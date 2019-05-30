@@ -40,17 +40,16 @@
     {% endfor %}
   {% endif %}
   <div>
-    <div class="sidebar-nav-item">Study</div>
+    <a class="sidebar-nav-item">Study</a>
     <nav class="content-ul">
       {% for category in site.categories %}
-      <a href="{{ root_url }}/{{ site.category_dir }}#{{ category | first }}"
+      <div onclick="location.href='/jhy156456.github.io/{{ category | first }}/'"
          class="sidebar-nav-item pl-3rem">
                             <span class="name">
                                 {{ category | first }}
                             </span>
         <span class="badge">{{ category | last | size }}</span>
-      </a>
-      <br>
+      </div>
       {% endfor %}
     </nav>
   </div>

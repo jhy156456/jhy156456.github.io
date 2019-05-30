@@ -1,7 +1,7 @@
 ---
 layout: list
-title: Hyde
-slug: hyde
+title: Database
+slug: database
 menu: true
 order: 2
 description: >
