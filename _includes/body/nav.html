@@ -40,7 +40,7 @@
     {% endfor %}
   {% endif %}
   <div>
-    <a class="sidebar-nav-item">Study</a>
+    <a class="sidebar-nav-item">공부</a>
     <nav class="content-ul">
       {% for category in site.categories %}
       <div onclick="location.href='/jhy156456.github.io/{{ category | first }}/'"
@@ -53,5 +53,18 @@
       {% endfor %}
     </nav>
   </div>
-  
+  <div>
+    <a class="sidebar-nav-item">취업</a>
+    <nav class="content-ul">
+      {% for category in site.job %}
+      <div onclick="location.href='/jhy156456.github.io/{{ category | first }}/'"
+         class="sidebar-nav-item pl-3rem">
+                            <span class="name">
+                                {{ category | first }}
+                            </span>
+        <span class="badge">{{ category | last | size }}</span>
+      </div>
+      {% endfor %}
+    </nav>
+  </div>
 </ul>

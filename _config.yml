@@ -51,7 +51,6 @@ menu:
     url:               jhy
 
 
-category_dir: /
 # Add links to the footer.
 # Typically you'll want to link to your cookie- or privacy policy (if appliable), etc..
 # legal:
@@ -222,7 +221,6 @@ collections:
   featured_categories:
     permalink:         /:name/
     output:            true
-
   featured_tags:
     permalink:         /tag-:name/
     output:            true
@@ -230,7 +228,6 @@ collections:
   projects:
     permalink:         /projects/:path/
     output:            true
-
 
 # File inclusion/exclusion
 # ========================================================================================
