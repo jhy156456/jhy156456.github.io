@@ -19,16 +19,16 @@ baseurl:               '/jhy156456.github.io'
 lang:                  en
 
 # The title of your blog. Used in the sidebar and the browser tab.
-title:                  황성열님은
+title:                  JHY
 
 # A short description (~150 chars) of the page used for the meta description tag.
 # Can use markdown, but no more than one paragraph (enforced by `>`)
 description:           >
- KDB산업은행 최종면접에
+ JHY
 
 # A shorter description for the sidebar.
 tagline:               >
- '합격'하셨습니다.
+ 블로그 가즈아..
 
 # A list of keywords for your blog
 keywords:              []
@@ -47,15 +47,13 @@ author:
 
 # Add links to the sidebar.
 menu:
-  - title:             개인별 일정은
-    url:               /hydejack/
-  - title:             추후에
+  - title:             JHY
+    url:               jhy
+  - title:             Contact
     url:               /hyde/
-  - title:             공지드리겠습니다.
-    url:               /docs/
-  - title:             다시한번 축하드립니다.
-    url:               /about/
 
+
+category_dir: /
 # Add links to the footer.
 # Typically you'll want to link to your cookie- or privacy policy (if appliable), etc..
 # legal:

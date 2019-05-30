@@ -1,4 +1,5 @@
-<span class="sr-only">{{ site.data.strings.navigation | default:"Navigation" }}{{ site.data.strings.colon | default:":" }}</span>
+<span class="sr-only">{{ site.data.strings.navigation | default:"Navigation" }}
+  {{ site.data.strings.colon | default:":" }}</span>
 <ul>
   {% if site.menu %}
     {% for node in site.menu %}
@@ -18,7 +19,7 @@
     {% assign pages = site.pages | where: "menu", true %}
     {% assign documents = site.documents | where: "menu", true %}
     {% assign nodes = pages | concat: documents | sort: "order" %}
-
+  
     {% for node in nodes %}
       {% unless node.redirect_to %}
         <li>
@@ -38,4 +39,20 @@
       {% endunless %}
     {% endfor %}
   {% endif %}
+  <div>
+    <div class="sidebar-nav-item">Study</div>
+    <nav class="content-ul">
+      {% for category in site.categories %}
+      <a href="{{ root_url }}/{{ site.category_dir }}#{{ category | first }}"
+         class="sidebar-nav-item pl-3rem">
+                            <span class="name">
+                                {{ category | first }}
+                            </span>
+        <span class="badge">{{ category | last | size }}</span>
+      </a>
+      <br>
+      {% endfor %}
+    </nav>
+  </div>
+  
 </ul>
