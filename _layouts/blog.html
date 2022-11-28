@@ -12,7 +12,7 @@
 <body class="" gtools_scp_screen_capture_injected="true">
     <header id="header" class="header bg-white">
         <div class="navbar-container">
-            <a href="/?liberxue" title="访问 {{site.title }}" class="navbar-logo"> <img
+            <a href="/?liberxue" title="{{site.title }}" class="navbar-logo"> <img
                     src="{{ site.url }}/style/images/logo-liberxue.png" alt="{{ site.title }}"> </a>
             <div class="navbar-menu">
                 {% for link in site.links %}
@@ -48,7 +48,7 @@
                 <div class="post-data">
                     <time datetime="{{ page.date | date: '%F %H:%M:%S'}}" itemprop="datePublished">发布时间：{{ page.date |
                         date: "%F %H:%M:%S"}}</time>
-                    <a href="/tags#{{ page.category }}" title="访问 {{ page.category }}"
+                    <a href="/tags#{{ page.category }}" title="{{ page.category }}"
                         data-hover="博客分类: {{ page.category }}">博客分类: {{ page.category }}</a>
                     <a href="#read"> 阅读次数: comments</a>
                 </div>
@@ -57,14 +57,14 @@
                     {% assign tags_list = page.tags %}
                     {% if tags_list.first[0] == null %}
                     {% for tag in tags_list %}
-                    <a href="/tags#{{ tag }}" title="访问{{ tag }}" data-hover="{{ tag }}">
+                    <a href="/tags#{{ tag }}" title="{{ tag }}" data-hover="{{ tag }}">
                         {{ tag }} <span>({{ site.tags[tag].size }})</span>
                         {% unless forloop.last %}{% endunless %}
                     </a>
                     {% endfor %}
                     {% else %}
                     {% for tag in tags_list %}
-                    <a href="/tags#{{ tag[0] }}" title="访问 {{ tag[0] }}" data-hover="{{tag[0]}}">
+                    <a href="/tags#{{ tag[0] }}" title="{{ tag[0] }}" data-hover="{{tag[0]}}">
                         {{ tag[0] }} <span>({{ tag[1].size }})</span>
                         {% unless forloop.last %}{% endunless %}
                     </a>
@@ -91,13 +91,13 @@
                 {% assign tags_list = page.tags %}
                 {% if tags_list.first[0] == null %}
                 {% for tag in tags_list %}
-                <a href="/tags#{{ tag }}" title="访问{{ tag }}" data-hover="{{ tag }}">
+                <a href="/tags#{{ tag }}" title={{ tag }}" data-hover="{{ tag }}">
                     {{ tag }} <span>({{ site.tags[tag].size }})</span>
                     {% unless forloop.last %}{% endunless %}</a>
                 {% endfor %}
                 {% else %}
                 {% for tag in tags_list %}
-                <a href="/tags#{{ tag[0] }}" title="访问{{ tag[0] }}" data-hover="{{ tag[0] }}">
+                <a href="/tags#{{ tag[0] }}" title="{{ tag[0] }}" data-hover="{{ tag[0] }}">
                     {{ tag[0] }} <span>({{ tag[1].size }})</span>
                     {% unless forloop.last %}{% endunless %}
                 </a>
@@ -216,8 +216,8 @@
                         li = document.createElement('li');
                         link = document.createElement('a');
                         link.href = '#' + titleId[i];
-                        link.title = '访问' + titleId[i];
-                        link.title = '访问' + titleId[i];
+                        link.title = titleId[i];
+                        link.title = titleId[i];
                         link.innerHTML = !isDirNum ? contentArr[i] :
                             dirNum.join('.') + ' ' + contentArr[i];
                         li.appendChild(link);
