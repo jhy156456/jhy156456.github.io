@@ -26,9 +26,9 @@ description: "分享正在看和看过想看的一些书籍"
 								style="background: url('../style/images/bg-ico.png') no-repeat;background-size: 40px auto;">
 							</div>
 							<div class="item-meta-cat">
-								<a href="category/thoughts/index.html" title="访问 {{  posts.category }}"
+								<a href="category/thoughts/index.html" title="{{  posts.category }}"
 									data-hover="{{ posts.category }}">{{ posts.category }}</a>
-								<a href="category/thoughts/index.html" title="访问 {{ posts.date | date: " %Y"}}"
+								<a href="category/thoughts/index.html" title="{{ posts.date | date: " %Y"}}"
 									data-hover="{{ posts.date | date: " %F %H:%M:%S "}}">{{ posts.date | date: "%F
 									%H:%M:%S "}}</a>
 							</div>
