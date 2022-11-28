@@ -17,9 +17,9 @@ links:
   - name:         연구
     url:          /book
     external:     false
-  # - name:         旅游
-  #   url:          /road
-  #   external:     false
+  - name:         공부
+    url:          /study
+    external:     false
   - name:         기록
     url:          /archives
   #   external:     false
