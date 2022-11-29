@@ -130,9 +130,9 @@ a::before {
     white-space: nowrap;
     opacity: 0;
     text-shadow: 0 0 1px rgba(255, 255, 255, 0.3);
-    -webkit-transform: scale(1.1) translateX(10px) translateY(-10px) rotate(4deg);
-    -moz-transform: scale(1.1) translateX(10px) translateY(-10px) rotate(4deg);
-    transform: scale(1.1) translateX(10px) translateY(-10px) rotate(4deg);
+    -webkit-transform: scale(1.1) translateX(10px) translateY(-10px) rotate(2deg);
+    -moz-transform: scale(1.1) translateX(10px) translateY(-10px) rotate(2deg);
+    transform: scale(1.1) translateX(10px) translateY(-10px) rotate(2deg);
     -webkit-transition: -webkit-transform 0.3s, opacity 0.3s;
     -moz-transition: -moz-transform 0.3s, opacity 0.3s;
     transition: transform 0.3s, opacity 0.3s;
