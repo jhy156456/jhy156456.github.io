@@ -49,8 +49,8 @@
                     <time datetime="{{ page.date | date: '%F %H:%M:%S'}}" itemprop="datePublished">작성일자：{{ page.date |
                         date: "%F %H:%M:%S"}}</time>
                     <a href="/tags#{{ page.category }}" title="{{ page.category }}"
-                        data-hover="博客分类: {{ page.category }}">博客分类: {{ page.category }}</a>
-                    <a href="#read"> 阅读次数: comments</a>
+                        data-hover="博客分类: {{ page.category }}"> 분류: {{ page.category }}</a>
+                    <a href="#read"> 댓글: comments</a>
                 </div>
                 <div class="post-tags">
                     {% unless page.tags == empty %}
