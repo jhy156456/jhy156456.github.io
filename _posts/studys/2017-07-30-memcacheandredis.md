@@ -1,6 +1,7 @@
 ---
 layout: blog
 study : true
+category: study
 banana: true
 category: 负载均衡
 title:  [python] DatetimeIndex 값 추가하기 및 date관련 함수
