@@ -36,3 +36,9 @@ permalink: /:year/:month/:day/:title.html
 defaults:
   - values:
       layout: "default"
+category_archive:
+  type: liquid
+  path: /categories/
+tag_archive:
+  type: liquid
+  path: /tags/
