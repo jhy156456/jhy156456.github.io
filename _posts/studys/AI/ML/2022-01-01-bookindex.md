@@ -4,14 +4,15 @@ study: true
 background-image: http://ot1cc1u9t.bkt.clouddn.com/17-7-16/91630214.jpg
 category: study
 categories: AI-ML
-title: "공부테스트"
-date:   2017-07-30 10:06:42
+folder: AI-ML
+title: "AI-ML카테고리테스트"
+date:   2022-07-30 10:06:42
 tags:
 - 书籍
 - book
 - liberxue读过书
 redirect_from:
-  - /1970/01/bookindex/
+  - /1950/01/bookindex/
 ---
 
 何其有幸。仅需短短几小时，至多几十个小时就能读完一本作家的心血结晶。感受他们的或磅礴思想、或悲欢离合，从文字中汲取养分与力量,感受他们的或磅礴思想、或悲欢离合，从文字中汲取养分与力量

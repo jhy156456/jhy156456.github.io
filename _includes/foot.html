@@ -51,10 +51,13 @@
             </div>
             <div class="meta-item meta-comments">
                 <h3 class="meta-title" style="-webkit-margin-after:0">최신글</h3>
-                {% for post in site.posts limit:14 %}
-                <!-- {% if post.book %} -->
-                <li><a href="{{ post.url }}" title="访问 {{ post.title }}" data-hover="{{ post.title }}">{{ post.title
-                        }}</a></li>
+                
+
+
+                {% for post in site.posts limit:5 %}
+                {% if post %}
+                <li><a href="{{ post.url }}" title="{{ post.title }}" data-hover="{{ post.title }}">
+                    {{ post.title}}</a></li>
                 {% endif %}
                 {% endfor %}
             </div>
