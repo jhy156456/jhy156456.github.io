@@ -108,9 +108,12 @@
             </p>
             {{ content }}
             <p class="post-info">
-                本文由 <a href="/">liberxue</a> 创作，采用 <a href="https://creativecommons.org/licenses/by/4.0/"
-                    target="_blank" rel="external nofollow">知识共享署名4.0</a>
-                国际许可协议进行许可<br>本站文章除注明转载/出处外，均为本站原创或翻译，转载前请务必署名<br>最后编辑时间为:{{ page.date | date: "%F %H:%M:%S"}}</p>
+                이 문서는<a href="/">jhy156456</a>에 의해 작성되었으며,
+                <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank"
+                    rel="external nofollow">createive commons 4.0</a>
+                    라이센스에 대한 국제 라이센스 계약<br>
+                이 사이트의 기사는 원본이거나 이 사이트에서 번역한 것입니다. 재인쇄/출처가 표시되지 않는 한 재인쇄 전에 서명하십시오.<br>마지막 수정 날짜:{{ page.date | date: "%F %H:%M:%S"}}
+            </p>
         </div>
     </article>
 
@@ -140,21 +143,21 @@
     <script>
         var postDirectoryBuild = function () {
             var postChildren = function children(childNodes, reg) {
-                var result = [],
-                    isReg = typeof reg === 'object',
-                    isStr = typeof reg === 'string',
-                    node, i, len;
-                for (i = 0, len = childNodes.length; i < len; i++) {
-                    node = childNodes[i];
-                    if ((node.nodeType === 1 || node.nodeType === 9) &&
-                        (!reg ||
-                            isReg && reg.test(node.tagName.toLowerCase()) ||
-                            isStr && node.tagName.toLowerCase() === reg)) {
-                        result.push(node);
+                    var result = [],
+                        isReg = typeof reg === 'object',
+                        isStr = typeof reg === 'string',
+                        node, i, len;
+                    for (i = 0, len = childNodes.length; i < len; i++) {
+                        node = childNodes[i];
+                        if ((node.nodeType === 1 || node.nodeType === 9) &&
+                            (!reg ||
+                                isReg && reg.test(node.tagName.toLowerCase()) ||
+                                isStr && node.tagName.toLowerCase() === reg)) {
+                            result.push(node);
+                        }
                     }
-                }
-                return result;
-            },
+                    return result;
+                },
                 createPostDirectory = function (article, directory, isDirNum) {
                     var contentArr = [],
                         titleId = [],
@@ -225,12 +228,15 @@
                     }
                     directory.appendChild(root);
                 };
-            createPostDirectory(document.getElementById('post-content'), document.getElementById('directory'), true);
+            createPostDirectory(document.getElementById('post-content'), document.getElementById('directory'),
+                true);
         };
         postDirectoryBuild();
     </script>
     <script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-    <script>lang = hljs.initHighlightingOnLoad();</script>
+    <script>
+        lang = hljs.initHighlightingOnLoad();
+    </script>
 </body>
 
 </html>

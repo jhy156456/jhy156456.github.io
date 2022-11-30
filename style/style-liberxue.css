@@ -752,7 +752,8 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     -webkit-animation: fade-in .5s;
     animation: fade-in;
     animation-duration: .5s;
-    width: 65%;
+    /* width: 65%; */
+    width: 80%;
 }
 
 .index-page {
@@ -2181,12 +2182,12 @@ pre code::after {
     }
 
     .post-list-item {
-        width: 100%;
+        /* width: 100%; */
         padding: 10px 20px;
     }
 
     .post-list-item:first-child {
-        padding-top: 20px;
+        /* padding-top: 20px; */
     }
 
     .archive-page .post-list-item:first-child {
