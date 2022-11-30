@@ -2226,3 +2226,91 @@ pre code::after {
         min-height: 180px;
     }
 }
+
+
+
+.nav__list {
+    margin-bottom: 1.5em;
+}
+.nav__list input[type="checkbox"], .nav__list label {
+    display: none;
+}
+.nav__list .nav__items {
+    margin: 0;
+    font-size: 1.25rem;
+}
+.nav__list .nav__items a {
+    color: inherit;
+}
+.nav__list .nav__items .active {
+    margin-left: -0.5em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    font-weight: bold;
+}
+.nav__title {
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+.nav__sub-title {
+    display: block;
+    margin: 0.5rem 0;
+    padding: 0.25rem 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
+    font-size: 0.75em;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-bottom: 1px solid #f2f3f3;
+}
+/* Table of contents navigation ========================================================================== */
+.toc {
+    font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
+    border-left: 1px solid #f2f3f3;
+    text-decoration: none;
+    margin-bottom: 0;
+}
+.toc .nav__title {
+    color: #542c85;
+    font-size: 0.75em ;
+}
+.toc .active a {
+    font-weight: bold;
+    color: #ba0682;
+    text-decoration: none;
+}
+.toc__menu {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    list-style: none;
+    font-size: 0.75em ;
+}
+.toc__menu a {
+    display: block;
+    padding: 0.25rem 0.75rem;
+    color: #3d4144;
+    font-weight: normal;
+    line-height: 1.5;
+}
+.toc__menu a:hover {
+    font-weight: bold;
+    text-decoration: none;
+}
+.toc__menu li ul > li a {
+    padding-left: 1.25rem;
+    font-weight: normal;
+}
+.toc__menu li ul li ul > li a {
+    padding-left: 1.75rem;
+}
+.toc__menu li ul li ul li ul > li a {
+    padding-left: 2.25rem;
+}
+.toc__menu li ul li ul li ul li ul > li a {
+    padding-left: 2.75rem;
+}
+.toc__menu li ul li ul li ul li ul li ul > li a {
+    padding-left: 3.25rem;
+}
