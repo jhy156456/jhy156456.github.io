@@ -752,13 +752,14 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     -webkit-animation: fade-in .5s;
     animation: fade-in;
     animation-duration: .5s;
-    /* width: 65%; */
-    width: 80%;
+    
+    width: 65%;
 }
 
 .index-page {
-    padding: 120px 20px 0;
+    /* padding: 120px 20px 0; */
     margin: auto;
+    padding: 80px 20px 0;
 }
 
 .index-page .post-list-item-container .item-label {
@@ -2038,6 +2039,7 @@ pre code::after {
 
     .main-content {
         margin: 0 auto;
+        
     }
 
     .footer-meta .meta-item {
@@ -2208,6 +2210,7 @@ pre code::after {
 
     .main-content {
         margin: 0 auto;
+        width: 80%;
     }
 
     .post-onelist-item-container {
