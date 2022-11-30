@@ -1986,8 +1986,11 @@ pre code::after {
 }
 
 @media (max-width: 880px) {
+    .item-meta-cat{
+        display: none;
+    }
     .index-page {
-        padding: 90px 0 0;
+        padding: 120px 0 0;
     }
 
     .archive-page {
@@ -2092,6 +2095,10 @@ pre code::after {
 }
 
 @media (max-width: 650px) {
+    .nav_list_parent {
+        display: none;
+    }
+    
     .navbar-menu {
         display: none;
     }
@@ -2174,7 +2181,7 @@ pre code::after {
         width: 150px;
     }
     .index-page {
-        padding: 80px 0 0;
+        padding: 120px 0 0;
     }
 
     .archive-page {
@@ -2186,7 +2193,7 @@ pre code::after {
     }
 
     .post-list-item {
-        /* width: 100%; */
+        width: 100%;
         padding: 10px 20px;
     }
 
