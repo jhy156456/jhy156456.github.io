@@ -9,7 +9,7 @@ description: "分享那些年走过的地方去过路过的美景"
 		<div class="post-lists">
 			<div class="post-lists-body">
 				{% for posts in site.posts %}
-				{% if posts.study and posts.folder == "AI-ML" %}
+				{% if posts.categories[0] == "python-dataframe" %}
 				{% include categories-main.html %}
 				{% endif %}
 				{% endfor %}

@@ -9,7 +9,6 @@
             <a href="/study" class="">✨ <span>전체 글 수</style>
                     <span>{{site.categories.study.size}}</style>
                         <span>개</style></a>
-
             <!-- <li> -->
             {% for category in site.categories %}
             {% if category[0] == "python" %}
@@ -20,11 +19,32 @@
             <span class="nav__sub-title">AI</span>
             <ul>
                 {% for category in site.categories %}
-                {% if category[0] == "AI-ML" %}
-                <li><a href="/study/categories/AI-ML" class="">ML ({{category[1].size}})</a></li>
+                {% if category[0] == "ai-ml" %}
+                <li><a href="/study/categories/ai/ml" class="">ML ({{category[1].size}})</a></li>
                 {% endif %}
                 {% endfor %}
             </ul>
+
+            <!-- {% for posts in site.posts %}
+                <p style="color: red;">{{posts.categories}}</p>
+                {% endfor %} -->
+
+            {% for category in site.categories %}
+            {% if category[0] == "tips" %}
+            <a href="/study/categories/tips" class=""><span class="nav__sub-title">tips
+                    ({{category[1].size}})</span></a>
+            {% endif %}
+            {% endfor %}
+
+            <span class="nav__sub-title">Python</span>
+            <ul>
+                {% for category in site.categories %}
+                {% if category[0] == "python-dataframe" %}
+                <li><a href="/study/categories/python/dataframe" class="">dataframe ({{category[1].size}})</a></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+
             <span class="nav__sub-title">Native App</span>
             <ul>
                 {% for category in site.categories %}
