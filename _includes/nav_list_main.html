@@ -1,6 +1,33 @@
-{% assign sum = site.posts | size %}
+{% assign sum = site.categories | size %}
 
-<div style="align-self: center;" class="nav_list_parent">
+{% assign categories_max = 0 %}
+{% for category in site.categories %}
+{% if category[1].size > categories_max %}
+{% assign categories_max = category[1].size %}
+{% endif %}
+{% endfor %}
+<div class="nav_parent">
+    <ul class="taxonomy__index">
+        <li>
+            <a href="/study">
+                <strong>전체</strong> <span class="taxonomy__count">{{ sum }}</span>
+            </a>
+        </li>
+        {% for i in (1..categories_max) reversed %}
+        {% for category in site.categories %}
+        {% if category[1].size == i %}
+        <li>
+            <!-- 공부 -->
+            <!-- | slugify 추가하면 slash가 dash로 변한다 -->
+            <a href="/study/categories/{{ category[0]}}">
+                <strong>{{ category[0] }}</strong> <span class="taxonomy__count">{{ i }}</span>
+            </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </ul>
+
     <nav class="nav__list">
         <input id="ac-toc" name="accordion-toc" type="checkbox" />
         <label for="ac-toc">{{ site.data.ui-text[site.locale].menu_label }}</label>
@@ -17,16 +44,17 @@
             {% endif %}
             {% endfor %}
             <span class="nav__sub-title">AI</span>
-            <ul>
+            <ul class="nav_ul">
                 {% for category in site.categories %}
-                {% if category[0] == "ai-ml" %}
+                {% if category[0] == "ai/ml" %}
                 <li><a href="/study/categories/ai/ml" class="">ML ({{category[1].size}})</a></li>
                 {% endif %}
                 {% endfor %}
             </ul>
 
-            <!-- {% for posts in site.posts %}
-                <p style="color: red;">{{posts.categories}}</p>
+            <!-- <p style="color: red;">{{site.categories}}</p>
+            {% for category in site.categories %}
+                <p style="color: red;">{{category[0]}}</p>
                 {% endfor %} -->
 
             {% for category in site.categories %}
@@ -39,7 +67,7 @@
             <span class="nav__sub-title">Python</span>
             <ul>
                 {% for category in site.categories %}
-                {% if category[0] == "python-dataframe" %}
+                {% if category[0] == "python/dataframe" %}
                 <li><a href="/study/categories/python/dataframe" class="">dataframe ({{category[1].size}})</a></li>
                 {% endif %}
                 {% endfor %}

@@ -54,9 +54,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-body>* :first-child {
+/* 추가 */
+/* body>* :first-child {
     margin-top: 0 !important;
-}
+} */
 
 p,
 blockquote,
@@ -585,8 +586,8 @@ textarea:-ms-input-placeholder {
 
 .navbar-container {
     position: relative;
-    /* width: 1040px; */
-    width: 65%;
+    width: 1040px;
+    /* width: 65%; */
     max-width: 100%;
     height: 80px;
     margin: 0 auto;
@@ -831,12 +832,18 @@ textarea:-ms-input-placeholder {
     -webkit-animation: fade-in .5s;
     animation: fade-in;
     animation-duration: .5s;
-
     width: 65%;
+}
+.index-home-page {
+    margin: auto;
+    padding: 120px 20px 0;
+}
+
+.index-home-page .post-list-item-container .item-label {
+    padding: 10px 20px 40px;
 }
 
 .index-page {
-    /* padding: 120px 20px 0; */
     margin: auto;
     padding: 120px 20px 0;
 }
@@ -857,7 +864,8 @@ textarea:-ms-input-placeholder {
 
 .post-list-item {
     float: left;
-    width: 33.3333%;
+    /* width: 33.3333%; */
+    width: 25%;
     height: auto;
     padding: 18px;
     align-items: center;
@@ -2090,7 +2098,9 @@ pre code::after {
     .item-meta-cat {
         display: none;
     }
-
+    .index-home-page {
+        padding: 120px 0 0;
+    }
     .index-page {
         padding: 120px 0 0;
     }
@@ -2198,7 +2208,6 @@ pre code::after {
 
 @media (max-width: 650px) {
 
-    /* 추가 */
     .navbar-container {
         position: relative;
         width: 1040px;
@@ -2206,10 +2215,6 @@ pre code::after {
         max-width: 100%;
         height: 80px;
         margin: 0 auto;
-    }
-
-    .nav_list_parent {
-        display: none;
     }
 
     .navbar-menu {
@@ -2287,6 +2292,8 @@ pre code::after {
     .post-page .post-content .post-tags {
         display: inherit;
     }
+
+    /* 추가 */
 }
 
 @media (max-width: 580px) {
@@ -2295,7 +2302,7 @@ pre code::after {
     }
 
     .index-page {
-        padding: 120px 0 0;
+        padding: 0;
     }
 
     .archive-page {
@@ -2333,7 +2340,13 @@ pre code::after {
 
     .main-content {
         margin: 0 auto;
-        width: 70%;
+        /* width: 80%; */
+        width: 100%;
+    }
+
+    .main-post {
+        margin: 0 auto;
+        width: 100%;
     }
 
     .post-onelist-item-container {
@@ -2351,9 +2364,60 @@ pre code::after {
     .post-onelist-item-container .onelist-item-thumb {
         min-height: 180px;
     }
+
+    /* 추가 */
+    .post-list-item-container .item-thumb {
+        display: none;
+    }
+
+    .nav__list {
+        display: none;
+    }
+    .taxonomy__index {
+        display: grid;
+        grid-column-gap: 2em;
+        grid-template-columns: repeat(2, 1fr);
+        margin: 1.414em 0;
+        padding: 0 18px 0 18px;
+        font-size: 1em;
+        list-style: none;
+        
+    }
+
+    .taxonomy__index a {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        padding: 0.25em 0;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+        color: inherit;
+        text-decoration: none;
+        border-bottom: 1px solid #7a8288;
+    }
+    .nav_parent {
+        margin-top: 120px;
+    }
+}
+.nav_parent {
+    margin-top: 120px;
+}
+/* 추가 */
+
+@media (min-width: 580px){
+    .nav_main_parent{
+        display: flex;
+    }
+    .taxonomy__index{
+        display: none;
+    }
 }
 
 
+.nav_ul {
+    margin: 0;
+}
 
 .nav__list {
     margin-bottom: 1.5em;

@@ -2,14 +2,14 @@
 title: 那些年走过的地方去过路过的美景
 description: "分享那些年走过的地方去过路过的美景"
 ---
-<div style="display: flex;">
+<div class="nav_main_parent">
 	{% include nav_list_main.html %}
 	<div class="main-content index-page clearfix ">
 		{% assign sum = site.posts | size %}
 		<div class="post-lists">
 			<div class="post-lists-body">
 				{% for posts in site.posts %}
-				{% if posts.categories[0] == "python-dataframe" %}
+				{% if posts.categories[0] == "python/dataframe" %}
 				{% include categories-main.html %}
 				{% endif %}
 				{% endfor %}

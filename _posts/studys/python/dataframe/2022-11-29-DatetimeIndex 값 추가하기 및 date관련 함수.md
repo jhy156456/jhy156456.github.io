@@ -2,8 +2,8 @@
 layout: blog
 study: true
 background-image: http://ot1cc1u9t.bkt.clouddn.com/17-8-1/24280498.jpg
-category: study
-categories: python-dataframe
+main-category: study
+categories: python/dataframe
 title: "[python] DatetimeIndex 값 추가하기 및 date관련 함수"
 date: 2021-11-30 10:06:42
 tags:

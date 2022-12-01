@@ -6,7 +6,7 @@ description: "标签分类的博文"
 	{% capture site_tags %}{% for tag in site.tags %}{{ tag | first }}{% unless forloop.last %},{% endunless %}{% endfor
 	%}{% endcapture %}
 	{% assign tags_list = site_tags | split:',' | sort %}
-	<h3 class="post-title" itemprop="name headline">标签分类的博文--点击自动查找相应`Tags`</h3>
+	<h3 class="post-title" itemprop="name headline">태그로 분류된 블로그 게시물--클릭하면 해당 게시물을 자동으로 찾습니다.`Tags`</h3>
 	<div class="post-data">
 		<div class="post-tags">
 			{% for item in (0..site.tags.size) %}{% unless forloop.last %}
