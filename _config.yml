@@ -6,9 +6,9 @@ signoff:          "HaydenJ" # Your name
 facebook_appid:   #liberxue
 # google_analytics: UA-101222464-1
 share:            true 
-# 分页
 paginate: 15
 paginate_path: "jhy156456page:num"
+
 gems: [jekyll-paginate]
 links:
   - name:         홈
