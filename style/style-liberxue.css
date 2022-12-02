@@ -1143,8 +1143,10 @@ textarea:-ms-input-placeholder {
    #post page
    ========================================================================== */
 .post-header-thumb {
-    position: relative;
-    height: 233px;
+    /* position: relative; */
+    /* 추가 */
+    margin-top: 80px;
+    /* height: 233px; */
     background: #f7f7f733;
 }
 
@@ -1171,8 +1173,8 @@ textarea:-ms-input-placeholder {
 }
 
 .post-header-thumb-container {
-    position: relative;
-    top: 100px;
+    /* position: relative; */
+    /* top: 100px; */
     max-width: 1024px;
     margin: 0 auto;
     -webkit-animation: auto;
