@@ -1,7 +1,7 @@
 ---
 layout: blog
 study: true
-background-image: http://ot1cc1u9t.bkt.clouddn.com/17-8-1/24280498.jpg
+background: purple
 category: study
 categories: python/dataframe
 title: "[python] DatetimeIndex 값 추가하기 및 date관련 함수"

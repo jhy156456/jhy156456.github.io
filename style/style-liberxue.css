@@ -600,7 +600,8 @@ textarea:-ms-input-placeholder {
   font-size: 22px;
   line-height: 22px;
   position: absolute;
-  top: 30%;
+  /* top: 30%; */
+  top: 20%;
   display: block;
   width: auto;
   max-width: 50%;
@@ -610,7 +611,8 @@ textarea:-ms-input-placeholder {
 
 .navbar-logo img {
   width: auto;
-  height: 35px;
+  /* height: 35px; */
+  height: 50px;
   outline: 0;
 }
 
@@ -2039,7 +2041,8 @@ pre code::after {
 }
 
 .footer-meta .meta-copyright .info-logo img {
-  height: 32px;
+  /* height: 32px; */
+  height: 50px;
   margin-bottom: 12px;
 }
 
