@@ -6,8 +6,7 @@ signoff:          "HaydenJ" # Your name
 facebook_appid:   #liberxue
 # google_analytics: UA-101222464-1
 share:            true 
-paginate: 15
-paginate_path: "jhy156456page:num"
+
 
 gems: [jekyll-paginate]
 links:
@@ -31,7 +30,13 @@ links:
     external:     false
 # ------------ CONFIGURABLE END ------------
 
-#permalink:        /:categories/:title.html
+gems:
+    - jekyll-paginate-v2
+pagination:
+  enabled: true
+  paginate: 15
+  # permalink: "jhy156456page:num"
+
 permalink: /:year/:month/:day/:title.html
 defaults:
   - values:

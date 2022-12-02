@@ -1,16 +1,23 @@
 ---
+pagination:
+    enabled: true
+    category: study
 ---
 <div class="nav_main_parent">
 
 	{% include nav_list_main.html %}
 	<div class="main-content index-page clearfix ">
-		<!-- {% for posts in paginator.posts %}
+
+		<!-- <p style="color: red;">{{paginator.total_pages}}</p>
+		{% for posts in paginator.posts %}
 		<p style="color: red;">{{posts.title}}</p>
 		{% endfor %} -->
+
+
 		{% assign sum = site.posts | size %}
 		<div class="post-lists">
 			<div class="post-lists-body">
-				{% for posts in site.posts %}
+				{% for posts in paginator.posts %}
 				{% if posts.study %}
 				<div class="post-list-item">
 					<div class="post-list-item-container">

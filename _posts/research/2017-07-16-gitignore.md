@@ -4,7 +4,7 @@ istop: true
 title: "논문논문"
 background-image: http://ot1cc1u9t.bkt.clouddn.com/17-7-16/38390376.jpg
 date:  2017-07-16 23:45:56
-main-category: research
+category: research
 tags:
 - github
 - git

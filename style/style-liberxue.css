@@ -827,6 +827,13 @@ textarea:-ms-input-placeholder {
 /* ==========================================================================
    #main content
    ========================================================================== */
+.main-post {
+    position: relative;
+    -webkit-animation: fade-in .5s;
+    animation: fade-in;
+    animation-duration: .5s;
+    width: 65%;
+}
 .main-content {
     position: relative;
     -webkit-animation: fade-in .5s;
@@ -897,7 +904,8 @@ textarea:-ms-input-placeholder {
 .post-list-item-container .item-thumb {
     position: relative;
     display: inherit;
-    min-height: 250px;
+    /* min-height: 250px; */
+    min-height: 200px;
     -webkit-transition: -webkit-transform 500ms ease, filter 500ms ease;
     -moz-transition: -moz-transform 500ms ease, filter 500ms ease;
     transition: transform 500ms ease, filter 500ms ease;

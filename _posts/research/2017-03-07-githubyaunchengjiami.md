@@ -4,7 +4,7 @@ istop: true
 title: "논문논문"
 background-image: https://o243f9mnq.qnssl.com/2017/06/116099051.jpg
 date:  2017-03-07
-main-category: research
+category: research
 tags:
 - github
 - git-crypt

@@ -1,10 +1,10 @@
 <!-- 分页链接 -->
 <div class="lists-navigator clearfix">
-
-
+    {% assign back_url = "page" | append: paginator.page %}
+    {% assign pre_url = paginator.page_path| remove: "/index.html" |remove:  back_url%}
     <ol class="page-navigator">
         <li class="current">
-            <a href="/?jhy156456" data-hover="이전">
+            <a href="{{paginator.previous_page_path }}" data-hover="이전">
                 <span>이전</span>
             </a>
         </li>
@@ -28,9 +28,9 @@
         <li>
             {% endif %}
             {% if i == 1 %}
-            <a href="/?jhy156456" data-hover="{{i}}">{{i}}</a>
+            <a href="{{pre_url}}" data-hover="{{i}}">{{i}}</a>
             {% else %}
-            <a href="/jhy156456page{{i}}?jhy156456" data-hover="{{i}}">{{i}}</a>
+            <a href="{{pre_url}}/page{{i}}" data-hover="{{i}}">{{i}}</a>
             {% endif %}
         </li>
         {% endfor %}
@@ -38,19 +38,19 @@
             {% if paginator.page == paginator.total_pages %}
             <span>&raquo;</span>
             {% else %}
-            <a href="/jhy156456page{{ paginator.next_page }}?jhy156456" data-hover="&raquo;">
+            <a href="{{paginator.next_page_path }}" data-hover="&raquo;">
                 <span>&raquo;</span>
             </a>
             {% endif %}
         </li>
         <li>
-            <a href="/jhy156456page{{paginator.total_pages}}?jhy156456" data-hover="다음">
+            <a href="{{paginator.next_page_path }}" data-hover="다음">
                 <span>다음</span>
             </a>
         </li>
         <li class="current">
             <!-- <span>第{{paginator.page}}页 / 共{{paginator.total_pages}}页</span> -->
-            <span>현재 {{paginator.page}}  / 총 {{paginator.total_pages}} 페이지</span>
+            <span>현재 {{paginator.page}} / 총 {{paginator.total_pages}} 페이지</span>
     </ol>
 
 </div>
