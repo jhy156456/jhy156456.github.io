@@ -1,3 +1,16 @@
+---
+layout: blog
+study: true
+background-image: http://ot1cc1u9t.bkt.clouddn.com/17-8-1/24280498.jpg
+category: study
+categories: web/css
+title: "[css] position, display 정리"
+date: 2022-12-02 10:06:42
+tags:
+- web
+- css
+---
+
 # [css] position, display 정리
 
 

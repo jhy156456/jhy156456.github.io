@@ -52,6 +52,14 @@
                 {% endfor %}
             </ul>
 
+            <span class="nav__sub-title">WEB</span>
+            <ul class="nav_ul">
+                {% for category in site.categories %}
+                {% if category[0] == "web/css" %}
+                <li><a href="/study/categories/web/css" class="">css ({{category[1].size}})</a></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
             <!-- <p style="color: red;">{{site.categories}}</p>
             {% for category in site.categories %}
                 <p style="color: red;">{{category[0]}}</p>
