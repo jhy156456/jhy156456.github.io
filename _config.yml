@@ -4,7 +4,12 @@ description: "Full Stack | AI"
 url: https://jhy156456.github.io
 signoff: "HaydenJ" # Your name
 # facebook_appid: #liberxue
-# google_analytics: UA-101222464-1
+# Analytics
+analytics:
+  provider: "google-gtag" # false (default), "google", "google-universal", "google-gtag", "custom"
+  google:
+    tracking_id: "G-S9G62LP1GS"
+    anonymize_ip: # true, false (default
 share: true
 future: true
 
@@ -41,6 +46,7 @@ permalink: /:year/:month/:day/:title.html
 defaults:
   - values:
       layout: "default"
+      image_url: ""
 
 category_archive:
   type: liquid

@@ -4,12 +4,12 @@ study: true
 background-image: http://ot1cc1u9t.bkt.clouddn.com/17-8-1/24280498.jpg
 background: yellow
 category: study
-categories: db/postgres
+categories: db/postgresql
 title: "[postgrsql] PostgreSQL-tmp.s.PGSQL.5432-failed"
 date: 2022-12-05 10:16:42
 tags:
 - db
-- postgres
+- postgresql
 ---
 
 # [postgrsql] PostgreSQL-tmp.s.PGSQL.5432-failed
