@@ -60,6 +60,15 @@
                 {% endif %}
                 {% endfor %}
             </ul>
+
+            <span class="nav__sub-title">DB</span>
+            <ul class="nav_ul">
+                {% for category in site.categories %}
+                {% if category[0] == "db/postgresql" %}
+                <li><a href="/study/categories/db/postgresql/" class="">css ({{category[1].size}})</a></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
             <!-- <p style="color: red;">{{site.categories}}</p>
             {% for category in site.categories %}
                 <p style="color: red;">{{category[0]}}</p>
@@ -73,7 +82,7 @@
             {% endfor %}
 
             <span class="nav__sub-title">Python</span>
-            <ul>
+            <ul class="nav_ul">
                 {% for category in site.categories %}
                 {% if category[0] == "python/dataframe" %}
                 <li><a href="/study/categories/python/dataframe" class="">dataframe ({{category[1].size}})</a></li>

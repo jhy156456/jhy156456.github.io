@@ -10,7 +10,7 @@ pagination:
 		<div class="post-lists">
 			<div class="post-lists-body">
 				{% for posts in site.posts %}
-				{% if posts.categories[0] == "ai/ml" %}
+				{% if posts.categories[0] == "db/postgresql" %}
 				{% include categories-main.html %}
 				{% endif %}
 				{% endfor %}

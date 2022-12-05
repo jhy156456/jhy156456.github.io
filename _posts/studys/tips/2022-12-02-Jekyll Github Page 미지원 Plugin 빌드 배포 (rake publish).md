@@ -1,7 +1,7 @@
 ---
 layout: blog
 study: true
-background-image: http://ot1cc1u9t.bkt.clouddn.com/17-8-1/24280498.jpg
+background: blue
 category: study
 categories: tips
 title: "[tips] Jekyll Github Page 미지원 Plugin 빌드 배포 (rake publish)"
