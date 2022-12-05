@@ -2120,9 +2120,9 @@ pre code::after {
 }
 
 @media (max-width: 880px) {
-  .item-meta-cat {
+  /* .item-meta-cat {
     display: none;
-  }
+  } */
 
   .index-home-page {
     padding: 120px 0 0;
