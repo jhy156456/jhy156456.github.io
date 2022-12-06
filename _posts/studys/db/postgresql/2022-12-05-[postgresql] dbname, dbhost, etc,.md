@@ -14,7 +14,6 @@ tags:
 
 # [postgresql] dbname, dbhost, etc, permission denied to create database
 
-{{site.baseurl}}
 ## database
 
 - `\list` 명령어로 List of databases 조회

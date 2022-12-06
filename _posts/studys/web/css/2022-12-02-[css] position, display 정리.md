@@ -1,7 +1,7 @@
 ---
 layout: blog
 study: true
-background-image: http://ot1cc1u9t.bkt.clouddn.com/17-8-1/24280498.jpg
+background: red
 category: study
 categories: web/css
 title: "[css] position, display 정리"

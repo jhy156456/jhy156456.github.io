@@ -8,6 +8,8 @@
                     data-hover="GitHub">GitHub</a>
                 <a class="social tistory" target="blank" href="http://jhy156456.tistory.com" title="tistory"
                     data-hover="Tistory">Tistory</a>
+                    <a class="social linkedin" target="blank" href="https://www.linkedin.com/in/hayden-j-6b2660252/" title="linkedin"
+                    data-hover="LinkedIn">LinkedIn</a>
                 <!-- <a class="social stackoverflow" target="blank" href="https://stackoverflow.com/users/6902190/liberxue"
                     title="访问 LiberXue_stackoverflow" data-hover="StackOverflow">StackOverflow</a>
                 <a class="social oschina" target="blank" href="https://my.oschina.net/bolanzw"
@@ -40,14 +42,12 @@
             </div>
             <div class="meta-item meta-posts">
                 <h3 class="meta-title" style="-webkit-margin-after:0">다른기사</h3>
-                <!--置顶-->
                 {% for post in site.posts limit:15 %}
                 {% if post.istop %}
                 <li><a href="{{ post.url }}" title="访问 {{ post.title }}" data-hover="{{ post.title }}">{{ post.title
                         }}</a></li>
                 {% endif %}
                 {% endfor %}
-                <!--置顶-->
             </div>
             <div class="meta-item meta-comments">
                 <h3 class="meta-title" style="-webkit-margin-after:0">최신글</h3>

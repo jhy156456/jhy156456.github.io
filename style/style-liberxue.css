@@ -2101,6 +2101,14 @@ pre code::after {
   }
 }
 
+@media (max-width: 1500px) {
+  
+  /* 추가 */
+  .main-content {
+    width: 80%;
+  }
+}
+
 @media (max-width: 1000px) {
   .post-header-thumb {
     height: 280px;
@@ -2183,6 +2191,7 @@ pre code::after {
 
   .main-content {
     margin: 0 auto;
+    width: 60%;
   }
 
   .footer-meta .meta-item {
