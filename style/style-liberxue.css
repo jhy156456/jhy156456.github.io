@@ -1479,10 +1479,18 @@ pre code::after {
   border-radius: 50%;
 }
 
-.archive-page {
-  padding: 120px 20px 40px;
+/* 추가 blog.html은 내부에서 50, 부모에서 50이므로  */
+.archive-page-head {
+  padding-top: 100px;
+  padding-left: 20px;
 }
 
+.archive-page {
+  padding: 100px 20px 40px;
+}
+.tags {
+  padding: 0 20px 40px;
+}
 .archive-page .categorys-title {
   font-size: 14px;
   position: relative;
@@ -2139,9 +2147,12 @@ pre code::after {
   .index-page {
     padding: 120px 0 0;
   }
-
-  .archive-page {
+  /* 추가 */
+  .archive-page-head {
     padding: 90px 0 20px;
+  }
+  .archive-page {
+    padding: 100px 0 20px;
   }
 
   .common-page {
@@ -2338,7 +2349,10 @@ pre code::after {
   .index-page {
     padding: 0;
   }
-
+  /* 추가 */
+  .archive-page-head {
+    padding: 80px 0 20px;
+  }
   .archive-page {
     padding: 80px 0 20px;
   }

@@ -48,6 +48,19 @@ ALTER ROLE
 
 DB 권한 부여 확인 및 create database 진행 성공!
 
+### 생성된 Database 조회
+
+```shell
+psql [DBNAME] [USERNAME]
+```
+으로 접속 후
+
+```shell
+SELECT * FROM pg_catalog.pg_tables;
+```
+
+로 테이블 리스트 조회 
+
 ## Username
 
 - `\du` 명령어로 List of rolse Attributes조회

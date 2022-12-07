@@ -11,7 +11,7 @@ signoff: "HaydenJ" # Your name
 #     tracking_id: "G-S9G62LP1GS"
 #     anonymize_ip: # true, false (default
 google_analytics:
-  tracking_id: G-S9G62LP1GS
+  tracking_id: "G-S9G62LP1GS"
 share: true
 future: true
 
