@@ -67,7 +67,7 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         {% endif %} {% endfor %}
       </ul>
       <!-- WEB -->
-      <span class="nav__sub-title">DB</span>
+      <span class="nav__sub-title">DataBase</span>
       <ul class="nav_ul">
         {% for category in site.categories %} {% if category[0] ==
         "db/postgresql" %}
@@ -79,18 +79,18 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         {% endif %} {% endfor %}
       </ul>
       <!-- DE -->
-      <span class="nav__sub-title">DE</span>
+      <span class="nav__sub-title">Data-Engineer</span>
       <ul class="nav_ul">
-        {% for category in site.categories %} {% if category[0] == "de/sqoop" %}
+        {% for category in site.categories %} {% if category[0] == "data-engineer/sqoop" %}
         <li>
-          <a href="/study/categories/de/sqoop/" class=""
+          <a href="/study/categories/data-engineer/sqoop/" class=""
             >sqoop ({{category[1].size}})</a
           >
         </li>
         {% endif %} {% endfor %} {% for category in site.categories %} {% if
-        category[0] == "de/spark" %}
+        category[0] == "data-engineer/spark" %}
         <li>
-          <a href="/study/categories/de/spark/" class=""
+          <a href="/study/categories/data-engineer/spark/" class=""
             >spark ({{category[1].size}})</a
           >
         </li>

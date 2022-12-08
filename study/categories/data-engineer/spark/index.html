@@ -10,7 +10,7 @@ pagination:
     {% assign sum = site.posts | size %}
     <div class="post-lists">
       <div class="post-lists-body">
-        {% for posts in site.posts %} {% if posts.categories[0] == "de/spark" %}
+        {% for posts in site.posts %} {% if posts.categories[0] == "data-engineer/spark" %}
         {% include categories-main.html %} {% endif %} {% endfor %}
       </div>
     </div>

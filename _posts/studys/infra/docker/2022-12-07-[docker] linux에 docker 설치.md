@@ -1,14 +1,14 @@
 ---
 layout: blog
 study: true
-background: red
+background: orange
 category: study
 categories: infra/docker
 title: "[docker] linux에 docker 설치"
 date: 2022-12-07 10:42:42
 tags:
-- web
-- css
+- infra
+- docker
 ---
 
 # [docker] linux에 docker 설치

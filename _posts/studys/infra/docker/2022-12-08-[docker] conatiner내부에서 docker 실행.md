@@ -1,7 +1,7 @@
 ---
 layout: blog
 study: true
-background: red
+background: orange
 category: study
 categories: infra/docker
 title: "[docker] conatiner내부에서 docker 실행"
@@ -38,6 +38,7 @@ service start docker
 ```shell
 start: unrecognized service
 ```
+가 나오고
 
 ```
 dockerd
@@ -62,7 +63,7 @@ Perhaps iptables or your kernel needs to be upgraded.
 가 나오고 
 
 
-커널 업데이트 , iptables 업데이트 다 해봤는데 안됐다
+커널 업데이트(apt-get dist-upgrade) , iptables 업데이트 다 해봤는데 안됐다
 
 ## 원인
 아마 원인은 접속한 shell이 컨테이너 위에있는 docker내부라고 생각된다. 이 docker가 실행될 때 권한이 없고, iptables에 접근할 수 없으므로 업데이트도 안되는것이다.
