@@ -2110,7 +2110,6 @@ pre code::after {
 }
 
 @media (max-width: 1500px) {
-  
   /* 추가 */
   .main-content {
     width: 80%;
@@ -2118,9 +2117,9 @@ pre code::after {
 }
 
 @media (max-width: 1000px) {
-  .post-header-thumb {
+  /* .post-header-thumb {
     height: 280px;
-  }
+  } */
 
   .post-header-thumb-cover {
     height: 280px;
@@ -2180,9 +2179,9 @@ pre code::after {
     margin: 25px 0 30px;
   }
 
-  .post-header-thumb {
+  /* .post-header-thumb {
     height: 250px;
-  }
+  } */
 
   .post-header-thumb-op {
     height: 250px;
@@ -2215,9 +2214,9 @@ pre code::after {
     max-width: 100%;
   }
 
-  .post-header-thumb {
+  /* .post-header-thumb {
     height: 220px;
-  }
+  } */
 
   .post-header-thumb-op {
     height: 220px;
@@ -2481,7 +2480,7 @@ pre code::after {
 
 .nav__list .nav__items {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 
 .nav__list .nav__items a {

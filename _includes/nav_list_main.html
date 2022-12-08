@@ -43,6 +43,7 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         ><span class="nav__sub-title">Project ({{category[1].size}})</span></a
       >
       {% endif %} {% endfor %}
+      <!-- AI -->
       <span class="nav__sub-title">AI</span>
       <ul class="nav_ul">
         {% for category in site.categories %} {% if category[0] == "ai/ml" %}
@@ -53,7 +54,8 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         </li>
         {% endif %} {% endfor %}
       </ul>
-
+      <!-- AI -->
+      <!-- WEB -->
       <span class="nav__sub-title">WEB</span>
       <ul class="nav_ul">
         {% for category in site.categories %} {% if category[0] == "web/css" %}
@@ -64,7 +66,7 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         </li>
         {% endif %} {% endfor %}
       </ul>
-
+      <!-- WEB -->
       <span class="nav__sub-title">DB</span>
       <ul class="nav_ul">
         {% for category in site.categories %} {% if category[0] ==
@@ -76,6 +78,7 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         </li>
         {% endif %} {% endfor %}
       </ul>
+      <!-- DE -->
       <span class="nav__sub-title">DE</span>
       <ul class="nav_ul">
         {% for category in site.categories %} {% if category[0] == "de/sqoop" %}
@@ -93,11 +96,12 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         </li>
         {% endif %} {% endfor %}
       </ul>
+      <!-- DE -->
       <!-- <p style="color: red;">{{site.categories}}</p>
             {% for category in site.categories %}
                 <p style="color: red;">{{category[0]}}</p>
                 {% endfor %} -->
-
+      <!-- Python -->
       <span class="nav__sub-title">Python</span>
       <ul class="nav_ul">
         {% for category in site.categories %} {% if category[0] ==
@@ -109,7 +113,31 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         </li>
         {% endif %} {% endfor %}
       </ul>
+      <!-- Python -->
+      <!-- Infra -->
+      <span class="nav__sub-title">Infra</span>
+      <ul class="nav_ul">
+        {% for category in site.categories %} {% if category[0] ==
+        "infra/kubernets" %}
+        <li>
+          <a href="/study/categories/infra/kubernets" class=""
+            >kubernets ({{category[1].size}})</a
+          >
+        </li>
+        {% endif %} {% endfor %}
+      </ul>
 
+      <ul class="nav_ul">
+        {% for category in site.categories %} {% if category[0] ==
+        "infra/docker" %}
+        <li>
+          <a href="/study/categories/infra/docker" class=""
+            >docker ({{category[1].size}})</a
+          >
+        </li>
+        {% endif %} {% endfor %}
+      </ul>
+      <!-- Infra -->
       <span class="nav__sub-title">Native App</span>
       <ul>
         {% for category in site.categories %} {% if category[0] == "Android" %}
