@@ -72,7 +72,7 @@
               title="{{ page.category }}"
               data-hover="博客分类: {{ page.category }}"
             >
-                 분류: {{ page.category }}</a
+              분류: {{ page.category }}</a
             >
             <a href="#read"> 댓글: comments</a>
           </div>
@@ -133,6 +133,22 @@
           {% endfor %} {% endif %} {% assign tags_list = nil %} {% endunless %}
         </p>
         {{ content }}
+        <div>
+          <p class="post-info">
+            <!-- <link rel="canonical" href="http://jhy156456.github.io/"/> -->
+            <script
+              src="https://utteranc.es/client.js"
+              repo="jhy156456/github.io-comments"
+              issue-term="pathname"
+              label="Comment"
+              theme="github-light"
+              crossorigin="anonymous"
+              rel="canonical"
+              async
+            ></script>
+          </p>
+        </div>
+
         <p class="post-info">
           이 문서는<a href="/"> jhy156456</a>에 의해 작성되었으며,
           <a
@@ -142,23 +158,8 @@
             >createive commons 4.0</a
           >
           라이센스에 대한 국제 라이센스 계약<br />
-          이 사이트의 기사는 원본이거나 이 사이트에서 번역한 것입니다.
-          재인쇄/출처가 표시되지 않는 한 재인쇄 전에 서명하십시오.<br />마지막
-          수정 날짜:{{ page.date | date: "%F %H:%M:%S"}}
+          마지막 수정 날짜:{{ page.date | date: "%F %H:%M:%S"}}
         </p>
-      </div>
-      <div>
-        <!-- <link rel="canonical" href="http://jhy156456.github.io/"/> -->
-        <script
-          src="https://utteranc.es/client.js"
-          repo="jhy156456/github.io-comments"
-          issue-term="pathname"
-          label="Comment"
-          theme="github-light"
-          crossorigin="anonymous"
-          rel="canonical"
-          async
-        ></script>
       </div>
     </article>
 
@@ -185,7 +186,6 @@
     <div id="directory-content" class="directory-content">
       <div id="directory"></div>
     </div>
-    <!--liberxueconnnet-menu-->
     <script>
       var postDirectoryBuild = function () {
         var postChildren = function children(childNodes, reg) {
@@ -298,6 +298,60 @@
       };
       postDirectoryBuild();
     </script>
+    <script>
+      //           window.addEventListener(
+      //     "scroll",
+      //     function () {
+      //       console.log("??????????");
+      //     },
+      //     true
+      //   );
+    </script>
+    <!-- <script>
+      $(document).ready(function () {
+        var currentPosition = parseInt($("#directory").css("top"));
+        $(window).scroll(function () {
+          var position = $(window).scrollTop()-500;
+          $("#directory")
+            .stop()
+            .animate({ top: position + currentPosition + "px" }, 0);
+        });
+      });
+    </script> -->
+    <!-- <script>
+      $(function () {
+        var $win = $(window);
+        var top = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환
+
+        /*사용자 설정 값 시작*/
+        var speed = 500; // 따라다닐 속도 : "slow", "normal", or "fast" or        numeric(단위:msec)
+        var easing = "linear"; // 따라다니는 방법 기본 두가지 linear, swing
+        var $layer = $("#directory"); // 레이어 셀렉팅
+        // var layerTopOffset = 650; // 레이어 높이 상한선, 단위:px
+        var layerTopOffset = 0; // 레이어 높이 상한선, 단위:px
+        // $layer.css("position", "absolute");
+        $layer.css("top", "0px"); //첫 시작 위치
+        /*사용자 설정 값 끝*/
+
+        // 스크롤 바를 내린 상태에서 리프레시 했을 경우를 위해
+        if (top > 0) $win.scrollTop(layerTopOffset + top);
+        else $win.scrollTop(0);
+
+        //스크롤이벤트가 발생하면
+        $(window).scroll(function () {
+          yPosition = $win.scrollTop() + layerTopOffset;
+        //   console.log($win.scrollTop())
+          console.log($layer.css("top"))
+          if (yPosition < 0) {
+            yPosition = 0;
+          }
+          $layer.animate(
+            { top: yPosition},
+            { duration: speed, easing: easing, queue: false }
+          );
+        });
+      });
+    </script> -->
     <script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
     <script>
       lang = hljs.initHighlightingOnLoad();

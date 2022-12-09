@@ -221,6 +221,13 @@ pandas 주기 코드
 | U   | 마이크로초 |     |     |
 | N   | 나노초 |     |     |
 
+
+## a
+## b
+## c
+
+
+
 참조
 
 [1] [python, numpy, pandas 날짜 타입 비교 및 정리](https://ellun.tistory.com/320)

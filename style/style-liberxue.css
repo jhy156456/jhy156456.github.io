@@ -1645,7 +1645,7 @@ pre code::after {
   position: relative;
   z-index: 99999;
   width: 68%;
-  line-height: 30px;
+  /* line-height: 30px; */
   max-height: 10px;
   margin-right: auto !important;
   margin-left: auto !important;
@@ -1676,7 +1676,7 @@ pre code::after {
 
 #directory {
   position: fixed;
-  top: 100px;
+  top: 90px;
   display: inline-block;
   text-align: left;
   margin-top: 200px;
