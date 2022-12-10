@@ -137,6 +137,18 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         </li>
         {% endif %} {% endfor %}
       </ul>
+
+      <ul class="nav_ul">
+        {% for category in site.categories %} {% if category[0] ==
+        "infra/heroku" %}
+        <li>
+          <a href="/study/categories/infra/heroku" class=""
+            >heroku ({{category[1].size}})</a
+          >
+        </li>
+        {% endif %} {% endfor %}
+      </ul>
+
       <!-- Infra -->
       <span class="nav__sub-title">Native App</span>
       <ul>

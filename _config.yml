@@ -35,7 +35,7 @@ links:
   # - name:         标签
   #   url:          /tags
   #   external:     false
-  - name: about me
+  - name: About Me
     url: /about
     external: false
 # ------------ CONFIGURABLE END ------------
