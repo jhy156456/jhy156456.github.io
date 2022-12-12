@@ -102,7 +102,12 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
                 <p style="color: red;">{{category[0]}}</p>
                 {% endfor %} -->
       <!-- Python -->
-      <span class="nav__sub-title">Python</span>
+      {% for category in site.categories %} {% if category[0] == "python" %}
+      <a href="/study/categories/python" class=""
+        ><span class="nav__sub-title">Python ({{category[1].size}})</span></a
+      >
+      {% endif %} {% endfor %}
+      <!-- <span class="nav__sub-title">Python</span> -->
       <ul class="nav_ul">
         {% for category in site.categories %} {% if category[0] ==
         "python/dataframe" %}
