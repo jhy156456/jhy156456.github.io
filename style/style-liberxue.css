@@ -1676,10 +1676,10 @@ pre code::after {
 
 #directory {
   position: fixed;
-  top: 90px;
+  top: 100px;
   display: inline-block;
   text-align: left;
-  margin-top: 200px;
+  /* margin-top: 200px; */
 }
 
 #directory ul,

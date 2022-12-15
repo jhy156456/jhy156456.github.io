@@ -38,11 +38,13 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
       >
       {% endif %} {% endfor %}
       <!-- <li> -->
-      {% for category in site.categories %} {% if category[0] == "python" %}
+        <!-- Project -->
+      {% for category in site.categories %} {% if category[0] == "project" %}
       <a href="/categories/project" class=""
         ><span class="nav__sub-title">Project ({{category[1].size}})</span></a
       >
       {% endif %} {% endfor %}
+      <!-- Project -->
       <!-- AI -->
       <span class="nav__sub-title">AI</span>
       <ul class="nav_ul">
