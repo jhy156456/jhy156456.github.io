@@ -42,6 +42,7 @@ links:
 pagination:
   enabled: true
   paginate: 15
+  per_page: 12
   # permalink: "jhy156456page:num"
 
 permalink: /:year/:month/:day/:title.html
