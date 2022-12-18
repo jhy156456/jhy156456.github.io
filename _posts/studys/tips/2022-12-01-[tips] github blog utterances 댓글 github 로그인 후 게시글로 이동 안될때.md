@@ -21,6 +21,6 @@ link tag가 모여있는 html에
 이렇게 되어있던거를
 
 ```html
-<link rel="canonical" href="{{ .Permalink }}"/>
+<link rel="canonical" href="{{ dotPermalink }}"/>
 ```
 이렇게 바꿔준다

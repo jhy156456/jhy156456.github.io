@@ -4,7 +4,7 @@ study: true
 background-image: http://ot1cc1u9t.bkt.clouddn.com/17-8-1/24280498.jpg
 background: yellow
 category: study
-categories: data-engineer/spark
+categories: data-engineer/apache
 title: "[spark] spark란? spark 기본 개념"
 date: 2022-12-14 14:25
 tags:

@@ -5,7 +5,7 @@ background-image: http://ot1cc1u9t.bkt.clouddn.com/17-7-16/91630214.jpg
 category: study
 background: green
 categories: [ai/cv]
-title: "[cv] CNN calculate parameter"
+title: "[CV] CNN calculate parameter"
 date:   2022-12-16 08:58
 tags:
 - ai
@@ -13,7 +13,7 @@ tags:
 - cv
 ---
 
-# [cv] CNN calculate parameter
+# [CV] CNN calculate parameter
 
 ## model.summary()
 

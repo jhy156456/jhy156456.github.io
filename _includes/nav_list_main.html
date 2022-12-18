@@ -92,20 +92,13 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
       <!-- DE -->
       <span class="nav__sub-title">Data-Engineer</span>
       <ul class="nav_ul">
-        {% for category in site.categories %} {% if category[0] == "data-engineer/sqoop" %}
+        {% for category in site.categories %} {% if category[0] == "data-engineer/apache" %}
         <li>
-          <a href="/study/categories/data-engineer/sqoop/" class=""
-            >sqoop ({{category[1].size}})</a
+          <a href="/study/categories/data-engineer/apache/" class=""
+            >apache ({{category[1].size}})</a
           >
         </li>
-        {% endif %} {% endfor %} {% for category in site.categories %} {% if
-        category[0] == "data-engineer/spark" %}
-        <li>
-          <a href="/study/categories/data-engineer/spark/" class=""
-            >spark ({{category[1].size}})</a
-          >
-        </li>
-        {% endif %} {% endfor %}
+        {% endif %} {% endfor %} 
       </ul>
       <!-- DE -->
       <!-- <p style="color: red;">{{site.categories}}</p>
