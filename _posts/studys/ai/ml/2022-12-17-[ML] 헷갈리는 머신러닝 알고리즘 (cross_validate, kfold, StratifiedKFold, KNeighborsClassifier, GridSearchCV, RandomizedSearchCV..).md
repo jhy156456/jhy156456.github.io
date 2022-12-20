@@ -66,8 +66,22 @@ print(np.mean(scores['test_score']))
 데이터가 imbalance한 경우에는 train, validation셋의 label의 비율이 어긋나게된다.
 참고로 일반적으로 회귀에는 기본 k-겹 교차검증을 사용하고, 분류에는 StratifiedKFold를 사용한다.
 
-## KMeans
 
+## KNeighborsClassifier
+- 주변 k개의 데이터를 보고 과반수 넘어가는 나의 class가 어디인지 확인후 해당 class로 분류하는 방법
+- k를 어떻게 정하느냐가 제일 중요하다
+- default값은 5
+- lazy maethod
+- 모든 데이터의 거리를 구하여 분류하면 시간이 오래걸리므로 n차원 공간을 격자로 만들어서 인덱싱시켜놓는다.
+
+
+## KMeans
+- 클러스터링 알고리즘
+- 클러스터링을 몇개로 할 것인지?(k)가 중요하다.
+- Expecation Maxmization 알고리즘
+    - 랜덤하게 k개(centroid)를 선택한 후, 나머지 선택되지 않은 점들에 대해 가장 가까운 k에 클러스터링(membership)을 시도한다.
+    - k를 움직인 후 다시 가까운것들끼리 클러스터링(membership)을 시도한다
+    - 클러스터링이 변하지않으면 종료한다.
 
 ## GridSearchCV
 - 하이퍼 파라미터 튜닝을 위해 사용
@@ -132,9 +146,7 @@ TypeError: Parameter value is not iterable or distribution (key='min_impurity_de
 에러 발생
 
 
-## KNeighborsClassifier
-- 주변 k개의 데이터를 보고 과반수 넘어가는 나의 class가 어디인지 확인후 해당 class로 분류하는 방법
-- k를 어떻게 정하느냐가 제일 중요하다
-- default값은 5
-- lazy maethod
-- 모든 데이터의 거리를 구하여 분류하면 시간이 오래걸리므로 n차원 공간을 격자로 만들어서 인덱싱시켜놓는다.
+참고  
+[1] 대학원 수업  
+[2] https://towardsdatascience.com/the-5-clustering-algorithms-data-scientists-need-to-know-a36d136ef68  
+[3] https://www.youtube.com/watch?v=dxOldlIBx0Q&ab_channel=%EA%B3%A0%EB%A0%A4%EB%8C%80%ED%95%99%EA%B5%90%EC%82%B0%EC%97%85%EA%B2%BD%EC%98%81%EA%B3%B5%ED%95%99%EB%B6%80DSBA%EC%97%B0%EA%B5%AC%EC%8B%A4
