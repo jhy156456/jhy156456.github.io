@@ -65,12 +65,15 @@ model.add(keras.layers.Dense(10, activation='softmax'))
 - 이 이미지에 필터의 갯수 32개, kernel_size는 (3,3) 입니다.
     - summary의 max_pooling2d (MaxPooling2D  (None, 14, 14, 32)       0 )  이부분을 보면 filter의 갯수만큼 채널이 추가 됩니다.  
 - 따라서  (32(출력 채널) x 3 x 3(필터 크기) x 1 (입력 채널(RGB))  + 32(출력 채널 bias)  = 320개의 파라미터입니다.
+- 필터의 채널은 입력 채널과 동일해야 하므로 x 1 (입력 채널(RGB)) 가 들어갑니다.
 
 ## conv2d_1 (Conv2D)  (None, 14, 14, 32)  18496  분석
 - input_shape에 위 계층(MaxPooling2D)에서 출력된  (None, 14, 14, 32) 가 들어갑니다.
     - width, height가 14,14 , 채널이 32입니다.
+``model.add(keras.layers.Conv2D(64, kernel_size=(3,3), activation='relu', padding='same'))``
 - 이 이미지에 필터의 갯수 64개, kernel_size는 (3,3) 입니다.
 - 따라서  (64(출력 채널-필터의갯수) x 3 x 3(필터 크기) x 32 (입력 채널(RGB))  + 64(출력 채널 bias)  = 18496의 파라미터입니다.
+- 필터의 채널은 입력 채널과 동일해야 하므로 x 32 (입력 채널(RGB)) 가 들어갑니다.
 
 
 ![](../../../assets/images/study/ai/cv/ScreenShot 2022-12-16 9.10.26.png)
