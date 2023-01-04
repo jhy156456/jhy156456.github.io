@@ -80,8 +80,8 @@ print(np.mean(scores['test_score']))
 - 클러스터링을 몇개로 할 것인지?(k)가 중요하다.
 - Expecation Maxmization 알고리즘
     - 랜덤하게 k개(centroid)를 선택한 후, 나머지 선택되지 않은 점들에 대해 가장 가까운 k에 클러스터링(membership)을 시도한다.
-    - k를 움직인 후 다시 가까운것들끼리 클러스터링(membership)을 시도한다
-    - 클러스터링이 변하지않으면 종료한다.
+    - k를 membership의 무게중심 쪽으로 움직인 후 다시 가까운것들끼리 클러스터링(membership)을 시도한다
+    - 클러스터링, centroid좌표가 변하지않으면 종료한다.
 
 ## GridSearchCV
 - 하이퍼 파라미터 튜닝을 위해 사용

@@ -26,7 +26,7 @@ links:
   - name: 연구
     url: /research
     external: false
-  - name: 공부
+  - name: 카테고리
     url: /study
     external: false
   - name: 기록

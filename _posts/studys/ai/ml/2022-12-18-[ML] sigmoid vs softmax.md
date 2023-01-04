@@ -29,7 +29,7 @@ tags:
 
 ## softmax 
 - multi classification
-- 최종 노드의 activation function!
+- 최종 노드 또는 hidden layer 노드의 activation function!
 - cost function은 cross entropy
     - `loss='categorical_crossentropy'`
 - 확률의 총합은 1
