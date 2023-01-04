@@ -3,9 +3,17 @@ title: "Hayden J GitHub blog"
 description: "Full Stack | AI"
 url: https://jhy156456.github.io
 signoff: "HaydenJ" # Your name
-google_analytics: G-S9G62LP1GS
+
+# Analytics
+analytics:
+  provider: "google-gtag" # false (default), "google", "google-universal", "google-gtag", "custom"
+  google:
+    tracking_id: "G-S9G62LP1GS"
+    anonymize_ip: # true, false (default)
+# google_analytics: G-S9G62LP1GS
 # google_analytics:
   # tracking_id: "G-S9G62LP1GS"
+
 share: true
 future: true
 
