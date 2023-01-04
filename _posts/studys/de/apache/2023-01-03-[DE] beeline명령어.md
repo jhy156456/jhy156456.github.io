@@ -6,7 +6,7 @@ background: yellow
 category: study
 categories: data-engineer/apache
 title: "[DE] beeline 명령어"
-date: 2022-12-14 14:25
+date: 2022-12-14 14:25:00
 tags:
 - de
 - data engineer
