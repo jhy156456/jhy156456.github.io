@@ -2,6 +2,27 @@
     
     {% assign back_url = "page" | append: paginator.page %}
     {% assign pre_url = paginator.page_path| remove: "/index.html" | remove:  back_url%}
+    <!-- <div>
+        {{ paginator}}
+    </div> -->
+
+    <!-- <div>
+        {% assign var1 = pre_url | size  | plus: 0 %}
+    </div>
+    <div>
+        {% assign cate = pre_url | slice:1, var1 %}
+    </div>
+    <div>
+        {{ cate }}
+    </div>
+    <div>
+        {% for category in site.categories %} 
+        {% if category[0] ==  {{ cate }} %}
+        {{ category[1].size }}
+        {% endif %} 
+        {% endfor %} 
+    </div> -->
+
     <ol class="page-navigator">
         <li class="current">
             <a href="{{paginator.previous_page_path }}" data-hover="이전">

@@ -123,7 +123,7 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         {% endif %} {% endfor %}
       </ul>
       <!-- Python -->
-      <!-- Infra -->
+      <!-- Infra start-->
       <span class="nav__sub-title">Infra</span>
       <ul class="nav_ul">
         {% for category in site.categories %} {% if category[0] ==
@@ -158,7 +158,15 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         {% endif %} {% endfor %}
       </ul>
 
-      <!-- Infra -->
+      <!-- Infra end-->
+      <!-- liquid start-->
+      {% for category in site.categories %} {% if category[0] == "liquid" %}
+      <a href="/study/categories/liquid" class=""
+        ><span class="nav__sub-title">liquid ({{category[1].size}})</span></a
+      >
+      {% endif %} {% endfor %}
+      <!-- liquid end-->
+
       <span class="nav__sub-title">Native App</span>
       <ul>
         {% for category in site.categories %} {% if category[0] == "Android" %}

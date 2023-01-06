@@ -858,7 +858,8 @@ textarea:-ms-input-placeholder {
 }
 
 .index-page {
-  margin: auto;
+  /* margin: auto; */
+  margin : 0 auto;
   padding: 120px 20px 0;
 }
 
