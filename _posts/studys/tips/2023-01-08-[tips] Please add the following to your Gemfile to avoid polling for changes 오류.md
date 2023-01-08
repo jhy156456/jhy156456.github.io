@@ -27,7 +27,7 @@ Please add the following to your Gemfile to avoid polling for changes:
  ```
  위 에러 발생
 
- ## 해결
+ ## 해결 
 ```ruby
 gem install webrick
 jekyll build
