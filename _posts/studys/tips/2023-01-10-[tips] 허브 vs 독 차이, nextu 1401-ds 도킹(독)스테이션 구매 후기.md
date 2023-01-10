@@ -1,7 +1,8 @@
 ---
 layout: blog
 study: true
-background: blue
+background-image: ../../../assets/images/study/tips/ScreenShot 2023-01-10 10.36.36.png
+background: transparent
 category: study
 categories: tips
 title: "[tips] 허브 vs 독 차이, nextu 1401-ds 도킹(독)스테이션 구매 후기"
