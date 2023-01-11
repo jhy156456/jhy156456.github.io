@@ -42,7 +42,7 @@ CONCAT('<a href="', 'https://www.google.com', '">', platform, '</a>')
 
 ### 새로 추가한 컬럼을 COLUMNS에 추가한 화면
 ![](../../../assets/images/study/web/superset/ScreenShot 2023-01-11 3.47.34.png)
-
+위 화면의 hello컬럼을 보면 하이퍼링크가 생긴것을 확인할 수 있다.
 
 
 
