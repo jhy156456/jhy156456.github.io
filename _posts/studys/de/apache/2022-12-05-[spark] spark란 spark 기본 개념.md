@@ -1,7 +1,6 @@
 ---
 layout: blog
 study: true
-background-image: http://ot1cc1u9t.bkt.clouddn.com/17-8-1/24280498.jpg
 background: yellow
 category: study
 categories: data-engineer/apache
