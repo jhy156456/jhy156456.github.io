@@ -38,7 +38,7 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
       >
       {% endif %} {% endfor %}
       <!-- <li> -->
-        <!-- Project -->
+      <!-- Project -->
       {% for category in site.categories %} {% if category[0] == "project" %}
       <a href="/categories/project" class=""
         ><span class="nav__sub-title">Project ({{category[1].size}})</span></a
@@ -78,7 +78,8 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         {% endif %} {% endfor %}
       </ul>
       <ul class="nav_ul">
-        {% for category in site.categories %} {% if category[0] == "web/superset" %}
+        {% for category in site.categories %} {% if category[0] ==
+        "web/superset" %}
         <li>
           <a href="/study/categories/web/superset" class=""
             >superset ({{category[1].size}})</a
@@ -87,6 +88,7 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         {% endif %} {% endfor %}
       </ul>
       <!-- WEB end-->
+      <!-- DataBase start -->
       <span class="nav__sub-title">DataBase</span>
       <ul class="nav_ul">
         {% for category in site.categories %} {% if category[0] ==
@@ -98,32 +100,35 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         </li>
         {% endif %} {% endfor %}
       </ul>
-      <!-- DE -->
+      <!-- DataBase end -->
+      <!-- DE start-->
       <span class="nav__sub-title">Data-Engineer</span>
       <ul class="nav_ul">
-        {% for category in site.categories %} {% if category[0] == "data-engineer/apache" %}
+        {% for category in site.categories %} {% if category[0] ==
+        "data-engineer/apache" %}
         <li>
           <a href="/study/categories/data-engineer/apache/" class=""
             >apache ({{category[1].size}})</a
           >
         </li>
-        {% endif %} {% endfor %} 
+        {% endif %} {% endfor %}
       </ul>
       <ul class="nav_ul">
-        {% for category in site.categories %} {% if category[0] == "data-engineer/spark" %}
+        {% for category in site.categories %} {% if category[0] ==
+        "data-engineer/spark" %}
         <li>
           <a href="/study/categories/data-engineer/spark/" class=""
             >spark ({{category[1].size}})</a
           >
         </li>
-        {% endif %} {% endfor %} 
+        {% endif %} {% endfor %}
       </ul>
-      <!-- DE -->
+      <!-- DE end-->
       <!-- <p style="color: red;">{{site.categories}}</p>
             {% for category in site.categories %}
                 <p style="color: red;">{{category[0]}}</p>
                 {% endfor %} -->
-      <!-- Python -->
+      <!-- Python start-->
       {% for category in site.categories %} {% if category[0] == "python" %}
       <a href="/study/categories/python" class=""
         ><span class="nav__sub-title">Python ({{category[1].size}})</span></a
@@ -140,7 +145,7 @@ assign categories_max = category[1].size %} {% endif %} {% endfor %}
         </li>
         {% endif %} {% endfor %}
       </ul>
-      <!-- Python -->
+      <!-- Python end-->
       <!-- Infra start-->
       <span class="nav__sub-title">Infra</span>
       <ul class="nav_ul">
