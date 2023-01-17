@@ -3,7 +3,7 @@ layout: blog
 study: true
 background: yellow
 category: study
-categories: data-engineer/apache
+categories: data-engineer/spark 
 title: "[spark] spark란? spark 기본 개념"
 date: 2022-12-14 14:25
 tags:
@@ -20,6 +20,7 @@ tags:
 - 범용적인 목적을 지닌 분산 클러스터 컴퓨팅 프레임워크
 - 내 결함성, 병렬처리를 언어 수준에서 처리가 가능
 - Java,Python, R 등 다양한 언어지원
+    - python은 pyspark 라이브러리를 통해 사용 가능
 - yarn(hadoop의 hdfs같은개념) 이라는 리소스 매니저가 리소스에대해 관리해줌
     - 리소스를 클러스터하면서 어떻게 애플리케이션을 실행할건지?관리
     - 어떻게 spark애플리케이션이 기동될건지 관리
