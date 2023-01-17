@@ -38,7 +38,7 @@ tags:
 ## 프로젝트 텅스텐
 
 ## 카탈리스트 옵티마이저
-![](../../../assets/images/study/de/spark/ScreenShot 2022-12-14 2.42.05.png)
+![](../../../assets/images/study/de/spark/ScreenShot 2022-12-14 2.42.05.png){: width="60%" height="60%"}
 - 카탈리스트가 쿼리를 읽어와서, 로지컬 플래닝을 짜준다.
 - 어떻게 조인하고, 어디서 읽어올지
 - 로지컬 플랜에서 메타데이터를 통해 계산하여 데이터 이동에 걸릴시간을 계산한다
