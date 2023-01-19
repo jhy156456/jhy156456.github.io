@@ -849,7 +849,8 @@ textarea:-ms-input-placeholder {
   -webkit-animation: fade-in 0.5s;
   animation: fade-in;
   animation-duration: 0.5s;
-  width: 65%;
+  /* width: 65%; */
+  max-width: 1300px;
 }
 
 .index-home-page {
@@ -886,7 +887,8 @@ textarea:-ms-input-placeholder {
   /* width: 33.3333%; */
   width: 25%;
   height: auto;
-  padding: 18px;
+  /* padding: 18px; */
+  padding: 0.5em;
   align-items: center;
 }
 
@@ -2113,11 +2115,14 @@ pre code::after {
     display: none;
   }
 }
-
-@media (max-width: 1500px) {
-  /* 추가 */
-  .main-content {
+/* 추가 */
+@media (max-width: 1280px) {
+  
+  /* .main-content {
     width: 80%;
+  } */
+  .post-list-item{
+    width: 33.3%;
   }
 }
 
@@ -2206,7 +2211,8 @@ pre code::after {
 
   .main-content {
     margin: 0 auto;
-    width: 60%;
+    /* width: 60%; */
+    /* padding: 4em 2em 8em; */
   }
 
   .footer-meta .meta-item {

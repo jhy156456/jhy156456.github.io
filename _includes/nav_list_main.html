@@ -1,7 +1,9 @@
 {% assign sum = site.categories | size %} {% assign categories_max = 0 %}
-{% for category in site.categories %}
+{% for
+category in site.categories %}
   {% if category[1].size > categories_max %}
-    {% assign categories_max = category[1].size %}
+    {%
+       assign categories_max = category[1].size %}
   {% endif %}
 {% endfor %}
 {% assign
@@ -14,7 +16,7 @@
         <span class="taxonomy__count">{{ posts_sum }}</span>
       </a>
     </li>
-    {% for i in (1..catego ies_max) reversed %}
+    {% for i in (1..categories_max) reversed %}
       {% for category in site.categories %}
         {% if category[1].size == i and category[0] != "study" %}
           <li>
@@ -94,7 +96,8 @@
       </ul>
       <ul class="nav_ul">
         {% for category in site.categories %}
-          {% if category[0] == "web/superset" %}
+          {% if category[0] == 
+ "web/superset" %}
             <li>
               <a href="/study/categories/web/superset" class="">superset ({{ category[1].size }})</a>
             </li>
@@ -106,7 +109,8 @@
       <span class="nav__sub-title">DataBase</span>
       <ul class="nav_ul">
         {% for category in site.categories %}
-          {% if category[0] == "db/postgresql" %}
+          {% if category[0] == 
+ "db/postgresql" %}
             <li>
               <a href="/study/categories/db/postgresql/" class="">postgresql ({{ category[1].size }})</a>
             </li>
@@ -118,7 +122,8 @@
       <span class="nav__sub-title">Data-Engineer</span>
       <ul class="nav_ul">
         {% for category in site.categories %}
-          {% if category[0] == "data-engineer/apache" %}
+          {% if category[0] == 
+ "data-engineer/apache" %}
             <li>
               <a href="/study/categories/data-engineer/apache/" class="">apache ({{ category[1].size }})</a>
             </li>
@@ -127,7 +132,8 @@
       </ul>
       <ul class="nav_ul">
         {% for category in site.categories %}
-          {% if category[0] == "data-engineer/spark" %}
+          {% if category[0] == 
+ "data-engineer/spark" %}
             <li>
               <a href="/study/categories/data-engineer/spark/" class="">spark ({{ category[1].size }})</a>
             </li>
@@ -162,7 +168,8 @@
       <span class="nav__sub-title">Infra</span>
       <ul class="nav_ul">
         {% for category in site.categories %}
-          {% if category[0] == "infra/kubernets" %}
+          {% if category[0] == 
+ "infra/kubernets" %}
             <li>
               <a href="/study/categories/infra/kubernets" class="">kubernets ({{ category[1].size }})</a>
             </li>
@@ -172,7 +179,8 @@
 
       <ul class="nav_ul">
         {% for category in site.categories %}
-          {% if category[0] == "infra/docker" %}
+          {% if category[0] == 
+ "infra/docker" %}
             <li>
               <a href="/study/categories/infra/docker" class="">docker ({{ category[1].size }})</a>
             </li>
