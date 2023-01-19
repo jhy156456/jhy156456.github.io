@@ -1,17 +1,22 @@
 {% assign sum = site.categories | size %} {% assign categories_max = 0 %} {% for
 category in site.categories %} {% if category[1].size > categories_max %} {%
 assign categories_max = category[1].size %} {% endif %} {% endfor %}
+{% assign posts_sum = site.posts | size %}
+    
+
 <div class="nav_parent">
   <ul class="taxonomy__index">
+  
     <li>
       <a href="/study">
-        <strong>전체</strong> <span class="taxonomy__count">{{ sum }}</span>
+        <strong>전체</strong>
+        <span class="taxonomy__count">{{ posts_sum }}</span>
       </a>
     </li>
     {% for i in (1..categories_max) reversed %} {% for category in
-    site.categories %} {% if category[1].size == i %}
+    site.categories %} {% if category[1].size == i  and category[0] != "study"%}
     <li>
-      <!-- 공부 -->
+      <!-- record -->
       <!-- | slugify 추가하면 slash가 dash로 변한다 -->
       <a href="/study/categories/{{ category[0]}}">
         <strong>{{ category[0] }}</strong>
