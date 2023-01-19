@@ -1,6 +1,6 @@
 <footer class="footer bg-white">
-    {% assign sum = site.posts | size %}
-    
+  {% assign sum = site.posts | size %}
+
   <div class="footer-social">
     <div class="footer-container clearfix">
       <div class="social-list">
@@ -9,34 +9,26 @@
           target="blank"
           href="https://github.com/jhy156456"
           title="github"
-          data-hover="GitHub"
-          >GitHub</a
-        >
+          data-hover="GitHub">GitHub</a>
         <a
           class="social tistory"
           target="blank"
           href="http://jhy156456.tistory.com"
           title="tistory"
-          data-hover="Tistory"
-          >Tistory</a
-        >
+          data-hover="Tistory">Tistory</a>
         <a
           class="social linkedin"
           target="blank"
           href="https://www.linkedin.com/in/hayden-j-6b2660252/"
           title="linkedin"
-          data-hover="LinkedIn"
-          >LinkedIn</a
-        >
+          data-hover="LinkedIn">LinkedIn</a>
         <a
           class="social rss"
           target="blank"
           href="mailto:jcypher1024@outlook.com"
           title="E-mail"
-          data-hover="E-mail"
-          >E-mail</a
-        >
-        
+          data-hover="E-mail">E-mail</a>
+
       </div>
     </div>
   </div>
@@ -49,8 +41,7 @@
               src="{{ site.url }}/style/images/logo-jhy156456.png"
               title="jhy156456_blog"
               data-hover="jhy156456_blog"
-              alt="jhy156456_blog"
-            />
+              alt="jhy156456_blog" />
           </a>
           <div class="info-text">
             <p>
@@ -59,13 +50,9 @@
                 href="http://www.liberxue.com/2017/08/03/Jekyllthemes.html"
                 title="访问 Jekyll liberxue主题"
                 data-hover="Jekyll liberxue"
-                target="_blank"
-                >Jekyll liberxue</a
-              >
+                target="_blank">Jekyll liberxue</a>
               by
-              <a href="http://www.liberxue.com/about" target="_blank"
-                >liberxue</a
-              >
+              <a href="http://www.liberxue.com/about" target="_blank">liberxue</a>
             </p>
             <p>
               Powered by
@@ -74,47 +61,45 @@
                 title="Jekyll"
                 data-hover="Jekyll"
                 target="_blank"
-                rel="nofollow"
-                >Jekyll</a
-              >
+                rel="nofollow">Jekyll</a>
             </p>
             <!-- <p>&copy; 2017 <a href="/feed.xml" title="访问 liberxue blog RSS" -->
             <!-- data-hover="liberxue blog RSS">liberxue blog RSS</a></p> -->
-            <!-- <p>게시글：{{paginator.total_posts}}개</p> -->
-            <p>총 게시글：{{sum}}개</p>
+            <!-- <p>게시글：{{paginator.total_posts}}개</p> --><p>총 게시글：{{ sum }}개
+          </p>
             <!-- <p>이blog는 Fork되었습니다.</p><iframe
-                            src="http://ghbtns.com/github-btn.html?user=liberxue&repo=liberxue.github.io&type=fork&count=true"
-                            allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe> -->
+            src="http://ghbtns.com/github-btn.html?user=liberxue&repo=liberxue.github.io&type=fork&count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe> -->
           </div>
         </div>
       </div>
       <div class="meta-item meta-posts">
         <h3 class="meta-title" style="-webkit-margin-after: 0">다른기사</h3>
-        {% for post in site.posts limit:15 %} {% if post.istop %}
-        <li>
-          <a
-            href="{{ post.url }}"
-            title="访问 {{ post.title }}"
-            data-hover="{{ post.title }}"
-            >{{ post.title }}</a
-          >
-        </li>
-        {% endif %} {% endfor %}
+        {% for post in site.posts limit: 15 %}
+          {% if post.istop %}
+            <li>
+              <a
+                href="{{ post.url }}"
+                title="访问 {{ post.title }}"
+                data-hover="{{ post.title }}">{{ post.title }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
       </div>
       <div class="meta-item meta-comments">
         <h3 class="meta-title" style="-webkit-margin-after: 0">최신글</h3>
 
-        {% for post in site.posts limit:5 %} {% if post %}
-        <li>
-          <a
-            href="{{ post.url }}"
-            title="{{ post.title }}"
-            data-hover="{{ post.title }}"
-          >
-            {{ post.title}}</a
-          >
-        </li>
-        {% endif %} {% endfor %}
+        {% for post in site.posts limit: 5 %}
+          {% if post %}
+            <li>
+              <a
+                href="{{ post.url }}"
+                title="{{ post.title }}"
+                data-hover="{{ post.title }}">
+                {{ post.title }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
       </div>
     </div>
   </div>
@@ -123,13 +108,13 @@
 <script src="//cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.js"></script>
 <script src="/search/js/cb-search.js"></script>
 <script>
-  $(function () {
-    setTimeout(function () {
+  $(function() {
+    setTimeout(function() {
       $("code").removeClass("hljs");
       $("code").removeClass("language");
     }, 90);
   });
-  (function () {
+  (function() {
     var bp = document.createElement("script");
     var curProtocol = window.location.protocol.split(":")[0];
     if (curProtocol === "https") {

@@ -11,18 +11,15 @@
   <body class="" gtools_scp_screen_capture_injected="true">
     <header id="header" class="header bg-white">
       <div class="navbar-container">
-        <a href="/" title="{{site.title }}" class="navbar-logo">
-          <img
-            src="{{ site.url }}/style/images/logo-jhy156456.png"
-            alt="{{ site.title }}"
-          />
+        <a
+          href="/"
+          title="{{site.title }}"
+          class="navbar-logo">
+          <img src="{{ site.url }}/style/images/logo-jhy156456.png" alt="{{ site.title }}" />
         </a>
         <div class="navbar-menu">
           {% for link in site.links %}
-          <a
-            href="{% unless link.external %}{{ site.url }}{% endunless %}{{ link.url }}"
-            >{{ link.name }}</a
-          >
+            <a href="{% unless link.external %}{{ site.url }}{% endunless %}{{ link.url }}">{{ link.name }}</a>
           {% endfor %}
         </div>
         <div class="navbar-search" onclick="">
@@ -36,21 +33,19 @@
                 required="true"
                 placeholder="검색..."
                 maxlength="30"
-                autocomplete="off"
-              />
+                autocomplete="off" />
             </span>
           </form>
         </div>
         <div class="navbar-mobile-menu" onclick="">
-          <span class="icon-menu cross"><span class="middle"></span></span>
+          <span class="icon-menu cross">
+            <span class="middle"></span>
+          </span>
           <ul>
             {% for link in site.links %}
-            <li>
-              <a
-                href="{% unless link.external %}{{ site.url }}{% endunless %}{{ link.url }}"
-                >{{ link.name }}</a
-              >
-            </li>
+              <li>
+                <a href="{% unless link.external %}{{ site.url }}{% endunless %}{{ link.url }}">{{ link.name }}</a>
+              </li>
             {% endfor %}
           </ul>
         </div>
@@ -62,38 +57,43 @@
         <div class="post-header-thumb-container">
           <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
           <div class="post-data">
-            <time
-              datetime="{{ page.date | date: '%F %H:%M:%S'}}"
-              itemprop="datePublished"
-              >작성일자：{{ page.date | date: "%F %H:%M:%S"}}</time
-            >
+            <time datetime="{{ page.date | date: '%F %H:%M:%S'}}" itemprop="datePublished">작성일자：{{ page.date | date: "%F %H:%M:%S" }}</time>
             <a
               href="/tags#{{ page.category }}"
               title="{{ page.category }}"
-              data-hover="博客分类: {{ page.category }}"
-            >
-              분류: {{ page.category }}</a
-            >
-            <a href="#read"> 댓글: comments</a>
+              data-hover="博客分类: {{ page.category }}">
+              분류: {{ page.category }}</a>
+            <a href="#read">
+              댓글: comments</a>
           </div>
           <div class="post-tags">
-            {% unless page.tags == empty %} {% assign tags_list = page.tags %}
-            {% if tags_list.first[0] == null %} {% for tag in tags_list %}
-            <a href="/tags#{{ tag }}" title="{{ tag }}" data-hover="{{ tag }}">
-              {{ tag }} <span>({{ site.tags[tag].size }})</span>
-              {% unless forloop.last %}{% endunless %}
-            </a>
-            {% endfor %} {% else %} {% for tag in tags_list %}
-            <a
-              href="/tags#{{ tag[0] }}"
-              title="{{ tag[0] }}"
-              data-hover="{{tag[0]}}"
-            >
-              {{ tag[0] }} <span>({{ tag[1].size }})</span>
-              {% unless forloop.last %}{% endunless %}
-            </a>
-            {% endfor %} {% endif %} {% assign tags_list = nil %} {% endunless
-            %}
+            {% unless page.tags == empty %}
+              {% assign tags_list = page.tags %}
+              {% if tags_list.first[0] == null %}
+                {% for tag in tags_list %}
+                  <a
+                    href="/tags#{{ tag }}"
+                    title="{{ tag }}"
+                    data-hover="{{ tag }}">
+                    {{ tag }}
+                    <span>({{ site.tags[tag].size }})</span>
+                    {% unless forloop.last %}{% endunless %}
+                  </a>
+                {% endfor %}
+              {% else %}
+                {% for tag in tags_list %}
+                  <a
+                    href="/tags#{{ tag[0] }}"
+                    title="{{ tag[0] }}"
+                    data-hover="{{tag[0]}}">
+                    {{ tag[0] }}
+                    <span>({{ tag[1].size }})</span>
+                    {% unless forloop.last %}{% endunless %}
+                  </a>
+                {% endfor %}
+              {% endif %}
+              {% assign tags_list = nil %}
+            {% endunless %}
           </div>
         </div>
       </div>
@@ -101,69 +101,78 @@
     <article
       class="main-post post-page"
       itemscope
-      itemtype="http://schema.org/Article"
-    >
+      itemtype="http://schema.org/Article">
       <div class="post-header">
         <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
         <div class="post-data">
-          <time
-            datetime="{{ page.date | date: '%F %H:%M:%S'}}"
-            itemprop="datePublished"
-            >{{ page.date | date: "%F %H:%M:%S"}}</time
-          >
+          <time datetime="{{ page.date | date: '%F %H:%M:%S'}}" itemprop="datePublished">{{ page.date | date: "%F %H:%M:%S" }}</time>
         </div>
       </div>
-      <div id="post-content" class="post-content" itemprop="articleBody">
+      <div
+        id="post-content"
+        class="post-content"
+        itemprop="articleBody">
         <p class="post-tags">
-          {% unless page.tags == empty %} {% assign tags_list = page.tags %} {%
-          if tags_list.first[0] == null %} {% for tag in tags_list %}
-          <a href="/tags#{{ tag }}" title="{{ tag }}" data-hover="{{ tag }}">
-            {{ tag }} <span>({{ site.tags[tag].size }})</span> {% unless
-            forloop.last %}{% endunless %}</a
-          >
-          {% endfor %} {% else %} {% for tag in tags_list %}
-          <a
-            href="/tags#{{ tag[0] }}"
-            title="{{ tag[0] }}"
-            data-hover="{{ tag[0] }}"
-          >
-            {{ tag[0] }} <span>({{ tag[1].size }})</span>
-            {% unless forloop.last %}{% endunless %}
-          </a>
-          {% endfor %} {% endif %} {% assign tags_list = nil %} {% endunless %}
+          {% unless page.tags == empty %}
+            {% assign tags_list = page.tags %}
+            {% if tags_list.first[0] == null %}
+              {% for tag in tags_list %}
+                <a
+                  href="/tags#{{ tag }}"
+                  title="{{ tag }}"
+                  data-hover="{{ tag }}">
+                  {{ tag }}
+                  <span>({{ site.tags[tag].size }})</span>
+                  {% unless forloop.last %}{% endunless %}
+                </a>
+              {% endfor %}
+            {% else %}
+              {% for tag in tags_list %}
+                <a
+                  href="/tags#{{ tag[0] }}"
+                  title="{{ tag[0] }}"
+                  data-hover="{{ tag[0] }}">
+                  {{ tag[0] }}
+                  <span>({{ tag[1].size }})</span>
+                  {% unless forloop.last %}{% endunless %}
+                </a>
+              {% endfor %}
+            {% endif %}
+            {% assign tags_list = nil %}
+          {% endunless %}
         </p>
         {{ content }}
         <p class="post-info">
-          本文由 <a href="/">liberxue</a> 创作，采用
+          本文由
+          <a href="/">liberxue</a>
+          创作，采用
           <a
             href="https://creativecommons.org/licenses/by/4.0/"
             target="_blank"
-            rel="external nofollow"
-            >知识共享署名4.0</a
-          >
-          国际许可协议进行许可<br />本站文章除注明转载/出处外，均为本站原创或翻译，转载前请务必署名<br />最后编辑时间为:{{
-          page.date | date: "%F %H:%M:%S"}}
+            rel="external nofollow">知识共享署名4.0</a>
+          国际许可协议进行许可<br/>本站文章除注明转载/出处外，均为本站原创或翻译，转载前请务必署名<br/>最后编辑时间为:{{
+   page.date | date: "%F %H:%M:%S" }}
         </p>
       </div>
     </article>
 
     <!-- <div class="related-post-lists">
-	<div class="post-lists">
-		<div class="post-lists-body">
-					<div class="post-list-item">
-				<div class="post-list-item-container">
-					<div class="item-label">
-						<div class="item-title"><a href="induction.html">归纳的随想</a></div>
-						<div class="item-meta clearfix">
-														<div class="item-meta-ico bg-ico-image" style="background: url('../usr/themes/pinghsu/images/bg-ico.png') no-repeat;background-size: 40px auto;"></div>
-	                        							<div class="item-meta-cat"><a href="../category/thoughts/index.html">Thoughts</a></div>
-						</div>
-					</div>
-				</div>
-			</div>
-				</div>
-	</div>
-</div> -->
+    <div class="post-lists">
+    <div class="post-lists-body">
+    <div class="post-list-item">
+    <div class="post-list-item-container">
+    <div class="item-label">
+    <div class="item-title"><a href="induction.html">归纳的随想</a></div>
+    <div class="item-meta clearfix">
+    <div class="item-meta-ico bg-ico-image" style="background: url('../usr/themes/pinghsu/images/bg-ico.png') no-repeat;background-size: 40px auto;"></div>
+    <div class="item-meta-cat"><a href="../category/thoughts/index.html">Thoughts</a></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div> -->
     {% include foot.html %}
     <!--liberxueconnnet-menu-->
     <div id="directory-content" class="directory-content">
@@ -171,7 +180,7 @@
     </div>
     <!--liberxueconnnet-menu-->
     <script>
-      var postDirectoryBuild = function () {
+      var postDirectoryBuild = function() {
         var postChildren = function children(childNodes, reg) {
             var result = [],
               isReg = typeof reg === "object",
@@ -181,18 +190,13 @@
               len;
             for (i = 0, len = childNodes.length; i < len; i++) {
               node = childNodes[i];
-              if (
-                (node.nodeType === 1 || node.nodeType === 9) &&
-                (!reg ||
-                  (isReg && reg.test(node.tagName.toLowerCase())) ||
-                  (isStr && node.tagName.toLowerCase() === reg))
-              ) {
+              if ((node.nodeType === 1 || node.nodeType === 9) && (! reg || (isReg && reg.test(node.tagName.toLowerCase())) || (isStr && node.tagName.toLowerCase() === reg))) {
                 result.push(node);
               }
             }
             return result;
           },
-          createPostDirectory = function (article, directory, isDirNum) {
+          createPostDirectory = function(article, directory, isDirNum) {
             var contentArr = [],
               titleId = [],
               levelArr,
@@ -204,28 +208,27 @@
               link,
               i,
               len;
-            levelArr = (function (article, contentArr, titleId) {
+            levelArr = (function(article, contentArr, titleId) {
               var titleElem = postChildren(article.childNodes, /^h\d$/),
                 levelArr = [],
                 lastNum = 1,
                 lastRevNum = 1,
                 count = 0,
                 guid = 1,
-                id = "directory" + (Math.random() + "").replace(/\D/, ""),
+                id = "directory" + (
+                  Math.random() + ""
+                ).replace(/\D/, ""),
                 lastRevNum,
                 num,
                 elem;
               while (titleElem.length) {
                 elem = titleElem.shift();
                 contentArr.push(elem.innerHTML);
-                num = +elem.tagName.match(/\d/)[0];
+                num = + elem.tagName.match(/\d/)[0];
                 if (num > lastNum) {
                   levelArr.push(1);
                   lastRevNum += 1;
-                } else if (
-                  num === lastRevNum ||
-                  (num > lastRevNum && num <= lastNum)
-                ) {
+                } else if (num === lastRevNum || (num > lastRevNum && num <= lastNum)) {
                   levelArr.push(0);
                   lastRevNum = lastRevNum;
                 } else if (num < lastRevNum) {
@@ -237,7 +240,9 @@
                 elem.id = elem.id || id + guid++;
                 titleId.push(elem.id);
               }
-              if (count !== 0 && levelArr[0] === 1) levelArr[0] = 0;
+              if (count !== 0 && levelArr[0] === 1) 
+                levelArr[0] = 0;
+              
 
               return levelArr;
             })(article, contentArr, titleId);
@@ -247,7 +252,7 @@
               level = levelArr[i];
               if (level === 1) {
                 list = document.createElement("ul");
-                if (!currentList.lastElementChild) {
+                if (! currentList.lastElementChild) {
                   currentList.appendChild(document.createElement("li"));
                 }
                 currentList.lastElementChild.appendChild(list);
@@ -256,7 +261,9 @@
               } else if (level < 0) {
                 level *= 2;
                 while (level++) {
-                  if (level % 2) dirNum.pop();
+                  if (level % 2) 
+                    dirNum.pop();
+                  
                   currentList = currentList.parentNode;
                 }
               }
@@ -266,7 +273,7 @@
               link.href = "#" + titleId[i];
               link.title = titleId[i];
               link.title = titleId[i];
-              link.innerHTML = !isDirNum
+              link.innerHTML = ! isDirNum
                 ? contentArr[i]
                 : dirNum.join(".") + " " + contentArr[i];
               li.appendChild(link);
@@ -274,11 +281,7 @@
             }
             directory.appendChild(root);
           };
-        createPostDirectory(
-          document.getElementById("post-content"),
-          document.getElementById("directory"),
-          true
-        );
+        createPostDirectory(document.getElementById("post-content"), document.getElementById("directory"), true);
       };
       postDirectoryBuild();
     </script>
