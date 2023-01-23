@@ -888,7 +888,7 @@ textarea:-ms-input-placeholder {
   width: 25%;
   height: auto;
   /* padding: 18px; */
-  padding: 0.5em;
+  padding: 0.5em; 
   align-items: center;
 }
 
