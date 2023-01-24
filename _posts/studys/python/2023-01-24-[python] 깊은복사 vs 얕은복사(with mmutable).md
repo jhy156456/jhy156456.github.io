@@ -5,7 +5,7 @@ background: purple
 category: study
 categories: python
 title: "[python] 깊은복사 vs 얕은복사(with mmutable)"
-date: 2023-01-05 13:00:00
+date: 2023-01-24 23:00:00
 tags:
 - python
 - copy
