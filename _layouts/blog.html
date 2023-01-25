@@ -58,13 +58,14 @@
           <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
           <div class="post-data">
             <time datetime="{{ page.date | date: '%F %H:%M:%S'}}" itemprop="datePublished">작성일자：{{ page.date | date: "%F %H:%M:%S" }}</time>
+            <br/>
             <a
               href="/tags#{{ page.category }}"
               title="{{ page.category }}"
-              data-hover="博客分类: {{ page.category }}">
+              data-hover="분류: {{ page.category }}">
               분류: {{ page.category }}</a>
-            <a href="#read">
-              댓글: comments</a>
+            <!-- <a href="#read">
+            댓글: comments</a> -->
           </div>
           <div class="post-tags">
             {% unless page.tags == empty %}
@@ -160,11 +161,11 @@
         <p class="post-info">
           이 문서는<a href="/">
             jhy156456</a>에 의해 작성되었습니다.<br/>
-          <a
+          <!-- <a
             href="https://creativecommons.org/licenses/by/4.0/"
             target="_blank"
-            rel="external nofollow">createive commons 4.0</a>
-          라이센스에 대한 국제 라이센스 계약<br/>
+            rel="external nofollow">creative commons 4.0</a>
+          라이센스에 대한 국제 라이센스 계약<br/> -->
           마지막 수정 날짜:{{ page.date | date: "%F %H:%M:%S" }}
         </p>
       </div>
@@ -277,6 +278,7 @@
                   if (level % 2) 
                     dirNum.pop();
                   
+
                   currentList = currentList.parentNode;
                 }
               }

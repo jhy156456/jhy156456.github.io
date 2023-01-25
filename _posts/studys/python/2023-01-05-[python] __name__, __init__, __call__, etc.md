@@ -4,13 +4,13 @@ study: true
 background: purple
 category: study
 categories: python
-title: "[python] __name__, __init__, __self__, etc"
+title: "[python] __name__, __init__, __call__, etc"
 date: 2023-01-05 08:37:00
 tags:
 - phyton
 - os
 ---
-# [python] __name__, __init__, __self__, etc
+# [python] __name__, __init__, __call__, etc
  
  ## __name__
 

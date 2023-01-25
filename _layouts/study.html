@@ -58,10 +58,11 @@
           <h1 class="post-title" itemprop="name headline">{{ page.title }}</h1>
           <div class="post-data">
             <time datetime="{{ page.date | date: '%F %H:%M:%S'}}" itemprop="datePublished">작성일자：{{ page.date | date: "%F %H:%M:%S" }}</time>
+            <br/>
             <a
               href="/tags#{{ page.category }}"
               title="{{ page.category }}"
-              data-hover="博客分类: {{ page.category }}">
+              data-hover="분류: {{ page.category }}">
               분류: {{ page.category }}</a>
             <a href="#read">
               댓글: comments</a>
@@ -244,6 +245,7 @@
                 levelArr[0] = 0;
               
 
+
               return levelArr;
             })(article, contentArr, titleId);
             currentList = root = document.createElement("ul");
@@ -264,6 +266,7 @@
                   if (level % 2) 
                     dirNum.pop();
                   
+
                   currentList = currentList.parentNode;
                 }
               }
