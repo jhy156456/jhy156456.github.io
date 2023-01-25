@@ -32,6 +32,7 @@ if __name__ == "__main__":
 
 ## __call__
 - 인스턴스가 호출됐을 때 실행
+
 ```python
 class A:
     def __init__(self):

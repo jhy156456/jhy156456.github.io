@@ -864,6 +864,7 @@ textarea:-ms-input-placeholder {
 
 .index-page {
   /* margin: auto; */
+  width: 100%;
   margin : 0 auto;
   padding: 120px 20px 0;
 }
@@ -900,7 +901,8 @@ textarea:-ms-input-placeholder {
   border-radius: 0.6px;
   background-color: #fff;
   box-shadow: 2px 2px 10px rgba(159, 202, 255, 0.5);
-  border-radius: 0.6rem;
+  /* border-radius: 0.6rem; */
+  border-radius: 1.25rem;
 }
 
 .post-list-item-container:hover {

@@ -1,13 +1,12 @@
 ---
 pagination:
   enabled: true
-  category: study
+  category: review
   sort_field: "date"
   sort_reverse: true
 ---
 
 <div class="nav_main_parent">
-  {% include nav_list_main.html %}
     <div class="main-content index-page clearfix">
     <!-- <p style="color: red;">{{paginator.total_pages}}</p>
     {% for posts in paginator.posts %}
@@ -17,7 +16,7 @@ pagination:
     <div class="post-lists">
       <div class="post-lists-body">
         {% for posts in paginator.posts %}
-          {% if posts.study %}
+          {% if posts.review %}
             <div class="post-list-item">
               <div class="post-list-item-container">
                 <div class="item-thumb  bg-{{posts.background }}" style="background-image:url('{{posts.background-image }}');"></div>
