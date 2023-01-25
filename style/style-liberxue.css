@@ -865,7 +865,7 @@ textarea:-ms-input-placeholder {
 .index-page {
   /* margin: auto; */
   width: 100%;
-  margin : 0 auto;
+  margin: 0 auto;
   padding: 120px 20px 0;
 }
 
@@ -889,7 +889,7 @@ textarea:-ms-input-placeholder {
   width: 25%;
   height: auto;
   /* padding: 18px; */
-  padding: 0.5em; 
+  padding: 0.5em;
   align-items: center;
 }
 
@@ -2119,11 +2119,10 @@ pre code::after {
 }
 /* 추가 */
 @media (max-width: 1280px) {
-  
   /* .main-content {
     width: 80%;
   } */
-  .post-list-item{
+  .post-list-item {
     width: 33.3%;
   }
 }
