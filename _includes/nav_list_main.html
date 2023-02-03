@@ -45,6 +45,7 @@ category in site.categories %}
         <span>개</span>
       </a>
 
+      <!-- tips start -->
       {% for category in site.categories %}
         {% if category[0] == "tips" %}
           <a href="/study/categories/tips" class="">
@@ -52,6 +53,7 @@ category in site.categories %}
           </a>
         {% endif %}
       {% endfor %}
+      <!-- tips end -->
       <!-- <li> -->
       <!-- Project -->
       {% for category in site.categories %}
@@ -105,19 +107,27 @@ category in site.categories %}
         {% endfor %}
       </ul>
       <!-- WEB end-->
-      <!-- DataBase start -->
+      <!-- db start -->
       <span class="nav__sub-title">DataBase</span>
       <ul class="nav_ul">
         {% for category in site.categories %}
-          {% if category[0] == 
- "db/postgresql" %}
+          {% if category[0] == "db/postgresql" %}
             <li>
               <a href="/study/categories/db/postgresql/" class="">postgresql ({{ category[1].size }})</a>
             </li>
           {% endif %}
         {% endfor %}
       </ul>
-      <!-- DataBase end -->
+      <ul class="nav_ul">
+        {% for category in site.categories %}
+          {% if category[0] == "db/etc" %}
+            <li>
+              <a href="/study/categories/db/etc/" class="">etc ({{ category[1].size }})</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <!-- db end -->
       <!-- DE start-->
       <span class="nav__sub-title">Data-Engineer</span>
       <ul class="nav_ul">
@@ -155,8 +165,7 @@ category in site.categories %}
       <!-- <span class="nav__sub-title">Python</span> -->
       <ul class="nav_ul">
         {% for category in site.categories %}
-          {% if category[0] == 
- "python/dataframe" %}
+          {% if category[0] == "python/dataframe" %}
             <li>
               <a href="/study/categories/python/dataframe" class="">dataframe ({{ category[1].size }})</a>
             </li>
@@ -168,8 +177,7 @@ category in site.categories %}
       <span class="nav__sub-title">Infra</span>
       <ul class="nav_ul">
         {% for category in site.categories %}
-          {% if category[0] == 
- "infra/kubernets" %}
+          {% if category[0] == "infra/kubernets" %}
             <li>
               <a href="/study/categories/infra/kubernets" class="">kubernets ({{ category[1].size }})</a>
             </li>
@@ -179,8 +187,7 @@ category in site.categories %}
 
       <ul class="nav_ul">
         {% for category in site.categories %}
-          {% if category[0] == 
- "infra/docker" %}
+          {% if category[0] == "infra/docker" %}
             <li>
               <a href="/study/categories/infra/docker" class="">docker ({{ category[1].size }})</a>
             </li>
@@ -209,7 +216,24 @@ category in site.categories %}
         {% endif %}
       {% endfor %}
       <!-- liquid end-->
-
+      <!-- statistics start-->
+      {% for category in site.categories %}
+        {% if category[0] == "liquid" %}
+          <a href="/study/categories/statistics" class="">
+            <span class="nav__sub-title">statistics ({{ category[1].size }})</span>
+          </a>
+        {% endif %}
+      {% endfor %}
+      <!-- statistics end-->
+      <!-- aws start -->
+      {% for category in site.categories %}
+        {% if category[0] == "aws" %}
+          <a href="/study/categories/aws" class="">
+            <span class="nav__sub-title">aws ({{ category[1].size }})</span>
+          </a>
+        {% endif %}
+      {% endfor %}
+      <!-- aws end -->
       <span class="nav__sub-title">Native App</span>
       <ul>
         {% for category in site.categories %}

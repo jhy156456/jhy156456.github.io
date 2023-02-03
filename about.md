@@ -22,19 +22,34 @@ redirect_from:
   - /about/
 ---
 
-# 수행 프로젝트
+# 수행
 
 ## 자재 재고 예측 프로젝트 (2022.10~2023.01)
-### 기술스택
 - 예측을 위한 시계열 모델링 
 - SARIMA 모델 및 선형회귀
 - 데이터 시각화를 위한 Superset BI
 
+### 기술스택
+- Fast API
+- Vue.js
+- Postgres
+- SARIMA 모델
+- 선형회귀
+
+## 사내 MSA 교육 강의 (2022.07)
+- 클라우드 환경에서의 MSA를 적용한 애플리케이션 구축 및 개발 강의
+
+### 기술스택
+- Kafka, Kubernetes, Docker, AWS 
+
 ## 태양광 발전량 예측 프로젝트 (2022.04~2022.10)
-- 모델 예측을 위한 딥러닝 및 머신러닝
+- 태양광 발전량 데이터를 이용한 익일의 발전량 예측
+
+### 기술스택
 - LSTM, LGBM, XGBoost, GradientBoost
 
 ## 데이팅 모바일 앱 (2021.01 ~ 2021.12)
+
 ### 기술스택
 - React Native
   - Redux
@@ -42,6 +57,7 @@ redirect_from:
 - MySQL
 
 ## 관리자 페이지 개발 (2020.01 ~ 2020.12)
+
 ### 기술스택
 - React
   - Redux

@@ -6,6 +6,9 @@
     <meta content="{{ page.title }} - {{ site.title }}" name="og:title" />
     <title>{{ page.title }} - {{ site.title }}</title>
     {% include head.html %}
+    {% if page.use_math %}
+      {% include mathjax_support.html %}
+    {% endif %}
   </head>
 
   <body class="" gtools_scp_screen_capture_injected="true">
@@ -162,9 +165,9 @@
           이 문서는<a href="/">
             jhy156456</a>에 의해 작성되었습니다.<br/>
           <!-- <a
-            href="https://creativecommons.org/licenses/by/4.0/"
-            target="_blank"
-            rel="external nofollow">creative commons 4.0</a>
+          href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank"
+          rel="external nofollow">creative commons 4.0</a>
           라이센스에 대한 국제 라이센스 계약<br/> -->
           마지막 수정 날짜:{{ page.date | date: "%F %H:%M:%S" }}
         </p>
@@ -258,6 +261,7 @@
                 levelArr[0] = 0;
               
 
+
               return levelArr;
             })(article, contentArr, titleId);
             currentList = root = document.createElement("ul");
@@ -278,6 +282,7 @@
                   if (level % 2) 
                     dirNum.pop();
                   
+
 
                   currentList = currentList.parentNode;
                 }
@@ -319,39 +324,39 @@
   });
   });
   </script> --><!-- <script>
-  $(function () {
-  var $win = $(window);
-  var top = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환
+    $(function () {
+    var $win = $(window);
+    var top = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환
 
-  /*사용자 설정 값 시작*/
-  var speed = 500; // 따라다닐 속도 : "slow", "normal", or "fast" or        numeric(단위:msec)
-  var easing = "linear"; // 따라다니는 방법 기본 두가지 linear, swing
-  var $layer = $("#directory"); // 레이어 셀렉팅
-  // var layerTopOffset = 650; // 레이어 높이 상한선, 단위:px
-  var layerTopOffset = 0; // 레이어 높이 상한선, 단위:px
-  // $layer.css("position", "absolute");
-  $layer.css("top", "0px"); //첫 시작 위치
-  /*사용자 설정 값 끝*/
+    /*사용자 설정 값 시작*/
+    var speed = 500; // 따라다닐 속도 : "slow", "normal", or "fast" or        numeric(단위:msec)
+    var easing = "linear"; // 따라다니는 방법 기본 두가지 linear, swing
+    var $layer = $("#directory"); // 레이어 셀렉팅
+    // var layerTopOffset = 650; // 레이어 높이 상한선, 단위:px
+    var layerTopOffset = 0; // 레이어 높이 상한선, 단위:px
+    // $layer.css("position", "absolute");
+    $layer.css("top", "0px"); //첫 시작 위치
+    /*사용자 설정 값 끝*/
 
-  // 스크롤 바를 내린 상태에서 리프레시 했을 경우를 위해
-  if (top > 0) $win.scrollTop(layerTopOffset + top);
-  else $win.scrollTop(0);
+    // 스크롤 바를 내린 상태에서 리프레시 했을 경우를 위해
+    if (top > 0) $win.scrollTop(layerTopOffset + top);
+    else $win.scrollTop(0);
 
-  //스크롤이벤트가 발생하면
-  $(window).scroll(function () {
-  yPosition = $win.scrollTop() + layerTopOffset;
-  //   console.log($win.scrollTop())
-  console.log($layer.css("top"))
-  if (yPosition < 0) {
-  yPosition = 0;
-  }
-  $layer.animate(
-  { top: yPosition},
-  { duration: speed, easing: easing, queue: false }
-  );
-  });
-  });
-  </script> --><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+    //스크롤이벤트가 발생하면
+    $(window).scroll(function () {
+    yPosition = $win.scrollTop() + layerTopOffset;
+    //   console.log($win.scrollTop())
+    console.log($layer.css("top"))
+    if (yPosition < 0) {
+    yPosition = 0;
+    }
+    $layer.animate(
+    { top: yPosition},
+    { duration: speed, easing: easing, queue: false }
+    );
+    });
+    });
+    </script> --><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   <script>
     lang = hljs.initHighlightingOnLoad();
   </script>
