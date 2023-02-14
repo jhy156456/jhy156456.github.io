@@ -3,10 +3,9 @@ layout: blog
 study: true
 background-image: ../../../assets/images/study/tips/ScreenShot 2023-01-10 10.36.36.png
 background: transparent
-category: study
-categories: tips
-title: "[tips] 허브 vs 독 차이, nextu 1401-ds 도킹(독)스테이션 구매 후기"
-date: 2023-01-10 10:00:00
+category: review
+title: "[Review] 허브 vs 독 차이, nextu 1401-ds 도킹(독)스테이션 구매 후기"
+date: 2023-02-14 10:00:00
 tags:
 - tips
 - mac
@@ -17,7 +16,7 @@ tags:
 - hub
 ---
 
-# [tips] 허브 vs 독 차이, nextu 1401-ds 도킹(독)스테이션 구매 후기
+# [Review] 허브 vs 독 차이, nextu 1401-ds 도킹(독)스테이션 구매 후기
 
 mac m1 pro를 구매 후 집에 있는 랜선, hdmi모니터, 기계식 키보드, 마우스 등을 1개의 허브로 연결했었다.  
 허브 하나로 모든걸 연결할 수 있을 줄 알았는데 그렇지 않았다. 랜선의 인터넷 연결이 자꾸 끊기는 현상이 발생했다.  
