@@ -86,6 +86,7 @@ print(np.mean(scores['test_score']))
 ## GridSearchCV
 - 하이퍼 파라미터 튜닝을 위해 사용
 - 내가 바꿀 수 있는 하이퍼 파라미터를 여러가지 경우의수를 가지고 모두 실험하는것(optuna같은것)
+- fit 메서드에서 전달한 훈련 데이터를 사용해 k-fold 교차 검증을 수행한다.
 - grid search하면서 cross_validate도 같이 하는것
 
 ```python
