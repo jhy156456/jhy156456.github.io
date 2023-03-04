@@ -20,7 +20,7 @@ tags:
 
 ```js
 export default class AlertComponent extends PureComponent {
-  static propTypes = {
+  static propTypes = { 
     divider: PropTypes.bool,
     color: PropTypes.string,
     title: PropTypes.string,
