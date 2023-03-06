@@ -4,7 +4,7 @@ study: true
 background-image : ../../../assets/images/study/web/superset/ScreenShot 2023-01-11 3.47.01.png
 background: transparent
 category: study
-categories: web/css
+categories: web/superset
 title: "[superset] superset sql query table chart hyperlink"
 date: 2023-01-11 15:30:00
 tags:

@@ -3,7 +3,7 @@ layout: blog
 study: true
 background: red
 category: study
-categories: web/css
+categories: web/react
 title: "[react] prop-types"
 date: 2023-03-03 14:20:00
 tags:

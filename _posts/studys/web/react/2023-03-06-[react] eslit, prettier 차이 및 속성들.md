@@ -3,7 +3,7 @@ layout: blog
 study: true
 background: red
 category: study
-categories: web/css
+categories: web/react
 title: "[react] eslit, prettier 차이 및 속성들"
 date: 2023-03-06 10:20:00
 tags:
