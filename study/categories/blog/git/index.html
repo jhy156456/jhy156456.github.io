@@ -10,9 +10,9 @@ pagination:
     {% assign sum = site.posts | size %}
     <div class="post-lists">
       <div class="post-lists-body">
-        {% for posts in site.posts %} {% if posts.categories[0] ==
-        "liquid" %} {% include categories-main.html %} {% endif %} {%
-        endfor %}
+        {% for posts in site.posts %} {% if posts.categories[0] == "blog/git" %}
+          {% include categories-main.html %} {% endif %}
+        {% endfor %}
       </div>
     </div>
     {% include pagination.html %}

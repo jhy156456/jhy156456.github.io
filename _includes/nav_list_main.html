@@ -181,6 +181,7 @@
                 {% endfor %}
             </ul>
             <!-- Python end-->
+
             <!-- Infra start-->
             <span class="nav__sub-title">Infra</span>
             <ul class="nav_ul">
@@ -213,17 +214,31 @@
                     {% endif %}
                 {% endfor %}
             </ul>
-
             <!-- Infra end-->
-            <!-- liquid start-->
-            {% for category in site.categories %}
-                {% if category[0] == "liquid" %}
-                    <a href="/study/categories/liquid" class="">
-                        <span class="nav__sub-title">liquid ({{ category[1].size }})</span>
-                    </a>
+
+            <!-- blog start-->
+            <span class="nav__sub-title">BLOG</span>
+            <ul class="nav_ul">
+                {% for category in site.categories %}
+                {% if category[0] == "blog/git" %}
+                <li>
+                    <a href="/study/categories/blog/git" class="">git ({{ category[1].size }})</a>
+                </li>
                 {% endif %}
-            {% endfor %}
-            <!-- liquid end-->
+                {% endfor %}
+            </ul>
+
+            <ul class="nav_ul">
+                {% for category in site.categories %}
+                {% if category[0] == "blog/liquid" %}
+                <li>
+                    <a href="/study/categories/blog/liquid" class="">blog ({{ category[1].size }})</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            <!-- blog end-->
+
             <!-- statistics start-->
             {% for category in site.categories %}
                 {% if category[0] == "liquid" %}

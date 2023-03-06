@@ -3,7 +3,7 @@ layout: blog
 study: true
 background: purple
 category: study
-categories: liquid
+categories: blog/liquid
 title: "[liquid] string slice"
 date: 2023-01-06 11:16:42
 tags:

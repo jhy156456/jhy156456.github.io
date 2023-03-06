@@ -2,7 +2,7 @@
 layout: blog
 study: true
 background: blue
-category: study
+category: blog/git
 categories: tips
 title: "[tips] Jekyll Github Page 미지원 Plugin 빌드 배포 (rake publish)"
 date: 2022-12-02 15:06:42

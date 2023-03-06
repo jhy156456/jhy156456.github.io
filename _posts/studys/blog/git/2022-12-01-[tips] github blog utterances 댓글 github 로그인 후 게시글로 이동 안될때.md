@@ -3,7 +3,7 @@ layout: blog
 study: true
 background: blue
 category: study
-categories: tips
+categories: blog/git
 title: "[tips] github blog utterances 댓글 github 로그인 후 게시글로 이동 안될때"
 date: 2022-11-30 10:06:42
 tags:
