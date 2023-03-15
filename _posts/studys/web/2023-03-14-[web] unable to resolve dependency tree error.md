@@ -3,8 +3,8 @@ layout: blog
 study: true
 background: red
 category: study
-categories: web/react
-title: '[web] webpack 정리'
+categories: web
+title: '[web] unable to resolve dependency tree error'
 date: 2023-03-14 10:20:00
 tags:
 - web

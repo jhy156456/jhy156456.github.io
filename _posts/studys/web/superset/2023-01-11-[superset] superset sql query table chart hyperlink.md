@@ -1,7 +1,7 @@
 ---
 layout: blog
 study: true
-background-image : ../../../assets/images/study/web/superset/ScreenShot 2023-01-11 3.47.01.png
+background-image: ../../../../assets/images/study/web/superset/ScreenShot 2023-01-11 3.47.01.png
 background: transparent
 category: study
 categories: web/superset

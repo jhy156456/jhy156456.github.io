@@ -4,7 +4,7 @@ study: true
 background: transparent
 background-image : ../../../assets/images/study/web/webpack-bundling.e79747a1.png
 category: study
-categories: web/react
+categories: web
 title: '[web] webpack 정리'
 date: 2023-03-14 10:20:00
 tags:
