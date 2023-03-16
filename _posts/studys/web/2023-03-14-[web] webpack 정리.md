@@ -10,8 +10,8 @@ date: 2023-03-14 10:21:00
 tags:
 - web
 - javascript
-- eslint
-- prettier
+- webpack
+- bundle
 ---
 
 # 웹펙이란

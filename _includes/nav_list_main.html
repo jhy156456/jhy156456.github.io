@@ -118,6 +118,26 @@ posts_sum = site.posts | size %}
         {% endfor %}
       </ul>
       <!-- WEB end-->
+
+      <!-- iot start-->
+      {% for category in site.categories %}
+      {% if category[0] == "iot" %}
+      <a href="/study/categories/iot" class="">
+        <span class="nav__sub-title">iot ({{ category[1].size }})</span>
+      </a>
+      {% endif %}
+      {% endfor %}
+      <ul class="nav_ul">
+        {% for category in site.categories %}
+        {% if category[0] == "iot/term" %}
+        <li>
+          <a href="/study/categories/iot/term" class="">term ({{ category[1].size }})</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      <!-- iot end-->
+
       <!-- db start -->
       <span class="nav__sub-title">DataBase</span>
       <ul class="nav_ul">
