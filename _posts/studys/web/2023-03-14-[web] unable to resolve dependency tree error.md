@@ -44,7 +44,7 @@ npm 4 ~ 6버전 때처럼 peerDependencies를 자동으로 설치하지 않도�
 ## --force
 충돌이 일어난 peerDependecies를 강제로 설치하도록 설정하는 것
 
-
+___
 참고  
 [1] https://tesseractjh.tistory.com/234
 [2] https://www.korecmblog.com/ERESOLVE-unable-to-resolve-dependency-tree/

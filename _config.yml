@@ -4,6 +4,7 @@ description: "Full Stack | AI"
 url: https://jhy156456.github.io
 signoff: "HaydenJ" # Your name
 timezone: Asia/Seoul
+encoding: "utf-8"
 
 # Analytics
 analytics:
