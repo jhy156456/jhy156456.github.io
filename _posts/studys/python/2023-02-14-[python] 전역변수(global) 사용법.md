@@ -7,13 +7,13 @@ categories: python
 title: "[python] 전역변수(global) 사용법"
 date: 2023-02-14 10:40:00
 tags:
-- phyton
+- python
 - global
 - os
 ---
 
-
 # 변수의 유효 범위(variable scope)
+
 변수가 선언된 위치에 따라 해당 변수가 영향을 미치는 범위
 
 # 전역변수

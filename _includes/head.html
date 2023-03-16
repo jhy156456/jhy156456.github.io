@@ -3,45 +3,53 @@
 <title>{{ page.title }} - {{ site.title }}</title>
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="{{ page.title }} - {{ site.title }}">
-<meta name="twitter:keywords" content="{{ page.title }} - {{ site.title }}" property='og:description' />
+<meta name="twitter:keywords" content="{{ page.title }} - {{ site.title }}" property="og:description" />
 <meta property="og:type" content="article">
 <meta property="og:title" content="{{ page.title }} - {{ site.title }}">
 <meta name="og:keywords"
-  content="{{ page.title }} - {{ site.title }}|{{ page.content | strip_html | strip_newlines | truncate: 120 }}"
-  property='og:description' />
+      content="{{ page.title }} - {{ site.title }}|{{ page.content | strip_html | strip_newlines | truncate: 120 }}"
+      property="og:description" />
 <meta name="theme-Jekyll by liberxue" content="#eb5055">
 <link rel="icon" type="image/png" href="{{ site.url }}/style/favicons/favicon.ico" />
 <link href="{{ site.url }}/style/favicons/favicon.ico" rel="shortcut icon" type="image/png">
 <!-- 댓글 이슈 수정 -->
 <!-- <link rel="canonical" href="{{ site.url }}/"> -->
-<link rel="canonical" href="{{ .Permalink }}"/>
-<link rel="alternate" type="application/rss+xml" title="Liberxue" href="{{ site.url }}/feed.xml">
+<link rel="canonical" href="{{ .Permalink }}" />
+<link rel="alternate" type="application/rss+xml" title="jhy156456" href="{{ site.url }}/feed.xml">
 <meta charset="UTF-8">
 <!-- <link rel="manifest" href="/manifest.json"> -->
 <link rel="shortcut icon" href="{{ site.url }}/style/favicons/favicon.ico" type="image/x-icon">
 <meta name="keywords" content="{{ page.content | strip_html | strip_newlines | truncate: 120 }}"
-  property='og:description' />
+      property="og:description" />
 <meta name="description" content="오늘 무언가를 하지않으면 내일은 저절로 오지않는다" />
-<link href="https://cdn.bootcss.com/highlight.js/9.10.0/styles/xcode.min.css" rel="stylesheet">
+<!--<link href="https://cdn.bootcss.com/highlight.js/9.10.0/styles/xcode.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+
+<!--<link href="{{ site.url }}/assets/css/syntax.css" rel="stylesheet">-->
 <link href="{{ site.url }}/style/style-liberxue.css" rel="stylesheet">
 <!-- <link href="{{ site.url }}/_sass/minimal-mistakes/_navigation.scss" rel="stylesheet"> -->
 {% if page.date %}
-<meta content='{{ site.url }}{{ page.url }}' property='og:url' />
+<meta content="{{ site.url }}{{ page.url }}" property="og:url" />
 <meta content="{{ site.url }}{{ page.url }}|{{ page.content | strip_html | strip_newlines | truncate: 120 }}"
-  property='og:description' />
+      property="og:description" />
 <meta content="article" property="og:type" />
 {% else %}
-<meta content='{{ site.url }}' property='og:url' />
-<meta content="{{ site.description }}" property='og:description' />
+<meta content="{{ site.url }}" property="og:url" />
+<meta content="{{ site.description }}" property="og:description" />
 <meta content="blog" property="og:type" />
 {% endif %}
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.analytics.google.tracking_id }}"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', '{{ site.analytics.google.tracking_id }}');
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag("js", new Date());
+  gtag("config", "{{ site.analytics.google.tracking_id }}");
 </script>
 <!-- {% if site.google_analytics %} -->
 <!-- <script>
@@ -63,13 +71,13 @@
 {% if site.facebook_appid %}
 <meta content="{{ site.facebook_appid }}" property="fb:app_id" />
 <script>
-  (function (d, s, id) {
+  (function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
     js = d.createElement(s);
     js.id = id;
     js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId={{ site.facebook_appid }}";
     fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
+  }(document, "script", "facebook-jssdk"));
 </script>
 {% endif %}

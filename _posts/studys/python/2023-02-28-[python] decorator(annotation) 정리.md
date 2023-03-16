@@ -16,8 +16,8 @@ tags:
 
 ## @classmethod
 ```python
-    @classmethod
-    def get_network(cls):
+@classmethod
+def get_network(cls):
 ```
 - 객체 인스턴스를 의미하는 self 대신 cls 라는 클래스를 의미하는 파라미터 사용
 - cls 파라미터를 통해 클래스 변수 등을 엑세스할 수 있다.
@@ -41,6 +41,7 @@ class MyClass:
 - 자식 클래스에서 call가능
 - 클래스 변수에 접근 가능
 - 인스턴스 메소드 변수에 접근 불가능
+
 ```python
 class Parent:
     class_val = 'class variable'

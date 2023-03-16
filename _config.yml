@@ -57,6 +57,12 @@ defaults:
 category_archive:
   type: liquid
   path: /categories/
+
+#markdown: kramdown
+#kramdown:
+#  input: GFM
+#  syntax_highlighter: rouge
+
 # tag_archive:
 #   type: liquid
 #   path: /tags/

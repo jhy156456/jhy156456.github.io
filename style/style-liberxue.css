@@ -202,6 +202,7 @@ ol li ul:first-of-type {
 
 li {
   word-wrap: break-word;
+  font-size: 15px;
 }
 
 li p {
@@ -227,7 +228,8 @@ code {
   background-color: rgb(244, 244, 244);
   border: 1px solid #eaeaea;
   border-radius: 2px;
-  color: #716f6f;
+  /*color: #716f6f;*/
+  /*color: #fff;*/
   margin: 0 6px;
 }
 
@@ -236,6 +238,23 @@ pre code {
   overflow: auto;
   border: 0;
 }
+
+.post-content pre {
+  overflow-x: auto;
+  margin: 20px 0;
+  border-radius: 4px;
+  background: #f7f7f7;
+  text-shadow: none;
+}
+
+.post-content pre code {
+  line-height: 20px;
+  margin: 0;
+  padding: 1.3em;
+  color: #dcdcdc;
+  background-color: #3c3c3c;
+}
+
 
 blockquote {
   border-left: 2px solid rgba(235, 80, 85, 0.62);
@@ -1234,7 +1253,8 @@ textarea:-ms-input-placeholder {
 }
 
 .post-content p {
-  font-size: 14px;
+  /*font-size: 14px;*/
+  font-size: 16px;
   word-wrap: break-word;
   word-break: break-word;
   line-height: 40px;
@@ -1266,21 +1286,6 @@ textarea:-ms-input-placeholder {
   color: #eb5055;
 }
 
-.post-content pre {
-  overflow-x: auto;
-  margin: 20px 0;
-  border-radius: 4px;
-  background: #f7f7f7;
-  text-shadow: none;
-}
-
-.post-content pre code {
-  line-height: 20px;
-  margin: 0;
-  padding: 1.3em;
-  color: #dcdcdc;
-  background-color: #3c3c3c;
-}
 
 pre code::after {
   font-size: 1rem;
@@ -1697,6 +1702,7 @@ pre code::after {
   margin: 0;
   padding-left: 0;
   list-style: none;
+  white-space: nowrap;
 }
 
 #directory > ul {
@@ -1707,7 +1713,7 @@ pre code::after {
 #directory ul li a {
   display: inline-table;
   margin-left: 5px;
-  white-space: nowrap;
+  /*white-space: nowrap;*/
 }
 
 #directory ul li ul li a {
