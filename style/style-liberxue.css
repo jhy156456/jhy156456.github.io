@@ -1780,8 +1780,7 @@ pre code::after {
 
 .lists-navigator ol li a {
   font-size: 14px;
-  /*padding: 0 20px;*/
-  padding: 0 10px;
+  padding: 0 20px;
   color: #5f5f5f;
 }
 
@@ -2372,6 +2371,13 @@ pre code::after {
   .archive-page-head {
     padding: 80px 0 20px;
   }
+  /*추가 */
+  .lists-navigator ol li a {
+    font-size: 14px;
+    padding: 0 10px;
+    color: #5f5f5f;
+  }
+
   .archive-page {
     padding: 80px 0 20px;
   }
