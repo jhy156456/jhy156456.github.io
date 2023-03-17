@@ -5,7 +5,7 @@ background: transparent
 background-image : ../../../assets/images/study/web/webpack-bundling.e79747a1.png
 category: study
 categories: web
-title: '[web] webpack 정리'
+title: '[web] webpack 이란'
 date: 2023-03-14 10:21:00
 tags:
 - web

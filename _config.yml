@@ -4,7 +4,6 @@ description: "Full Stack | AI"
 url: https://jhy156456.github.io
 signoff: "HaydenJ" # Your name
 timezone: Asia/Seoul
-encoding: "euc-kr"
 
 # Analytics
 analytics:
@@ -45,8 +44,8 @@ links:
 # ------------ CONFIGURABLE END ------------
 pagination:
   enabled: true
-  paginate: 15
-  per_page: 12
+  paginate: 5
+  per_page: 15
   # permalink: "jhy156456page:num"
 
 permalink: /:year/:month/:day/:title.html
