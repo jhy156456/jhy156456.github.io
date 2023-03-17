@@ -21,7 +21,7 @@ tags:
 redirect_from:
   - /about/
 ---
-
+IT 전문가를 꿈꾸는 Data Scientist 입니다.
 # 수행
 
 ## 자재 재고 예측 프로젝트 (2022.10~2023.01)

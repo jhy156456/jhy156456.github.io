@@ -7,7 +7,7 @@ categories: python
 title: "[python] decorator(annotation) 정리"
 date: 2023-02-28 10:40:00
 tags:
-- phyton
+- python
 - global
 ---
 
