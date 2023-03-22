@@ -62,7 +62,12 @@ posts_sum = site.posts | size %}
       {% endfor %}
       <!-- Project -->
       <!-- AI -->
-      <span class="nav__sub-title">AI</span>
+      {% for category in site.categories %}
+      {% if category[0] == "ai" %}
+      <a href="/study/categories/ai" class=""> <span class="nav__sub-title">ai ({{ category[1].size }})</span>
+      </a>
+      {% endif %}
+      {% endfor %}
       <ul class="nav_ul">
         {% for category in site.categories %}
         {% if category[0] == "ai/cv" %}
@@ -131,7 +136,7 @@ posts_sum = site.posts | size %}
         {% for category in site.categories %}
         {% if category[0] == "iot/term" %}
         <li>
-          <a href="/study/categories/iot/term" class="">term ({{ category[1].size }})</a>
+          <a href="/study/categories/iot/term" class="">용어 ({{ category[1].size }})</a>
         </li>
         {% endif %}
         {% endfor %}
@@ -263,7 +268,7 @@ posts_sum = site.posts | size %}
 
       <!-- statistics start-->
       {% for category in site.categories %}
-      {% if category[0] == "liquid" %}
+      {% if category[0] == "statistics" %}
       <a href="/study/categories/statistics" class="">
         <span class="nav__sub-title">statistics ({{ category[1].size }})</span>
       </a>
