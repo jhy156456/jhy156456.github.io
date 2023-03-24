@@ -85,4 +85,4 @@ $ H(p,q) $ 만 남기떄문에 이 식을 minimize하여 p로 가깝게 만들�
 참고  
 [1] https://www.youtube.com/watch?v=Dc0PQlNQhGY&ab_channel=%ED%8C%A1%EC%9A%94%EB%9E%A9Pang-YoLab  
 [2] https://www.youtube.com/watch?v=7GBXCD-B6fo&ab_channel=MinsukHeo%ED%97%88%EB%AF%BC%EC%84%9D  
-[3] https://www.youtube.com/watch?v=z1k8HVU4Mxc&ab_channel=%ED%98%81%ED%8E%9C%ED%95%98%EC%9E%84
+[3] https://www.youtube.com/watch?v=z1k8HVU4Mxc&ab_channel=%ED%98%81%ED%8E%9C%ED%95%98%EC%9E%84 
