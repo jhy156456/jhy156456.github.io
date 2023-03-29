@@ -23,7 +23,7 @@ c = [2,4,6]
 print(zip(a,b,c))
 print(list(zip(a,b,c)))
 
-# <zip object at 0x1278dad40>
+# <zip object at 0x1278dad40> 
 # [(0, 0, 2), (1, 1, 4), (2, 2, 6)]
 ```
 - 가장 작은 리스트 사이즈 크기를 갖도록 list가 만들어진다.
