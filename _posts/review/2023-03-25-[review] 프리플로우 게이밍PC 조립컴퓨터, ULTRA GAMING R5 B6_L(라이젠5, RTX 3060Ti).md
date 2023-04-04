@@ -55,6 +55,7 @@ PC사양들을 잘 인식한 모습
 
 # 총평 및 본체사진
 ![](../../../assets/images/review/pc_8.jpg){: width="50%" height="50%"}
-디아블로4, 리그오브레전드 렉하나 없이 깨~끗하게 돌아가고  
-webstorm, pycharm, dbeaver등 개발툴도 m1 pro 못지않은 속도로 빌드된다.  
-전체적으로 좋은 구매였습니다!
+디아블로4, 리그오브레전드 렉하나 없이 깨~끗하게 돌아가고    
+m1 pro의 CPU보다는 하위 성능이지만,  
+webstorm, pycharm, dbeaver등 개발툴도 m2 air 못지않은 속도로 빌드된다.  
+전체적으로 좋은 구매였습니다! 
