@@ -56,7 +56,7 @@ PC사양들을 잘 인식한 모습
 [![](../../../assets/images/review/pc_7.jpg){: width="50%" height="50%"}](../../../assets/images/review/pc_7.jpg)
 이거 벗겨내느라 그래픽카드 다시 해체하고 벗긴후에 조립했는데 이정도 단점외엔.. 장점 뿐인듯!
 
-# 총평 및 본체사진
+# 총평 및 본체사진 
 [![](../../../assets/images/review/pc_8.jpg){: width="50%" height="50%"}](../../../assets/images/review/pc_8.jpg)
 디아블로4, 리그오브레전드 렉하나 없이 깨~끗하게 돌아가고    
 m1 pro의 CPU보다는 하위 성능이지만,  
