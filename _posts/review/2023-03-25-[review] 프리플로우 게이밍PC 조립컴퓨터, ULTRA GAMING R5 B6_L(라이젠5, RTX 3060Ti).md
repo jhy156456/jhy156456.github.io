@@ -44,7 +44,7 @@ tags:
 [![](../../../assets/images/review/pc_3.jpg){: width="50%" height="50%"}](../../../assets/images/review/pc_3.jpg)
 내부는 더할나위없이 깔끔하고.. 예쁘다.. 특히 그래픽카드 빳빳한게 아주 새제품임이 확신이 들었다.
 
-# 3dp chip
+# 3dp chip 
 ![](../../../assets/images/review/pc_4.png)
 
 PC사양들을 잘 인식한 모습
