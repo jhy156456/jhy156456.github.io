@@ -7,7 +7,7 @@ category: study
 categories: tips
 title: "[tips] mac에서 일반 윈도우 키보드 사용할 떄 fn키 사용 법"
 date: 2023-05-01 16:00:00
-tags:
+tags: 
 - tips
 - keyboard
 - window
