@@ -17,7 +17,7 @@ tags:
 # 사용법
 
 ## 1
-karabiner 설치
+karabiner 설치 
 
 ## 2
 - 오른쪽 아래에 네모난 커서 있는 키는 웹에서는 menu키라고 부르지만 karabiner에서는 application키이다. 
