@@ -50,7 +50,7 @@ tags:
 PC사양들을 잘 인식한 모습
 
 # 단점 
-그래픽카드를 자세히 보니 비닐 스티커? 같은걸 안벗기고 조립을 해주셨다.  
+그래픽카드를 자세히 보니 비닐 스티커? 같은걸 안벗기고 조립을 해주셨다.   
 [![](../../../assets/images/review/pc_5.jpg){: width="50%" height="50%"}](../../../assets/images/review/pc_5.jpg)
 [![](../../../assets/images/review/pc_6.jpg){: width="50%" height="50%"}](../../../assets/images/review/pc_6.jpg)
 [![](../../../assets/images/review/pc_7.jpg){: width="50%" height="50%"}](../../../assets/images/review/pc_7.jpg)
