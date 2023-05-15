@@ -1,4 +1,4 @@
----
+--- 
 layout: blog
 review: true
 background-image: ../../../assets/images/study/tips/ScreenShot 2023-01-10 10.36.36.png
