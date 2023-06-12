@@ -106,6 +106,15 @@ posts_sum = site.posts | size %}
       </ul>
       <ul class="nav_ul">
         {% for category in site.categories %}
+        {% if category[0] == "web/javascript" %}
+        <li>
+          <a href="/study/categories/web/javascript" class="">javascript ({{ category[1].size }})</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      <ul class="nav_ul">
+        {% for category in site.categories %}
         {% if category[0] == "web/superset" %}
         <li>
           <a href="/study/categories/web/superset" class="">superset ({{ category[1].size }})</a>
