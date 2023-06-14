@@ -1,0 +1,19 @@
+---
+layout: blog
+study: true
+background: blue
+category: study
+categories: java
+title: "[java] 범위를 가지고있는 랜덤 변수"
+date: 2023-06-14 16:00:00
+tags:
+- java
+---
+
+# min~max 값을 갖는 랜덤변수 코드
+
+```java
+int min = 0;
+int max = 12;
+int randomValue = (int) (Math.random() * (max - min)) + min;
+```

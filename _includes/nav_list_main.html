@@ -87,6 +87,17 @@ posts_sum = site.posts | size %}
         {% endfor %}
       </ul>
       <!-- AI -->
+
+      <!-- java start -->
+      {% for category in site.categories %}
+      {% if category[0] == "java" %}
+      <a href="/study/categories/java" class="">
+        <span class="nav__sub-title">java ({{ category[1].size }})</span>
+      </a>
+      {% endif %}
+      {% endfor %}
+      <!-- java end -->
+
       <!-- WEB start-->
       {% for category in site.categories %}
       {% if category[0] == "web" %}
@@ -173,6 +184,7 @@ posts_sum = site.posts | size %}
         {% endfor %}
       </ul>
       <!-- db end -->
+
       <!-- DE start-->
       <span class="nav__sub-title">Data-Engineer</span>
       <ul class="nav_ul">
@@ -196,6 +208,7 @@ posts_sum = site.posts | size %}
         {% endfor %}
       </ul>
       <!-- DE end-->
+
       <!-- <p style="color: red;">{{ site.categories }}</p>
       {% for category in site.categories %}
       <p style="color: red;">{{ category[0] }}</p>
@@ -284,6 +297,7 @@ posts_sum = site.posts | size %}
       {% endif %}
       {% endfor %}
       <!-- statistics end-->
+
       <!-- aws start -->
       {% for category in site.categories %}
       {% if category[0] == "aws" %}
@@ -293,6 +307,7 @@ posts_sum = site.posts | size %}
       {% endif %}
       {% endfor %}
       <!-- aws end -->
+
       <span class="nav__sub-title">Native App</span>
       <ul>
         {% for category in site.categories %}
