@@ -1,6 +1,6 @@
 ---
 layout: blog
-study: orange
+study: yellow
 background: transparent
 category: study
 categories: web/javascript
