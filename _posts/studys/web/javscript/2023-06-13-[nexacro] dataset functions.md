@@ -1,15 +1,15 @@
 ---
 layout: blog
-study: yellow
-background: transparent
+study: true
+background: yellow
 category: study
 categories: web/javascript
 title: "[nexacro] dataset functions"
-date: 2023-06-13 08:30:00
+date: 2023-06-16 08:30:00
 tags:
 - web
 - javascript
-- window
+- nexacro
 ---
 
 
@@ -17,14 +17,17 @@ tags:
 # 복합조건
 
 - findRowExpr : 조건표현식을 만족하는 첫 번째 row의 인덱스 반환; findRowExpr(EXPR);
+
 ```
 ex) dataset1.findRowExpr("DEP == 'K10' && SAL <= 500")
 ```
 - extractRow : 범위에서 조건표현식을 만족하는 row의 인덱스 배열 반환; extractRows(EXPR);
+
 ```
 ex) dataset1.extractRows("DEP=='K10'");
 ```
 - getCaseAvg : 조건을 만족하는 값, 또는 계산값의 평균값 반환;
+
 ```  
 getCaseAvg(EXPR,VAL,START_IDX, END_IDX, EXCLUDENAN);
 ex) dataset.getCaseAvg("GENDER=='M'", "SAL"); // gender이 M인 row들의 sal 값 평균

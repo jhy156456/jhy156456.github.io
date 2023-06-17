@@ -1,7 +1,7 @@
 ---
 layout: blog
-study: yellow
-background: transparent
+study: true
+background: yello
 category: study
 categories: web/javascript
 title: "[javascript] window 객체란"
