@@ -19,6 +19,6 @@ pip install -r requirements.txt
 
 # conda
 
-```shell
+```shell 
 conda install --yes --file requirements.txt
 ```
