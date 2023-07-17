@@ -10,7 +10,7 @@ tags:
 - java
 ---
 
-# string yyyyMM to LocalDate
+# 1
 
 ```java
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
@@ -20,4 +20,12 @@ tags:
         LocalDate localDate = LocalDate.parse("202305", formatter);
         System.out.println(localDate);
         // 2023-05-01
+```
+
+# 2
+```java
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
+        LocalDate localDate = YearMonth.parse("202206", formatter).atDay(1);
+        System.out.println(localDate);
+        // 2022-06-01
 ```
