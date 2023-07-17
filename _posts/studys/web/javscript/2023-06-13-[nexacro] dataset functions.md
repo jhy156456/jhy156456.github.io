@@ -46,6 +46,14 @@ this.Button01_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 };
 ```
 
+## 특정로우에 특정 컬럼 값 가져오기
+```
+dsDistinct.getColumn(rowIndex, "컬럼명")
+```
+
+
+
+
 ---
 참고  
 [1] http://docs.tobesoft.com/developer_guide_nexacro_n_ko/64c0742dcaac374b
