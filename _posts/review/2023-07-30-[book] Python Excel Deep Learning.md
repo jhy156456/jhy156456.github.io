@@ -75,7 +75,7 @@ PART 7 RNN
 5. 영어 철자 예측 데이터
 
 # 책 두께
-[![](../../../assets/images/review/review_python_excel_deeplearning_2.jpeg){: width="50%" height="50%"})](../../../assets/images/review/review_python_excel_deeplearning_2.jpeg)
+[![](../../../assets/images/review/review_python_excel_deeplearning_2.jpeg){: width="50%" height="50%"}](../../../assets/images/review/review_python_excel_deeplearning_2.jpeg)
 읽어보고 싶은 적당한 두께^^ 
 
 # 대상
@@ -89,14 +89,14 @@ PART 7 RNN
 라는 의문이 있었다. 그런 의문이 들 때 마침 좋은기회로 이 책을 리뷰할 수 있었고 궁금증을 해결하며 머신러닝, 딥러닝에대한 기초도 복습할 수 있었다. 
 
 ## 수학적 지식
-[![](../../../assets/images/review/review_python_excel_deeplearning_3.jpeg){: width="50%" height="50%"})](../../../assets/images/review/review_python_excel_deeplearning_3.jpeg)
+[![](../../../assets/images/review/review_python_excel_deeplearning_3.jpeg){: width="50%" height="50%"}](../../../assets/images/review/review_python_excel_deeplearning_3.jpeg)
 대학원에 진학하기 전 인공지능에 대해 공부할 때 편미분이 무엇인지 까먹어서 유튜브, 블로그, 머신러닝을 위한 기초수학 책을 구매해서 공부한 적이 있다.  
 이 책은 그럴필요없이 인공지능에대한 기초 수학적 지식까지 포함하고있는 휼륭한 책이다.
 
 
 ## 수학적 지식에대한 코드
-[![](../../../assets/images/review/review_python_excel_deeplearning_4.jpeg){: width="50%" height="50%"})](../../../assets/images/review/review_python_excel_deeplearning_4.jpeg)
-딥러닝, 그 중에도 가장 기초적인 선형회귀를 처음 배우면서 강사님들은 단순히 아래처럼 하면 된다고 알려준다. 
+[![](../../../assets/images/review/review_python_excel_deeplearning_4.jpeg){: width="50%" height="50%"}](../../../assets/images/review/review_python_excel_deeplearning_4.jpeg)
+일반적으로 인터넷강의, 사내 딥러닝교육을 수강하면 가장 기초적인 선형회귀를 처음 배우면서 강사님들은 단순히 아래처럼 하면 된다고 알려준다. 
 ```python
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -125,7 +125,7 @@ print("새로운 데이터에 대한 예측 결과:", predicted_y[0][0])
 또한 이런 방식으로 학습하면, 실전에서 해결해야하는 Task에대해 딥러닝 모델을 응용하여 구현하는 데 큰 도움이 될 것이라고 생각됩니다. 
 
 ## 응용
-[![](../../../assets/images/review/review_python_excel_deeplearning_5.jpeg){: width="50%" height="50%"})](../../../assets/images/review/review_python_excel_deeplearning_5.jpeg)
+[![](../../../assets/images/review/review_python_excel_deeplearning_5.jpeg){: width="50%" height="50%"}](../../../assets/images/review/review_python_excel_deeplearning_5.jpeg)
 이제 배웠던 개념들을 통해 실전 Task를 풀어볼 수 있는 Part이다.  
 실전 Task에 적용하기 위한 데이터 전처리 및 모델구현 부분으로 이루어져있다. 딥러닝 문제를 풀다보면 행렬 차원이 커지고 Layer가 깊어지다보면 내가 구현한 모델을 놓치는 경우가 많다.  
 이 책은 그런 독자들을 위해 엑셀과 딥러닝 층간의 상호작용을 이해하기 쉽게 잘 서술되어 있다.

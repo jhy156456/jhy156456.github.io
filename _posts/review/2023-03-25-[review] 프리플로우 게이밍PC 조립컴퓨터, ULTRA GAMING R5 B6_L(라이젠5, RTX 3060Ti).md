@@ -30,7 +30,7 @@ tags:
 실제로 위 사진처럼 배송왔다.
 
 # 본체 내부 - 1 
-[![](../../../assets/images/review/pc_1.jpg){: width="50%" height="50%"})](../../../assets/images/review/pc_1.jpg)
+[![](../../../assets/images/review/pc_1.jpg){: width="50%" height="50%"}](../../../assets/images/review/pc_1.jpg)
 
 본체 내부도 흔들리지 말라고 정성스럽게 포장해주셨다.
 
