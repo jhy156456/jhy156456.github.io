@@ -95,7 +95,7 @@ PART 7 RNN
 이 책은 내가 했던 수고를 덜어준다. 딥러닝의 기본이 되는 체인룰, 편미분, 확률적 경사 하강법 등 인공지능에 대한 기초 수학적 지식까지 포함하고 있는 훌륭한 책이다.
 
 
-## 수학적 지식에대한 코드
+## 수학적 지식에대한 코드 
 [![](../../../assets/images/review/review_python_excel_deeplearning_4.jpeg){: width="50%" height="50%"}](../../../assets/images/review/review_python_excel_deeplearning_4.jpeg)
 일반적으로 인터넷강의, 사내 딥러닝교육을 수강하면 가장 기초적인 선형회귀를 처음 배우면서 강사님들은 단순히 아래처럼 하면 된다고 알려준다. 
 ```python
