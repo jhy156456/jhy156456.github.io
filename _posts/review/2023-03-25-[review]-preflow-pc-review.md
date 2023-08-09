@@ -4,7 +4,7 @@ review: true
 background-image: ../../../assets/images/review/pc_8.jpg
 background: transparent
 category: review
-title: "[review] 프리플로우 게이밍PC 조립컴퓨터, ULTRA GAMING R5 B6_L(라이젠5, RTX 3060Ti)"
+title: "프리플로우 게이밍PC 조립컴퓨터, ULTRA GAMING R5 B6_L(라이젠5, RTX 3060Ti)"
 date: 2023-03-25 21:00:00
 tags:
 - 프리플로우

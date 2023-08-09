@@ -4,7 +4,7 @@ review: true
 background-image: ../../../assets/images/review/review_python_excel_deeplearning_1.jpeg
 background: transparent
 category: review
-title: "[도서] 파이썬과 엑셀로 시작하는 딥러닝"
+title: "파이썬과 엑셀로 시작하는 딥러닝 도서 리뷰"
 date: 2023-07-30 10:00:00
 tags:
 - python
