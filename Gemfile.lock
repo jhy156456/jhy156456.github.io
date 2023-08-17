@@ -24,13 +24,13 @@ GEM
     ethon (0.16.0)
       ffi (>= 1.15.0)
     eventmachine (1.2.7)
+    eventmachine (1.2.7-x86-mingw32)
     execjs (2.8.1)
     faraday (2.7.4)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
     ffi (1.15.5)
-    ffi (1.15.5-x64-unknown)
     forwardable-extended (2.6.0)
     gemoji (3.0.1)
     github-pages (228)
@@ -261,6 +261,7 @@ GEM
 PLATFORMS
   arm64-darwin-22
   x64-unknown
+  x86-mingw32
 
 DEPENDENCIES
   github-pages
