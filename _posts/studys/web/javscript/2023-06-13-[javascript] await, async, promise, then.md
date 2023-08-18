@@ -124,6 +124,9 @@ console.log(user); // Promise {}
 
 ## await
 
+```js
+
+```
 
 ---
 참고  
