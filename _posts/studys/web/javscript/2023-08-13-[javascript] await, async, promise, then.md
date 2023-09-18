@@ -101,8 +101,16 @@ const cook = egg =>
   });
 
 getHen() //
-  .then(getEgg)
+  .then(hen => getEgg(hen))
   .then(egg => cook(egg))
+  .then(meal => console.log(meal))
+  .catch(console.log);
+
+
+// 간략화
+getHen() //
+  .then(getEgg)
+  .then(cook)
   .then(console.log)
   .catch(console.log);
 ```
