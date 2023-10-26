@@ -14,7 +14,7 @@ tags:
 ---
 
 # 문제 발생
-
+  
 특정 상황에 따라 eventListener 함수를 변경해야 한다.  
 웹 검색 결과 eventListener 들을 전체 삭제하는 방법이 몇가지 있었다.
 
