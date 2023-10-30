@@ -1,4 +1,4 @@
----
+~~---
 layout: blog
 study: true
 background: yellow
@@ -7,14 +7,16 @@ categories: web/javascript
 title: "[javascript] evenetlistener 삭제 방법"
 date: 2023-10-25 10:12:00
 tags:
-  - remove
-  - click
-  - web
-  - javascript
+
+- remove
+- click
+- web
+- javascript
+
 ---
 
 # 문제 발생
-  
+
 특정 상황에 따라 eventListener 함수를 변경해야 한다.  
 웹 검색 결과 eventListener 들을 전체 삭제하는 방법이 몇가지 있었다.
 
@@ -45,30 +47,33 @@ area.removeEventListener('click', foo, true);
 ```
 
 이때 유의 할 점은 세번째인자를 꼭 true로 줘야한다.  
-세번째 인자는  https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener 사이트에 의하면,  
-`options` Optional
+세번째 인자는  https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener 사이트에 의하면,
+
+---
+**`options`** Optional
 An object that specifies characteristics about the event listener. The available options are:
 
-capture Optional
+`capture` Optional
 A boolean value indicating that events of this type will be dispatched to the registered listener before being
 dispatched to any EventTarget beneath it in the DOM tree. If not specified, defaults to false.
 
-once Optional
+`once` Optional
 A boolean value indicating that the listener should be invoked at most once after being added. If true, the listener
 would be automatically removed when invoked. If not specified, defaults to false.
 
-passive Optional
+`passive` Optional
 A boolean value that, if true, indicates that the function specified by listener will never call preventDefault(). If a
 passive listener does call preventDefault(), the user agent will do nothing other than generate a console warning.
 
 If this option is not specified it defaults to false – except that in browsers other than Safari, it defaults to true
 for wheel, mousewheel, touchstart and touchmove events. See Using passive listeners to learn more.
 
-signal Optional
+`signal` Optional
 An AbortSignal. The listener will be removed when the given AbortSignal object's abort() method is called. If not
 specified, no AbortSignal is associated with the listener.
+---
 
-랍니다..^^
+랍니다^^
 
 ## 자주 사용하는 이벤트의 종류
 
@@ -92,4 +97,4 @@ specified, no AbortSignal is associated with the listener.
 ---
 참고  
 [1] https://stackoverflow.com/questions/10444077/javascript-removeeventlistener-not-working  
-[2] https://kyounghwan01.github.io/blog/JS/JSbasic/addEventListener/
+[2] https://kyounghwan01.github.io/blog/JS/JSbasic/addEventListener/~~
