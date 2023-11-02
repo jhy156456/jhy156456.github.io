@@ -1,4 +1,4 @@
-~~---
+---
 layout: blog
 study: true
 background: yellow
