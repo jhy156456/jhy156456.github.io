@@ -39,7 +39,7 @@ box.outerHTML = box.outerHTML
 ```js
 function foo(event) {
   app.addSpot(event.clientX, event.clientY);
-  app.addFlag = 1;
+  app.addFlag = 1; 
 }
 
 area.addEventListener('click', foo, true);
