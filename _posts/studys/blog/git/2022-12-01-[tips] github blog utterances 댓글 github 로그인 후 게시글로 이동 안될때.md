@@ -7,8 +7,8 @@ categories: blog/git
 title: "[tips] github blog utterances 댓글 github 로그인 후 게시글로 이동 안될때"
 date: 2022-11-30 10:06:42
 tags:
-- tips
-- html
+  - tips
+  - html
 ---
 
 # [tips] github blog utterances 댓글 github 로그인 후 게시글로 이동 안될때
@@ -16,11 +16,15 @@ tags:
 link tag가 모여있는 html에
 
 ```html
+
 <link rel="canonical" href="{{ site.url }}/">
 ```
+
 이렇게 되어있던거를
 
 ```html
-<link rel="canonical" href="{{ dotPermalink }}"/>
+
+<link rel="canonical" href="{{ dotPermalink }}" />
 ```
+
 이렇게 바꿔준다

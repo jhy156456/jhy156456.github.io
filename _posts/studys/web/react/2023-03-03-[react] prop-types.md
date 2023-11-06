@@ -7,8 +7,8 @@ categories: web/react
 title: "[react] prop-types"
 date: 2023-03-03 14:20:00
 tags:
-- web
-- css
+  - web
+  - css
 ---
 
 # proptypes란?
@@ -20,7 +20,7 @@ tags:
 
 ```js
 export default class AlertComponent extends PureComponent {
-  static propTypes = { 
+  static propTypes = {
     divider: PropTypes.bool,
     color: PropTypes.string,
     title: PropTypes.string,
@@ -35,6 +35,7 @@ export default class AlertComponent extends PureComponent {
     before: PropTypes.element,
     panelClass: PropTypes.string,
   };
+
   render() {
     const {
       md, lg, xl, sm, xs, color, divider, icon, title, label, subhead, before,
@@ -46,19 +47,22 @@ export default class AlertComponent extends PureComponent {
   }
 }
 ```
+
 # proptype 종류
 
 ## shape
 
 ```js
 optionalObjectWithShape: PropTypes.shape({
-color: PropTypes.string,
-fontSize: PropTypes.number
+  color: PropTypes.string,
+  fontSize: PropTypes.number
 })
 ```
+
 - shape는 특정 형태를 갖는 객체이다.
 
 ## arrayOf
+
 ```js
 UserProfie.propTypes = {
   user: PropTypes.shape({
@@ -78,17 +82,21 @@ UserProfie.propTypes = {
 };
 ```
 
-UserProfie 컴포넌트의 경우, 
+UserProfie 컴포넌트의 경우,
+
 ### 필수 prop
-- user 
+
+- user
+
 #### user prop
+
 - 숫자 타입인 id 속성과 문자열 타입인 name 속성을 반드시 갖는 객체
 - theme 속성은 black과 white 중 하나의 값이 될 수 있는 Enum 타입이며, 선택인 image 속성은 Image 클래스의 인스턴스
 - 선택인 image 속성은 Image 클래스의 인스턴스
+
 ### 선택 prop
-- friends  
 
-
+- friends
 
 참고  
 [1] https://velog.io/@eunjin/React-PropTypes-%EC%93%B0%EB%8A%94-%EC%9D%B4%EC%9C%A0-%EB%B0%A9%EB%B2%95  

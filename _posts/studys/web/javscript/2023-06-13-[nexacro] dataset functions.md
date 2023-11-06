@@ -7,12 +7,10 @@ categories: web/javascript
 title: "[nexacro] dataset functions"
 date: 2023-06-16 08:30:00
 tags:
-- web
-- javascript
-- nexacro
+  - web
+  - javascript
+  - nexacro
 ---
-
-
 
 # 복합조건
 
@@ -21,11 +19,13 @@ tags:
 ```
 ex) dataset1.findRowExpr("DEP == 'K10' && SAL <= 500")
 ```
+
 - extractRow : 범위에서 조건표현식을 만족하는 row의 인덱스 배열 반환; extractRows(EXPR);
 
 ```
 ex) dataset1.extractRows("DEP=='K10'");
 ```
+
 - getCaseAvg : 조건을 만족하는 값, 또는 계산값의 평균값 반환;
 
 ```  
@@ -35,11 +35,13 @@ dataset.getCaseAvg("GENDER=='W'", "SAL", 0, -1, false); // 0번째부터 마지�
 ```
 
 ## 필터된 데이터 복사
+
 ```
 this.dataset2.copyData(this.dataset1, true);
 ```
 
 ## 입력된 텍스트로 필터링 처리
+
 ```
 this.Button01_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 {
@@ -50,12 +52,10 @@ this.Button01_onclick = function(obj:nexacro.Button,e:nexacro.ClickEventInfo)
 ```
 
 ## 특정로우에 특정 컬럼 값 가져오기
+
 ```
 dsDistinct.getColumn(rowIndex, "컬럼명")
 ```
-
-
-
 
 ---
 참고  

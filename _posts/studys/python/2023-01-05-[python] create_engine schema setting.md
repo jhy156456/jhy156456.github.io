@@ -7,8 +7,8 @@ categories: python
 title: "[python] create_engine schema setting"
 date: 2023-01-05 13:00:00
 tags:
-- db
-- python
+  - db
+  - python
 ---
 
 # [python] create_engine schema setting

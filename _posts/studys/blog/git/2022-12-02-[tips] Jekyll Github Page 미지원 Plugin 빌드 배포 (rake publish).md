@@ -7,18 +7,15 @@ categories: tips
 title: "[tips] Jekyll Github Page 미지원 Plugin 빌드 배포 (rake publish)"
 date: 2022-12-02 15:06:42
 tags:
-- tips
-- html
+  - tips
+  - html
 ---
+
 # [tips] Jekyll Github Page 미지원 Plugin 빌드 배포 (rake publish)
-
-
 
 ## 문제
 
 ``jekyll-paginate-v2`` 를 추가했더니 로컬에서는 정상 작동했는데 push 후 git 홈페이지에서는 정상 작동하지 않았음
-
-
 
 ## 해결
 
@@ -66,15 +63,9 @@ task :publish => [:generate] do
 end
 ```
 
-
-
 작성 후 ``rake publish`` 명령어로 배포한다.
 
 참고로 위 코드에서 GITHUB_REPONAME 를 수정해야한다
-
-
-
-
 
 참고
 

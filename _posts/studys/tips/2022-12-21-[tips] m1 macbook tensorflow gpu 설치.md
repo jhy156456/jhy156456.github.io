@@ -7,11 +7,11 @@ categories: tips
 title: "[tips] m1 macbook tensorflow gpu 설치"
 date: 2022-12-21 13:00
 tags:
-- tips
-- mac
-- m1
-- tensorflow
-- gpu
+  - tips
+  - mac
+  - m1
+  - tensorflow
+  - gpu
 ---
 
 # [tips] m1 macbook tensorflow gpu 설치
@@ -34,9 +34,11 @@ tf.config.list_physical_devices()
 ```
 
 ## graph error 발생시
+
 ```shell
 python -m pip install tensorflow-macos==2.9
 python -m pip install tensorflow-metal==0.5.0
 ```
+
 참고  
 [1] https://developer.apple.com/forums/thread/721619

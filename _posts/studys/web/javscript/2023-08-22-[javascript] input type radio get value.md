@@ -8,9 +8,9 @@ title: "[javascript] 라디오 버튼 값 가져오기"
 date: 2023-08-22 14:30:00
 tags:
 
-- web
-- javascript
-- radio
+  - web
+  - javascript
+  - radio
 
 ---
 

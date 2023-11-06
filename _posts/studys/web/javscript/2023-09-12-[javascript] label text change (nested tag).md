@@ -8,9 +8,9 @@ title: "[javascript] label태그가 감싸진 태그들의 label text 값만 변
 date: 2023-09-12 14:30:00
 tags:
 
-- web
-- javascript
-- radio
+  - web
+  - javascript
+  - radio
 
 ---
 

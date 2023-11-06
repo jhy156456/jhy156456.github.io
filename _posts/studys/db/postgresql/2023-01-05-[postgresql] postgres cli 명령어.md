@@ -8,8 +8,8 @@ categories: db/postgresql
 title: "[postgresql] postgres cli 명령어"
 date: 2022-12-05 10:16:42
 tags:
-- db
-- postgresql
+  - db
+  - postgresql
 ---
 
 # [postgresql] postgres cli 명령어
@@ -37,9 +37,6 @@ tags:
 [jhy156456@localhost ~]$ psql -h 10.52.0.1 -p 9000 -U jhy156456 galaxy
 [jhy156456@localhost ~]$ psql -h 10.52.0.1 -p 9000 -U jhy156456 -d galaxy
 ```
-
-
-
 
 참고  
 [1] https://jhy156456.tistory.com/51

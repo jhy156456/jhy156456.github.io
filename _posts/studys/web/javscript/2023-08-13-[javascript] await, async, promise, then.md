@@ -8,12 +8,12 @@ title: "[javascript] await, async, promise, then"
 date: 2023-08-17 08:30:00
 tags:
 
-- web
-- javascript
-- async
-- await
-- promise
-- then
+  - web
+  - javascript
+  - async
+  - await
+  - promise
+  - then
 
 ---
 
