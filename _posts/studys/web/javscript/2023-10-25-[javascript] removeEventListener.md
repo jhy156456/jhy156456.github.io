@@ -20,13 +20,13 @@ tags:
 특정 상황에 따라 eventListener 함수를 변경해야 한다.  
 웹 검색 결과 eventListener 들을 전체 삭제하는 방법이 몇가지 있었다.
 
-```js
+```javascript
 box.replaceWith(box.cloneNode(true));
 ```
 
 위 함수와
 
-```js
+```javascript
 box.outerHTML = box.outerHTML
 ```
 
@@ -36,7 +36,7 @@ box.outerHTML = box.outerHTML
 
 방법은 익명함수를 사용하지않고 함수를 선언한 후에 세번째 인자를 true로 주어 remove를 적용하는 방법이다.
 
-```js
+```javascript
 function foo(event) {
   app.addSpot(event.clientX, event.clientY);
   app.addFlag = 1; 
