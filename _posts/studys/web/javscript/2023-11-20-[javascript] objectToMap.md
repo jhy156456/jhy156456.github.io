@@ -14,11 +14,13 @@ tags:
 
 ---
 
-# 질문
+# Object To MAp
+
+## 질문
 
 javascript 에서 object 타입을 map타입으로 변환할 때 배열 안에 있는 object들도 map으로 변환시킬 수 있게 reucrsive형태로 짜줘
 
-# 답변
+## 답변
 
 ```javascript
 function objectToMap(obj) {
@@ -65,6 +67,69 @@ console.log(resultMap);
  }
  */
 
+```
+
+# Map To Object
+
+## 질문
+
+javascript 에서 Map타입을 Object타입으로 변환할 때 배열 안에 있는 Map들도 전부 Object로 변환시킬 수 있게 reucrsive형태로 짜줘
+
+## 답변
+
+```javascript
+function mapToObject(map) {
+  if (!(map instanceof Map)) {
+    return map;
+  }
+
+  const obj = {};
+  map.forEach((value, key) => {
+    if (Array.isArray(value)) {
+      obj[key] = value.map(item => mapToObject(item));
+    } else if (value instanceof Map) {
+      obj[key] = mapToObject(value);
+    } else {
+      obj[key] = value;
+    }
+  });
+
+  return obj;
+}
+
+// 예제 사용
+const originalMap = new Map([
+  ['name', 'John'],
+  ['age', 30],
+  ['address', new Map([
+    ['city', 'New York'],
+    ['country', 'USA']
+  ])],
+  ['hobbies', [
+    new Map([
+      ['type', 'reading'],
+      ['level', 'high']
+    ]),
+    new Map([
+      ['type', 'traveling'],
+      ['level', 'medium']
+    ])
+  ]]
+]);
+
+const resultObject = mapToObject(originalMap);
+console.log(resultObject);
+/**
+ {
+ name: 'John',
+ age: 30,
+ address: { city: 'New York', country: 'USA' },
+ hobbies: [
+ { type: 'reading', level: 'high' },
+ { type: 'traveling', level: 'medium' }
+ ]
+ }
+ */
 ```
 
 ---
