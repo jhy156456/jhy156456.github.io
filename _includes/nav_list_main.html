@@ -288,6 +288,16 @@ posts_sum = site.posts | size %}
       </ul>
       <!-- blog end-->
 
+      <!-- android start-->
+      {% for category in site.categories %}
+      {% if category[0] == "android" %}
+      <a href="/study/categories/android" class="">
+        <span class="nav__sub-title">android ({{ category[1].size }})</span>
+      </a>
+      {% endif %}
+      {% endfor %}
+      <!-- android end-->
+
       <!-- statistics start-->
       {% for category in site.categories %}
       {% if category[0] == "statistics" %}
