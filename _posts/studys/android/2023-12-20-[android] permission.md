@@ -32,8 +32,8 @@ https://developer.android.com/reference/android/Manifest.permission
 # 권한의 종류
 
 - 위험한 권한(런타임 권한)
-  - 필수 권한
-  - 선택적 권한
+    - 필수 권한
+    - 선택적 권한
 - 일반 권한
 
 ## 위험한 권한
@@ -52,7 +52,29 @@ https://developer.android.com/reference/android/Manifest.permission
 - 일반적으로 해당 기능을 이용할 때 동의를 구함
 - 선택적 접근 권한만 있다면 최초 실행 화면이 아닌 해당 정보와 기능에 최초에 접근할 때 고지해도 상관없다.
 
+### EX
+
+#### 알림(Notifications)
+
+```xml
+
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+```
+
+#### 위치정보
+
+[1] https://developer.android.com/training/location/permissions?hl=ko  
+[2] https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime
+
+```xml
+
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+기타등등
+```
+
 ## 일반권한
+
 - 낮은 수준의 보호 권한으로써 App 사용자(User)에게 권한 부여 요청을 필요로 하지 않고 App 설치 시 자동으로 권한을 부여 받는다.
 - ex) INTERNET, BLUETOOTH, VIBRATE, SET_ALARM
 
