@@ -1,14 +1,27 @@
 ---
 pagination:
-  enabled: true
-  category: study
-  sort_field: "date"
-  sort_reverse: true
+enabled: true
+category: study
+sort_field: "date"
+sort_reverse: true
 ---
 
 <div class="nav_main_parent">
   {% include nav_list_main.html %}
-    <div class="main-content index-page clearfix">
+  <div class="main-content index-page clearfix">
+    {% assign sum = site.posts | size %}
+    <div class="post-lists">
+      <div class="post-lists-body">
+        {% for posts in site.posts %}
+        {% include categories-main.html %} {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% comment %}
+<div class="nav_main_parent">
+  {% include nav_list_main.html %}
+  <div class="main-content index-page clearfix">
     <!-- <p style="color: red;">{{paginator.total_pages}}</p>
     {% for posts in paginator.posts %}
     <p style="color: red;">{{posts.title}}</p>
@@ -17,42 +30,43 @@ pagination:
     <div class="post-lists">
       <div class="post-lists-body">
         {% for posts in paginator.posts %}
-          {% if posts.study %}
-            <div class="post-list-item">
-              <div class="post-list-item-container">
-                <div class="item-thumb  bg-{{posts.background }}" style="background-image:url('{{posts.background-image }}');"></div>
-                <a href="{{ posts.url }}">
-                  <div class="item-desc">
-                    <p>
-                      {{ posts.content | strip_html | strip_newlines | truncate: 100 }}
-                    </p>
-                  </div>
-                </a>
-                <div class="item-slant reverse-slant  bg-{{ posts.background }}"></div>
-                <div class="item-slant">
-                  <div class="liberxue-title">&nbsp;</div>
-                </div>
-                <div class="item-label">
-                  <div class="item-title">
-                    <a href="{{ posts.url }}">{{ posts.title }}</a>
-                  </div>
-                  <div class="item-meta clearfix">
-                    <div class="item-meta-ico bg-ico-book" style="
+        {% if posts.study %}
+        <div class="post-list-item">
+          <div class="post-list-item-container">
+            <div class="item-thumb  bg-{{posts.background }}"
+                 style="background-image:url('{{posts.background-image }}');"></div>
+            <a href="{{ posts.url }}">
+              <div class="item-desc">
+                <p>
+                  {{ posts.content | strip_html | strip_newlines | truncate: 100 }}
+                </p>
+              </div>
+            </a>
+            <div class="item-slant reverse-slant  bg-{{ posts.background }}"></div>
+            <div class="item-slant">
+              <div class="liberxue-title">&nbsp;</div>
+            </div>
+            <div class="item-label">
+              <div class="item-title">
+                <a href="{{ posts.url }}">{{ posts.title }}</a>
+              </div>
+              <div class="item-meta clearfix">
+                <div class="item-meta-ico bg-ico-book" style="
                                           background: url('{{site.url}}/style/images/bg-ico.png') no-repeat;
                                           background-size: 40px auto;
                                         "></div>
-                    <div class="item-meta-cat">
-                      <a href="category/thoughts/index.html">{{ posts.date | date: "%F" }}</a>
-                      <a href="category/thoughts/index.html">{{ posts.category }}</a>
-                    </div>
-                  </div>
+                <div class="item-meta-cat">
+                  <a href="category/thoughts/index.html">{{ posts.date | date: "%F" }}</a>
+                  <a href="category/thoughts/index.html">{{ posts.category }}</a>
                 </div>
               </div>
             </div>
-          {% endif %}
+          </div>
+        </div>
+        {% endif %}
         {% endfor %}
       </div>
     </div>
-    {% include pagination.html %}
   </div>
 </div>
+{% endcomment %}
