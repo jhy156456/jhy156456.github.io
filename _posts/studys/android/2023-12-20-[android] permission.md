@@ -61,6 +61,17 @@ https://developer.android.com/reference/android/Manifest.permission
 <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 ```
 
+##### targetSDK >= 13
+
+- 사용자로부터 알림권한을 요청하고 허가받은 뒤부터 알림을 표시할 수 있도록 하는 권한.
+- Notification 권한요청을 개발자가 원하는 타이밍에 노출 가능
+
+##### targetSDK < 13
+
+- targetSdkVersion이 Android 13(API 33)이상이 아니라면 내가 원하는 시점에 권한요청을 할 수 없다.
+- Notification Channel을 생성한뒤 Activity가 실행되는 시점에 알림권한 요청 팝업이 뜨게 된다.
+- Manifest에 권한을 추가해주지 않아도 된다.
+
 #### 위치정보
 
 [1] https://developer.android.com/training/location/permissions?hl=ko  
@@ -70,7 +81,7 @@ https://developer.android.com/reference/android/Manifest.permission
 
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-기타등등
+        기타등등
 ```
 
 ## 일반권한
@@ -81,4 +92,5 @@ https://developer.android.com/reference/android/Manifest.permission
 ---
 참고  
 [1] https://developer.android.com/reference/android/Manifest.permission  
-[2] https://developer.android.com/training/permissions/requesting?hl=ko
+[2] https://developer.android.com/training/permissions/requesting?hl=ko  
+[3] https://medium.com/%EB%B0%95%EC%83%81%EA%B6%8C%EC%9D%98-%EC%82%BD%EC%A7%88%EB%B8%94%EB%A1%9C%EA%B7%B8/%EC%95%8C%EB%A6%BC-%EA%B6%8C%ED%95%9C-%EC%9A%94%EC%B2%AD%EC%97%90-%EA%B4%80%ED%95%9C-%EB%AA%A8%EB%93%A0%EA%B2%83-feat-android-13-5f20d17b5d09
