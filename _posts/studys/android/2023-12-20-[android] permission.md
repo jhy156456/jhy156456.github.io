@@ -2,7 +2,7 @@
 layout: blog
 study: true
 use_math: true
-background: red
+background-image: ../../../assets/images/study/android/ScreenShot 2023-12-20 9.07.15.png
 category: study
 categories: android
 title: "[android] android 권한관련 내용 정리"
