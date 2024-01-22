@@ -61,6 +61,7 @@ posts_sum = site.posts | size %}
       {% endif %}
       {% endfor %}
       <!-- Project -->
+
       <!-- AI -->
       {% for category in site.categories %}
       {% if category[0] == "ai" %}
@@ -184,6 +185,33 @@ posts_sum = site.posts | size %}
         {% endfor %}
       </ul>
       <!-- db end -->
+
+           <!-- OS Start -->
+      {% for category in site.categories %}
+      {% if category[0] == "os" %}
+      <a href="/study/categories/os" class=""> <span class="nav__sub-title">os ({{ category[1].size }})</span>
+      </a>
+      {% endif %}
+      {% endfor %}
+      <ul class="nav_ul">
+        {% for category in site.categories %}
+        {% if category[0] == "os/linux" %}
+        <li>
+          <a href="/study/categories/os/linux" class="">linux ({{ category[1].size }})</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      <ul class="nav_ul">
+        {% for category in site.categories %}
+        {% if category[0] == "os/mac" %}
+        <li>
+          <a href="/study/categories/os/mac" class="">mac ({{ category[1].size }})</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      <!-- OS End -->
 
       <!-- DE start-->
       <span class="nav__sub-title">Data-Engineer</span>
