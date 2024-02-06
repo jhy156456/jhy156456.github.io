@@ -91,7 +91,7 @@ IT 전문가를 꿈꾸는 Data Scientist 입니다.
 
 - React Native
     - Redux
-- Sping Boot
+- Spring Boot
 - MySQL
 
 ## 관리자 페이지 개발 (2020.01 ~ 2020.12)
@@ -101,6 +101,7 @@ IT 전문가를 꿈꾸는 Data Scientist 입니다.
 - React
     - Redux
     - Material-UI
+- Node.js
 - GraphQL
 - MySQL
 
