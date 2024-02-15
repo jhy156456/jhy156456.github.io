@@ -106,6 +106,21 @@ date
 
 ```
 
+### 3 groupby 후 agg로 특정 컬럼 sum하여 series반환하기
+
+```python
+print(data.groupby('date').agg({'col1': 'sum'}))
+print(type(data.groupby('date').agg({'col1': 'sum'})))
+
+          col1
+date          
+20221201    10
+20221202    70
+20230102    40
+<class 'pandas.core.frame.DataFrame'>
+
+```
+
 ---
 참고  
 [1] https://yganalyst.github.io/data_handling/Pd_13/
