@@ -77,14 +77,32 @@ for key, group in grouped:
 
 ## groupby 후 agg
 
+### 1
+
 ```python
-data.groupby('date')['col1'].agg(set)
+print(data.groupby('date')['col1'].agg(set))
+print(type(data.groupby('date')['col1'].agg(set)))
 
 date
 20221201        {10}
 20221202    {20, 30}
 20230102        {40}
 Name: col1, dtype: object
+<class 'pandas.core.series.Series'>
+```
+
+### 2
+
+```python
+print(data.groupby('date').agg(set))
+print(type(data.groupby('date').agg(set)))
+
+              col1             col2
+date                               
+20221201      {10}            {100}
+20221202  {20, 30}  {200, 500, 300}
+20230102      {40}            {400}
+<class 'pandas.core.frame.DataFrame'>
 
 ```
 
