@@ -56,6 +56,7 @@ python ./main.py
 
 - Python 웹 애플리케이션과 웹 서버 간의 비동기적 통신
 - 동시에 여러 요청을 처리할 수 있는 비동기적 모델
+- Unix 기반 시스템에서만 작동하도록 설계
 - gunicorn은 프로세스 매니저로서 동작하게 된다. 프로세스 매니저로서 Master 프로세스를 띄우고 Worker 프로세스로, 단일 프로세스로 실행하는 uvicorn  (uvicorn 에는 Gunicorn-호환
   worker class 가 존재한다) 프로세스를 여러개 미리 띄워 요청을 처리하는 구조
 - Gunicorn은 WSGI 서버이지만, uvicorn.workers.UvicornWorker를 사용하여 ASGI 애플리케이션인 FastAPI를 호스팅할 수 있습니다. 이를 통해 FastAPI 애플리케이션을 여러
