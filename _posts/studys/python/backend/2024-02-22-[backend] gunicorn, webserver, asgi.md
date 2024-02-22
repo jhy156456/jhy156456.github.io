@@ -33,13 +33,13 @@ tags:
 - 요청당 하나의 스레드 또는 프로세스를 사용
 - FastAPI는 내부적으로 Uvicorn이라는 ASGI 서버를 사용하여 단독으로 실행될 수 있다.
 
-## fastapi 실행 방법
+### fastapi 실행 방법
 
 ```cmd
 python.exe -m uvicorn main:app --reload
 ```
 
-## fastapi 실행 방법 2
+### fastapi 실행 방법 2
 
 - 위 직접 실행의 경우 디버깅이 불가능 하기 때문에 main 함수에 uvicorn을 호출하여 실행하는 방법
 
