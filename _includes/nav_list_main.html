@@ -248,7 +248,9 @@ posts_sum = site.posts | size %}
       </a>
       {% endif %}
       {% endfor %}
+      <!-- Python end-->
       <!-- <span class="nav__sub-title">Python</span> -->
+      <!-- Python/dataframe start-->
       <ul class="nav_ul">
         {% for category in site.categories %}
         {% if category[0] == "python/dataframe" %}
@@ -258,7 +260,19 @@ posts_sum = site.posts | size %}
         {% endif %}
         {% endfor %}
       </ul>
-      <!-- Python end-->
+      <!-- Python/dataframe end-->
+      <!-- Python/backend start-->
+      <ul class="nav_ul">
+        {% for category in site.categories %}
+        {% if category[0] == "python/backend" %}
+        <li>
+          <a href="/study/categories/python/backend" class="">backend ({{ category[1].size }})</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      <!-- Python/backend end-->
+
 
       <!-- Infra start-->
       <span class="nav__sub-title">Infra</span>
