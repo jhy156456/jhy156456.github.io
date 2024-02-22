@@ -16,7 +16,9 @@ tags:
 # Fastapi와 gunicorn 도식도
 
 - python 웹서비스 아키텍처
-  ![](../../../../assets/images/study/python/backend/fastapi.png){: width="100%" height="100%"}
+
+  [![](../../../../assets/images/study/python/backend/fastapi.png){: width="80%" height="100%"}](../../../../assets/images/study/python/backend/fastapi.png)
+  
 
 # Web server
 
