@@ -4,8 +4,8 @@ study: true
 # background-image: http://ot1cc1u9t.bkt.clouddn.com/17-7-16/91630214.jpg
 category: study
 background: green
-categories: [ ai/ml ]
-title: "[ML] lightgbm 정리"
+categories: ai/ml
+title: "[ML] lightgbm "
 date: 2023-02-15 15:10
 tags:
   - ai
@@ -46,7 +46,7 @@ models.append(newModel)
 - 검증셋을 활용해서 검증셋에 대한 결과가 좋아지지 않을때까지 의사결정트리를 추가한다.
 
 참고  
-[1] 모두의 연구소
-[2] https://dacon.io/codeshare/1827  
-[3] https://neptune.ai/blog/lightgbm-parameters-guide  
+[1] 모두의 연구소  
+[2] https://dacon.io/codeshare/1827    
+[3] https://neptune.ai/blog/lightgbm-parameters-guide        
 [4] https://velog.io/@kkiyou/lgbm
