@@ -77,7 +77,7 @@ for key, group in grouped:
 
 ## groupby 후 agg
 
-### 1
+### 1 col1만 agg(set)
 
 ```python
 print(data.groupby('date')['col1'].agg(set))
@@ -91,7 +91,7 @@ Name: col1, dtype: object
 <class 'pandas.core.series.Series'>
 ```
 
-### 2
+### 2 전체 컬럼 agg
 
 ```python
 print(data.groupby('date').agg(set))
@@ -119,6 +119,23 @@ date
 20230102    40
 <class 'pandas.core.frame.DataFrame'>
 
+```
+
+### 4 groupby 후 agg함수 적용 후 reset_index하여 값 열 변경
+
+```python
+print(data.groupby('date')['col1'].agg(set))
+#   MATL_CD          unit_list
+# 0       A       {Pump, Valve}
+# 1       B       {Pump, Valve}
+# 2       C              {Pump}
+
+print(data.groupby('date')['col1'].agg(set).reset_index(name='hi'))
+
+#      date                 hi
+# 0       A       {Pump, Valve}
+# 1       B       {Pump, Valve}
+# 2       C              {Pump}
 ```
 
 ---
