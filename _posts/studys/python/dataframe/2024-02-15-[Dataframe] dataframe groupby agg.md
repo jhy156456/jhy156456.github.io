@@ -122,6 +122,7 @@ date
 ```
 
 ### 4 groupby 후 agg함수 적용 후 reset_index하여 값 열 변경
+- Series의 인덱스를 리셋하는 reset_index() 사용 후 매게변수로 name을 사용하면 값(value) 열의 이름을 지정하는 데 사용됩니다.
 
 ```python
 print(data.groupby('date')['col1'].agg(set))
@@ -140,4 +141,5 @@ print(data.groupby('date')['col1'].agg(set).reset_index(name='hi'))
 
 ---
 참고  
-[1] https://yganalyst.github.io/data_handling/Pd_13/
+[1] https://yganalyst.github.io/data_handling/Pd_13/  
+[2] https://pandas.pydata.org/docs/reference/api/pandas.Series.reset_index.html
