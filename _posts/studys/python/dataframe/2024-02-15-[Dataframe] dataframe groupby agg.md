@@ -122,14 +122,15 @@ date
 ```
 
 ### 4 groupby 후 agg함수 적용 후 reset_index하여 값 열 변경
-- Series의 인덱스를 리셋하는 reset_index() 사용 후 매게변수로 name을 사용하면 값(value) 열의 이름을 지정하는 데 사용됩니다.
+- Series의 인덱스를 리셋하는 reset_index() 사용 후 매게변수로 name을 사용하면 값(value) 열의 이름을 지정하는 데 사용됩니다. [2]
 
 ```python
 print(data.groupby('date')['col1'].agg(set))
-#   MATL_CD          unit_list
-# 0       A       {Pump, Valve}
-# 1       B       {Pump, Valve}
-# 2       C              {Pump}
+#                   unit_list(value)
+#  MATL_CD          
+#        A       {Pump, Valve}
+#        B       {Pump, Valve}
+#        C              {Pump}
 
 print(data.groupby('date')['col1'].agg(set).reset_index(name='hi'))
 
