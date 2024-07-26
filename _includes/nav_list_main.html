@@ -87,6 +87,15 @@ posts_sum = site.posts | size %}
         {% endif %}
         {% endfor %}
       </ul>
+      <ul class="nav_ul">
+        {% for category in site.categories %}
+        {% if category[0] == "ai/nlp" %}
+        <li>
+          <a href="/study/categories/ai/nlp" class="">NLP ({{ category[1].size }})</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
       <!-- AI -->
 
       <!-- java start -->
