@@ -166,6 +166,6 @@ model has higher prediction performance and can be applied across various region
 
 # 학력
 
-2024, 한양대학교 인공지능시스템학과 석사 졸업     
-2019, 홍익대학교 컴퓨터공학과 학사 졸업  
+2024, Master’s Degree in Artificial Intelligence Systems, Hangyang University, Seoul, South Korea       
+2019, Bachelor’s Degree in Computer Engineering, Hongik University, Seoul, South Korea  
 2012, 배명고등학교 졸업
