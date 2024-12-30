@@ -1,0 +1,663 @@
+
+<!DOCTYPE >
+<html lang="zh-cn" data-scribe-reduced-action-queue="true">
+  <head>
+    <meta content="[ml] Precision, Recall - Hayden J GitHub blog" name="title" />
+    <meta content="[ml] Precision, Recall - Hayden J GitHub blog" name="og:title" />
+    <title>[ml] Precision, Recall - Hayden J GitHub blog</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>[ml] Precision, Recall - Hayden J GitHub blog</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[ml] Precision, Recall - Hayden J GitHub blog">
+<meta name="twitter:keywords" content="[ml] Precision, Recall - Hayden J GitHub blog" property="og:description" />
+<meta property="og:type" content="article">
+<meta property="og:title" content="[ml] Precision, Recall - Hayden J GitHub blog">
+<meta name="og:keywords"
+      content="[ml] Precision, Recall - Hayden J GitHub blog|[ml] Precision, RecallRecall  Recall은 실제로 True인 데이터를 모델이 True라고 인식한 데이터의 수입니다.  모델이 True라고 예측한 갯수 / 실제로 True인 갯수Preci..."
+      property="og:description" />
+<meta name="theme-Jekyll by liberxue" content="#eb5055">
+<link rel="icon" type="image/png" href="https://jhy156456.github.io/style/favicons/favicon.ico" />
+<link href="https://jhy156456.github.io/style/favicons/favicon.ico" rel="shortcut icon" type="image/png">
+<!-- 댓글 이슈 수정 -->
+<!-- <link rel="canonical" href="https://jhy156456.github.io/"> -->
+<link rel="canonical" href="" />
+<link rel="alternate" type="application/rss+xml" title="jhy156456" href="https://jhy156456.github.io/feed.xml">
+<meta charset="UTF-8">
+<!-- <link rel="manifest" href="/manifest.json"> -->
+<link rel="shortcut icon" href="https://jhy156456.github.io/style/favicons/favicon.ico" type="image/x-icon">
+<meta name="keywords" content="[ml] Precision, RecallRecall  Recall은 실제로 True인 데이터를 모델이 True라고 인식한 데이터의 수입니다.  모델이 True라고 예측한 갯수 / 실제로 True인 갯수Preci..."
+      property="og:description" />
+<meta name="description" content="오늘 무언가를 하지않으면 내일은 저절로 오지않는다" />
+<!--<link href="https://cdn.bootcss.com/highlight.js/9.10.0/styles/xcode.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+
+<!--<link href="https://jhy156456.github.io/assets/css/syntax.css" rel="stylesheet">-->
+<link href="https://jhy156456.github.io/style/style-liberxue.css" rel="stylesheet">
+<!-- <link href="https://jhy156456.github.io/_sass/minimal-mistakes/_navigation.scss" rel="stylesheet"> -->
+
+<meta content="https://jhy156456.github.io/2022/12/09/ml-presicion,-recall.html" property="og:url" />
+<meta content="https://jhy156456.github.io/2022/12/09/ml-presicion,-recall.html|[ml] Precision, RecallRecall  Recall은 실제로 True인 데이터를 모델이 True라고 인식한 데이터의 수입니다.  모델이 True라고 예측한 갯수 / 실제로 True인 갯수Preci..."
+      property="og:description" />
+<meta content="article" property="og:type" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S9G62LP1GS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag("js", new Date());
+  gtag("config", "G-S9G62LP1GS");
+</script>
+<!--  -->
+
+    
+  </head>
+
+  <body class="" gtools_scp_screen_capture_injected="true">
+    <header id="header" class="header bg-white">
+      <div class="navbar-container">
+        <a
+          href="/"
+          title="Hayden J GitHub blog"
+          class="navbar-logo">
+          <img src="https://jhy156456.github.io/style/images/logo-jhy156456.png" alt="Hayden J GitHub blog" />
+        </a>
+        <div class="navbar-menu">
+          
+            <a href="https://jhy156456.github.io/">홈</a>
+          
+            <a href="https://jhy156456.github.io/review">리뷰</a>
+          
+            <a href="https://jhy156456.github.io/study">카테고리</a>
+          
+            <a href="https://jhy156456.github.io/archives">기록</a>
+          
+            <a href="https://jhy156456.github.io/about">About Me</a>
+          
+        </div>
+        <div class="navbar-search" onclick="">
+          <span class="icon-search"></span>
+          <form id="cb-search-btn" role="search">
+            <span class="search-box">
+              <input
+                type="text"
+                class="input"
+                id="cb-search-content"
+                required="true"
+                placeholder="검색..."
+                maxlength="30"
+                autocomplete="off" />
+            </span>
+          </form>
+        </div>
+        <div class="navbar-mobile-menu" onclick="">
+          <span class="icon-menu cross">
+            <span class="middle"></span>
+          </span>
+          <ul>
+            
+              <li>
+                <a href="https://jhy156456.github.io/">홈</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/review">리뷰</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/study">카테고리</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/archives">기록</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/about">About Me</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div class="post-header-thumb bg-white}">
+      <!-- <div class="post-header-thumb-op"></div> -->
+      <div class="post-header-thumb">
+        <div class="post-header-thumb-container">
+          <h1 class="post-title" itemprop="name headline">[ml] Precision, Recall</h1>
+          <div class="post-data">
+            <time datetime="2022-12-09 19:06:42" itemprop="datePublished">작성일자：2022-12-09 19:06:42</time>
+            <br/>
+            <a
+              href="/tags#study"
+              title="study"
+              data-hover="분류: study">
+              분류: study</a>
+            <!-- <a href="#read">
+            댓글: comments</a> -->
+          </div>
+          <div class="post-tags">
+            
+              
+              
+                
+                  <a
+                    href="/tags#ai"
+                    title="ai"
+                    data-hover="ai">
+                    ai
+                    <span>(7)</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#presicion"
+                    title="presicion"
+                    data-hover="presicion">
+                    presicion
+                    <span>(1)</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#recall"
+                    title="recall"
+                    data-hover="recall">
+                    recall
+                    <span>(1)</span>
+                    
+                  </a>
+                
+              
+              
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <article
+      class="main-post post-page"
+      itemscope
+      itemtype="http://schema.org/Article">
+      <div class="post-header">
+        <h1 class="post-title" itemprop="name headline">[ml] Precision, Recall</h1>
+        <div class="post-data">
+          <time datetime="2022-12-09 19:06:42" itemprop="datePublished">2022-12-09 19:06:42</time>
+        </div>
+      </div>
+      <div
+        id="post-content"
+        class="post-content"
+        itemprop="articleBody">
+        <p class="post-tags">
+          
+            
+            
+              
+                <a
+                  href="/tags#ai"
+                  title="ai"
+                  data-hover="ai">
+                  ai
+                  <span>(7)</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#presicion"
+                  title="presicion"
+                  data-hover="presicion">
+                  presicion
+                  <span>(1)</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#recall"
+                  title="recall"
+                  data-hover="recall">
+                  recall
+                  <span>(1)</span>
+                  
+                </a>
+              
+            
+            
+          
+        </p>
+        <h1 id="ml-precision-recall">[ml] Precision, Recall</h1>
+
+<h2 id="recall">Recall</h2>
+
+<ul>
+  <li>Recall은 실제로 True인 데이터를 모델이 True라고 인식한 데이터의 수입니다.</li>
+  <li>모델이 True라고 예측한 갯수 / 실제로 True인 갯수</li>
+</ul>
+
+<h2 id="precision">Precision</h2>
+
+<ul>
+  <li>Precision은 모델이 True로 예측한 데이터 중 실제로 True인 데이터의 수입니다.</li>
+  <li>실제로 True인 갯수 / 모델이 True라고 예측한 갯수</li>
+</ul>
+
+<h2 id="tptn-fp-fn">TP,TN, FP, FN</h2>
+
+<p>True Postive: 문제가 있는(positive) 제품을 문제가 있다고(positive) 잘(true) 판별한 것.</p>
+
+<p>True Negative: 문제가 없는(negative) 제품을 문제가 없다고(negative) 잘(true) 판별한 것.</p>
+
+<p>False Positive: 문제가 없는(negative) 제품을 문제가 있다고(positive) 잘못(false) 판단한 것.</p>
+
+<p>False Negative: 문제가 있는(positive) 제품을 문제가 없다고(negative) 잘못(false) 판단한 것.</p>
+
+        <div>
+          <p class="post-info">
+            <!-- <link rel="canonical" href="http://jhy156456.github.io/"/> -->
+            <script
+              src="https://utteranc.es/client.js"
+              repo="jhy156456/github.io-comments"
+              issue-term="pathname"
+              label="Comment"
+              theme="github-light"
+              crossorigin="anonymous"
+              rel="canonical"
+              async></script>
+          </p>
+        </div>
+
+        <p class="post-info">
+          이 문서는<a href="/">
+            jhy156456</a>에 의해 작성되었습니다.<br/>
+          <!-- <a
+          href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank"
+          rel="external nofollow">creative commons 4.0</a>
+          라이센스에 대한 국제 라이센스 계약<br/> -->
+          마지막 수정 날짜:2022-12-09 19:06:42
+        </p>
+      </div>
+    </article>
+
+    <!-- <div class="related-post-lists">
+    <div class="post-lists">
+    <div class="post-lists-body">
+    <div class="post-list-item">
+    <div class="post-list-item-container">
+    <div class="item-label">
+    <div class="item-title"><a href="induction.html">归纳的随想</a></div>
+    <div class="item-meta clearfix">
+    <div class="item-meta-ico bg-ico-image" style="background: url('../usr/themes/pinghsu/images/bg-ico.png') no-repeat;background-size: 40px auto;"></div>
+    <div class="item-meta-cat"><a href="../category/thoughts/index.html">Thoughts</a></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div> -->
+
+    <footer class="footer bg-white">
+  
+
+  <div class="footer-social">
+    <div class="footer-container clearfix">
+      <div class="social-list">
+        <a
+          class="social github"
+          target="blank"
+          href="https://github.com/jhy156456"
+          title="github"
+          data-hover="GitHub">GitHub</a>
+        <a
+          class="social tistory"
+          target="blank"
+          href="http://jhy156456.tistory.com"
+          title="tistory"
+          data-hover="Tistory">Tistory</a>
+        <a
+          class="social linkedin"
+          target="blank"
+          href="https://www.linkedin.com/in/%ED%98%84%EC%98%81-%EC%A0%95-6b2660252/"
+          title="linkedin"
+          data-hover="LinkedIn">LinkedIn</a>
+        <a
+          class="social rss"
+          target="blank"
+          href="mailto:jcypher1024@outlook.com"
+          title="E-mail"
+          data-hover="E-mail">E-mail</a>
+
+      </div>
+    </div>
+  </div>
+  <div class="footer-meta">
+    <div class="footer-container">
+      <div class="meta-item meta-copyright">
+        <div class="meta-copyright-info">
+          <a href="/" class="info-logo">
+            <img
+              src="https://jhy156456.github.io/style/images/logo-jhy156456.png"
+              title="jhy156456_blog"
+              data-hover="jhy156456_blog"
+              alt="jhy156456_blog" />
+          </a>
+          <div class="info-text">
+            <p>
+              Theme is
+              <a
+                href="http://www.liberxue.com/2017/08/03/Jekyllthemes.html"
+                title="访问 Jekyll liberxue主题"
+                data-hover="Jekyll liberxue"
+                target="_blank">Jekyll liberxue</a>
+              by
+              <a href="http://www.liberxue.com/about" target="_blank">liberxue</a>
+            </p>
+            <p>
+              Powered by
+              <a
+                href="https://jhy156456.github.io/tags/#Jekyll"
+                title="Jekyll"
+                data-hover="Jekyll"
+                target="_blank"
+                rel="nofollow">Jekyll</a>
+            </p>
+            <!-- <p>&copy; 2017 <a href="/feed.xml" title="访问 liberxue blog RSS" -->
+            <!-- data-hover="liberxue blog RSS">liberxue blog RSS</a></p> -->
+            <!-- <p>게시글：개</p> --><p>총 게시글：94개
+          </p>
+            <!-- <p>이blog는 Fork되었습니다.</p><iframe
+            src="http://ghbtns.com/github-btn.html?user=liberxue&repo=liberxue.github.io&type=fork&count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe> -->
+          </div>
+        </div>
+      </div>
+      <div class="meta-item meta-posts">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">다른기사</h3>
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+      <div class="meta-item meta-comments">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">최신글</h3>
+
+        
+          
+            <li>
+              <a
+                href="/2024/12/30/k8s-service.html"
+                title="[k8s] service"
+                data-hover="[k8s] service">
+                [k8s] service</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2024/11/23/statistics-z-scoring,-f,-t/.html"
+                title="[statistics] z-scoring, f, t.."
+                data-hover="[statistics] z-scoring, f, t..">
+                [statistics] z-scoring, f, t..</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2024/09/19/tips-logitech-mx-keys-for-mac-f13~f15(with.-fn).html"
+                title="[tips] logitech mx keys for mac f13~f15(with. fn) 불편한 점 개선"
+                data-hover="[tips] logitech mx keys for mac f13~f15(with. fn) 불편한 점 개선">
+                [tips] logitech mx keys for mac f13~f15(with. fn) 불편한 점 개선</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2024/08/09/python-path.html"
+                title="[python] path"
+                data-hover="[python] path">
+                [python] path</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2024/08/07/backend-gunicorn,-argparse-%EC%B6%A9%EB%8F%8C-%EC%9D%B4%EC%8A%88.html"
+                title="[backend] gunicorn, argparse conflict issue"
+                data-hover="[backend] gunicorn, argparse conflict issue">
+                [backend] gunicorn, argparse conflict issue</a>
+            </li>
+          
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.js"></script>
+<script src="/search/js/cb-search.js"></script>
+<script>
+  $(function() {
+    setTimeout(function() {
+      $("code").removeClass("hljs");
+      $("code").removeClass("language");
+    }, 90);
+  });
+  (function() {
+    var bp = document.createElement("script");
+    var curProtocol = window.location.protocol.split(":")[0];
+    if (curProtocol === "https") {
+      bp.src = "https://zz.bdstatic.com/linksubmit/push.js";
+    } else {
+      bp.src = "http://push.zhanzhang.baidu.com/push.js";
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+    <div id="directory-content" class="directory-content">
+      <div id="directory"></div>
+    </div>
+    <script>
+      var postDirectoryBuild = function() {
+        var postChildren = function children(childNodes, reg) {
+            var result = [],
+              isReg = typeof reg === "object",
+              isStr = typeof reg === "string",
+              node,
+              i,
+              len;
+            for (i = 0, len = childNodes.length; i < len; i++) {
+              node = childNodes[i];
+              if ((node.nodeType === 1 || node.nodeType === 9) && (! reg || (isReg && reg.test(node.tagName.toLowerCase())) || (isStr && node.tagName.toLowerCase() === reg))) {
+                result.push(node);
+              }
+            }
+            return result;
+          },
+          createPostDirectory = function(article, directory, isDirNum) {
+            var contentArr = [],
+              titleId = [],
+              levelArr,
+              root,
+              level,
+              currentList,
+              list,
+              li,
+              link,
+              i,
+              len;
+            levelArr = (function(article, contentArr, titleId) {
+              var titleElem = postChildren(article.childNodes, /^h\d$/),
+                levelArr = [],
+                lastNum = 1,
+                lastRevNum = 1,
+                count = 0,
+                guid = 1,
+                id = "directory" + (
+                  Math.random() + ""
+                ).replace(/\D/, ""),
+                lastRevNum,
+                num,
+                elem;
+              while (titleElem.length) {
+                elem = titleElem.shift();
+                contentArr.push(elem.innerHTML);
+                num = + elem.tagName.match(/\d/)[0];
+                if (num > lastNum) {
+                  levelArr.push(1);
+                  lastRevNum += 1;
+                } else if (num === lastRevNum || (num > lastRevNum && num <= lastNum)) {
+                  levelArr.push(0);
+                  lastRevNum = lastRevNum;
+                } else if (num < lastRevNum) {
+                  levelArr.push(num - lastRevNum);
+                  lastRevNum = num;
+                }
+                count += levelArr[levelArr.length - 1];
+                lastNum = num;
+                elem.id = elem.id || id + guid++;
+                titleId.push(elem.id);
+              }
+              if (count !== 0 && levelArr[0] === 1) 
+                levelArr[0] = 0;
+              
+
+
+              return levelArr;
+            })(article, contentArr, titleId);
+            currentList = root = document.createElement("ul");
+            dirNum = [0];
+            for (i = 0, len = levelArr.length; i < len; i++) {
+              level = levelArr[i];
+              if (level === 1) {
+                list = document.createElement("ul");
+                if (! currentList.lastElementChild) {
+                  currentList.appendChild(document.createElement("li"));
+                }
+                currentList.lastElementChild.appendChild(list);
+                currentList = list;
+                dirNum.push(0);
+              } else if (level < 0) {
+                level *= 2;
+                while (level++) {
+                  if (level % 2) 
+                    dirNum.pop();
+                  
+
+
+                  currentList = currentList.parentNode;
+                }
+              }
+              dirNum[dirNum.length - 1]++;
+              li = document.createElement("li");
+              link = document.createElement("a");
+              link.href = "#" + titleId[i];
+              link.title = titleId[i];
+              link.title = titleId[i];
+              link.innerHTML = ! isDirNum
+                ? contentArr[i]
+                : dirNum.join(".") + " " + contentArr[i];
+              li.appendChild(link);
+              currentList.appendChild(li);
+            }
+            directory.appendChild(root);
+          };
+        createPostDirectory(document.getElementById("post-content"), document.getElementById("directory"), true);
+      };
+      postDirectoryBuild();
+    </script>
+    <script>//           window.addEventListener(
+//     "scroll",
+//     function () {
+//       console.log("??????????");
+//     },
+//     true
+// );
+  </script>
+  <!-- <script>
+  $(document).ready(function () {
+  var currentPosition = parseInt($("#directory").css("top"));
+  $(window).scroll(function () {
+  var position = $(window).scrollTop()-500;
+  $("#directory")
+  .stop()
+  .animate({ top: position + currentPosition + "px" }, 0);
+  });
+  });
+  </script> --><!-- <script>
+    $(function () {
+    var $win = $(window);
+    var top = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환
+
+    /*사용자 설정 값 시작*/
+    var speed = 500; // 따라다닐 속도 : "slow", "normal", or "fast" or        numeric(단위:msec)
+    var easing = "linear"; // 따라다니는 방법 기본 두가지 linear, swing
+    var $layer = $("#directory"); // 레이어 셀렉팅
+    // var layerTopOffset = 650; // 레이어 높이 상한선, 단위:px
+    var layerTopOffset = 0; // 레이어 높이 상한선, 단위:px
+    // $layer.css("position", "absolute");
+    $layer.css("top", "0px"); //첫 시작 위치
+    /*사용자 설정 값 끝*/
+
+    // 스크롤 바를 내린 상태에서 리프레시 했을 경우를 위해
+    if (top > 0) $win.scrollTop(layerTopOffset + top);
+    else $win.scrollTop(0);
+
+    //스크롤이벤트가 발생하면
+    $(window).scroll(function () {
+    yPosition = $win.scrollTop() + layerTopOffset;
+    //   console.log($win.scrollTop())
+    console.log($layer.css("top"))
+    if (yPosition < 0) {
+    yPosition = 0;
+    }
+    $layer.animate(
+    { top: yPosition},
+    { duration: speed, easing: easing, queue: false }
+    );
+    });
+    });
+    </script> --><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    lang = hljs.initHighlightingOnLoad();
+  </script>
+</body></html>
