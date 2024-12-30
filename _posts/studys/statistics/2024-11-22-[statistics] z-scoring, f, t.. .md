@@ -28,9 +28,9 @@ x1, x2, x3, x4, x5
 # z-scoring
 
 - 자료가 평균으로부터 표준편차의 몇 배만큼 떨어져 있는지를 나타낸다
-  <a href="../../../assets/images/study/statistics/img.png">
+<a href="../../../assets/images/study/statistics/img.png">
   <img src="../../../assets/images/study/statistics/img.png" alt="Screenshot" width="80%" height="50%">
-  </a>
+</a>
 - 위 그림은 표준 정규 분포에서의 분포 모형이다.
 - 위 그림에서 Z의 절대값이 3 이상이 나온다면 좀 튀는 값이라고 생각 할 수 있다.
 
