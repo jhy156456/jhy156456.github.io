@@ -41,10 +41,12 @@ load_dataset('klue', 'ynat', split='train')
 
 ## 해결
 
-`huggingface_hub`의 버전을 업데이트 하여 해결
+`huggingface_hub`의 버전만 업데이트 할 경우 `load_dataset` 함수 실행은 되지만  
+`transformer_model = models.Transformer('klue/roberta-base')` 함수로 모델을 불러올 때 다시 오류가 발생한다.  
+따라서 모든 라이브러리를 업데이트 해주자.
 
 ```python
-!pip install --upgrade huggingface_hub
+!pip install --upgrade huggingface_hub transformers datasets
 ```
 
 ---
