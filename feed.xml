@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hayden J GitHub blog</title>
+    <description>Full Stack | AI</description>
+    <link>https://jhy156456.github.io</link>
+    <atom:link href="https://jhy156456.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>[oracle] primary key 수정 후 무결성 제약조건(ORA-00001) 사라지지 않음 현상</title>
+        <category>study</category>
+        <description>문제발생A_TABLE에 A,B,C 컬럼 외에 D 컬럼을 프라이머리키로 추가했다.ALTER TABLE A_TABLE DROP CONSTRAINT SYS_0ALTER TABLE ...</description>
+        <pubDate>2025-03-18 18:58:42 </pubDate>
+        <link>https://jhy156456.github.io/2025/03/18/oracle-primary-key-index-error.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2025/03/18/oracle-primary-key-index-error.html</guid>
+      </item>
+    
+      <item>
+        <title>[nlp] KLUE STS 데이터셋 다운로드 오류</title>
+        <category>study</category>
+        <description>[nlp] KLUE STS 데이터셋 다운로드 오류오류 발생아래 코드로 데이터 다운로드 시 오류가 발생했다.from datasets import load_datasetload_...</description>
+        <pubDate>2025-01-08 12:38:00 </pubDate>
+        <link>https://jhy156456.github.io/2025/01/08/nlp-KLUE-STS-error.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2025/01/08/nlp-KLUE-STS-error.html</guid>
+      </item>
+    
+      <item>
+        <title>[k8s] service</title>
+        <category>study</category>
+        <description>  [k8s] serviceselector  Service를 생성하면, label Selector에서 특정 label을 가진 Pod들만 탐지한다. Service는 이렇게 필터...</description>
+        <pubDate>2024-12-30 18:40:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/12/30/k8s-service.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/12/30/k8s-service.html</guid>
+      </item>
+    
+      <item>
+        <title>[statistics] z-scoring, f, t..</title>
+        <category>study</category>
+        <description>분위수  확률 p에 위치해있는 수가 어떤수인지를 구하는 방법24, 28, 37, 43, 46x1, x2, x3, x4, x5 일때 p가 0.5인 경우의 분위수 값은? 5개 x...</description>
+        <pubDate>2024-11-23 00:06:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/11/23/statistics-z-scoring,-f,-t/.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/11/23/statistics-z-scoring,-f,-t/.html</guid>
+      </item>
+    
+      <item>
+        <title>[tips] logitech mx keys for mac f13~f15(with. fn) 불편한 점 개선</title>
+        <category>study</category>
+        <description>mx keyslogitech 에서 출시한 기기 3개의 연결이 가능한 소리가 적은 키보드문제점  로지텍에는 logi options에서 설정 가능한 F1,F2등을 기본 기능키로 ...</description>
+        <pubDate>2024-09-19 20:24:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/09/19/tips-logitech-mx-keys-for-mac-f13~f15(with.-fn).html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/09/19/tips-logitech-mx-keys-for-mac-f13~f15(with.-fn).html</guid>
+      </item>
+    
+      <item>
+        <title>[python] path</title>
+        <category>study</category>
+        <description>logger.pyfrom pathlib import PathPath().cwd() / 'logs'Path().cwd() : Return a new path pointing t...</description>
+        <pubDate>2024-08-09 22:27:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/08/09/python-path.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/08/09/python-path.html</guid>
+      </item>
+    
+      <item>
+        <title>[backend] gunicorn, argparse conflict issue</title>
+        <category>study</category>
+        <description>문제위와 같이 arg_parse.py파일이 있을때 gunicorn으로 파이썬을 실행시켰을 때 해당 모듈의 get_args()함수를 실행시키는 코드가 있었다. 이 때 gunic...</description>
+        <pubDate>2024-08-07 02:20:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/08/07/backend-gunicorn,-argparse-%EC%B6%A9%EB%8F%8C-%EC%9D%B4%EC%8A%88.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/08/07/backend-gunicorn,-argparse-%EC%B6%A9%EB%8F%8C-%EC%9D%B4%EC%8A%88.html</guid>
+      </item>
+    
+      <item>
+        <title>[nlp] RAG</title>
+        <category>study</category>
+        <description>RAG(Retrieval Augmented Generation) 개념정의  검색 증강 생성. 문서 기반의 검색 및 답변 생성 기술.프로세스전처리 작업: 문서 로드, 스플릿(청...</description>
+        <pubDate>2024-07-22 08:58:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/07/22/nlp-RAG.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/07/22/nlp-RAG.html</guid>
+      </item>
+    
+      <item>
+        <title>[python] reduce</title>
+        <category>study</category>
+        <description>reducePython의 reduce 함수는 functools 모듈에 포함된 고차 함수로, 주어진 이터러블(iterable) 객체에 지정된 이진 함수(binary functi...</description>
+        <pubDate>2024-07-10 18:44:42 </pubDate>
+        <link>https://jhy156456.github.io/2024/07/10/python-reduce.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/07/10/python-reduce.html</guid>
+      </item>
+    
+      <item>
+        <title>[Dataframe] dataframe groupby, agg</title>
+        <category>study</category>
+        <description>Dataframe 생성raw_data = {'date': ["20221201", "20221202", "20221202", "20221202", "20230102"],    ...</description>
+        <pubDate>2024-04-25 23:20:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/04/25/Dataframe-dataframe-groupby-agg.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/04/25/Dataframe-dataframe-groupby-agg.html</guid>
+      </item>
+    
+      <item>
+        <title>[backend] gunicorn, webserver, asgi</title>
+        <category>study</category>
+        <description>Fastapi와 gunicorn 도식도      python 웹서비스 아키텍처      Web server역할  정적 요청에 대한 응답  Reverse Proxy를 이용하여 ...</description>
+        <pubDate>2024-02-22 23:20:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/02/22/backend-gunicorn,-webserver,-asgi.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/02/22/backend-gunicorn,-webserver,-asgi.html</guid>
+      </item>
+    
+      <item>
+        <title>[Dataframe] dataframe에서 중복 컬럼 가져오기</title>
+        <category>study</category>
+        <description>Dataframe 생성raw_data = {'date': ["20221201", "20221202", "20221202", "20221202", "20230102"],    ...</description>
+        <pubDate>2024-02-14 23:20:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/02/14/Dataframe-dataframe-duplicated.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/02/14/Dataframe-dataframe-duplicated.html</guid>
+      </item>
+    
+      <item>
+        <title>[os] window의 cmd와 linux의 bash 명령어 비교</title>
+        <category>study</category>
+        <description>리눅스 / 윈도우            기능      리눅스      윈도우                  파일목록      ls      dir              현재디...</description>
+        <pubDate>2024-02-13 17:00:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/02/13/os-cmd-vs-bash.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/02/13/os-cmd-vs-bash.html</guid>
+      </item>
+    
+  </channel>
+</rss>
