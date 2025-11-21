@@ -177,6 +177,15 @@ posts_sum = site.posts | size %}
       <span class="nav__sub-title">DataBase</span>
       <ul class="nav_ul">
         {% for category in site.categories %}
+        {% if category[0] == "db/oracle" %}
+        <li>
+          <a href="/study/categories/db/oracle/" class="">oracle ({{ category[1].size }})</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      <ul class="nav_ul">
+        {% for category in site.categories %}
         {% if category[0] == "db/postgresql" %}
         <li>
           <a href="/study/categories/db/postgresql/" class="">postgresql ({{ category[1].size }})</a>
@@ -195,7 +204,7 @@ posts_sum = site.posts | size %}
       </ul>
       <!-- db end -->
 
-           <!-- OS Start -->
+      <!-- OS Start -->
       {% for category in site.categories %}
       {% if category[0] == "os" %}
       <a href="/study/categories/os" class=""> <span class="nav__sub-title">os ({{ category[1].size }})</span>
@@ -240,6 +249,16 @@ posts_sum = site.posts | size %}
         "data-engineer/spark" %}
         <li>
           <a href="/study/categories/data-engineer/spark/" class="">spark ({{ category[1].size }})</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      <ul class="nav_ul">
+        {% for category in site.categories %}
+        {% if category[0] ==
+        "data-engineer/hdfs" %}
+        <li>
+          <a href="/study/categories/data-engineer/hdfs/" class="">spark ({{ category[1].size }})</a>
         </li>
         {% endif %}
         {% endfor %}
