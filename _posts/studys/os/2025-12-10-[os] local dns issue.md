@@ -38,6 +38,10 @@ tags:
 
 `LOCAL_DNS` 의 BIND 핵심 설정 (개념만):
 
+- DNS 설정 : `/etc/named.conf`
+- 내부에 include 및 directory 확인
+- 내 LOCAL_DNS는 `include "/etc/named.rfc~~"` + `directory "/var/named "` 설정되어 있음
+
 ```conf
 options {
     directory "/var/named";
