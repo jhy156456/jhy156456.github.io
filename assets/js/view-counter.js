@@ -7,15 +7,14 @@
   'use strict';
 
   // Firebase 설정
-  // TODO: Firebase 프로젝트를 생성하고 아래 설정을 업데이트하세요
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyBOFhnIw3DNLkHzBHGtno1t5bWs992GQ58",
+    authDomain: "jhy156456-blog-views.firebaseapp.com",
+    databaseURL: "https://jhy156456-blog-views-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "jhy156456-blog-views",
+    storageBucket: "jhy156456-blog-views.firebasestorage.app",
+    messagingSenderId: "552788902808",
+    appId: "1:552788902808:web:73ad1b70867b60e515a1ed"
   };
 
   // Firebase 초기화 (설정이 완료된 경우에만)
@@ -26,10 +25,24 @@
   const useLocalStorage = !firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_API_KEY";
 
   /**
-   * 페이지 경로를 키로 변환
+   * Firebase 경로에 안전한 키로 변환
+   * Firebase Realtime Database 경로에는 ., #, $, [, ] 문자가 허용되지 않음
+   */
+  function encodeFirebasePath(path) {
+    return path
+      .replace(/^\/+/, '') // 앞의 슬래시 제거
+      .replace(/\./g, '_dot_')
+      .replace(/#/g, '_hash_')
+      .replace(/\$/g, '_dollar_')
+      .replace(/\[/g, '_lbracket_')
+      .replace(/\]/g, '_rbracket_');
+  }
+
+  /**
+   * 페이지 경로를 Firebase 안전 키로 변환
    */
   function getPageKey() {
-    return window.location.pathname;
+    return encodeFirebasePath(window.location.pathname);
   }
 
   /**
@@ -65,13 +78,14 @@
       return;
     }
 
-    const pageKey = getPageKey();
-    const viewedKey = 'viewed_' + pageKey.replace(/\//g, '_');
+    const originalPath = window.location.pathname;
+    const pageKey = getPageKey(); // Firebase 안전 경로
+    const viewedKey = 'viewed_' + encodeFirebasePath(originalPath).replace(/\//g, '_');
     
     // 같은 세션에서 이미 조회한 경우 카운트하지 않음
     if (sessionStorage.getItem(viewedKey)) {
       // 이미 조회했어도 현재 카운트는 표시
-      const counterRef = db.ref('views' + pageKey);
+      const counterRef = db.ref('views/' + pageKey);
       counterRef.once('value', (snapshot) => {
         const count = snapshot.val() || 0;
         updateViewCountDisplay(count);
@@ -83,7 +97,7 @@
     sessionStorage.setItem(viewedKey, 'true');
 
     // Firebase에 카운트 증가
-    const counterRef = db.ref('views' + pageKey);
+    const counterRef = db.ref('views/' + pageKey);
     counterRef.transaction((current) => {
       return (current || 0) + 1;
     }, (error, committed, snapshot) => {
