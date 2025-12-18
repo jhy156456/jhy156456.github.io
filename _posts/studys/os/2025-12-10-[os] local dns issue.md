@@ -1,4 +1,4 @@
-```yaml
+---
 layout: blog
 study: true
 use_math: true
@@ -10,7 +10,7 @@ title: '[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + D
 date: 2025-12-10 08:00:00
 tags:
   - dns  - bind  - linux  - dnssec
-```
+---
 
 # 개요
 
