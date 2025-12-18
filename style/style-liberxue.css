@@ -1738,10 +1738,33 @@ a {
 
 #directory {
     position: fixed;
-    top: 100px;
+    top: 80px;
     display: inline-block;
     text-align: left;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    overflow-x: visible;
+    padding-right: 10px;
+    padding-left: 5px;
     /* margin-top: 200px; */
+}
+
+/* 목차 스크롤바 스타일링 */
+#directory::-webkit-scrollbar {
+    width: 6px;
+}
+
+#directory::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#directory::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 3px;
+}
+
+#directory::-webkit-scrollbar-thumb:hover {
+    background: #bbb;
 }
 
 #directory ul,
@@ -1755,6 +1778,7 @@ a {
 #directory > ul {
     position: relative;
     border-left: 1px solid #ddd;
+    padding-left: 5px;
 }
 
 #directory ul li a {
@@ -1772,7 +1796,7 @@ a {
 #directory > ul > li::before {
     position: relative;
     top: 0;
-    left: -4px;
+    left: -9px;
     display: inline-block;
     width: 7px;
     height: 7px;
