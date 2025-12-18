@@ -25,7 +25,7 @@
             <a href="{% unless link.external %}{{ site.url }}{% endunless %}{{ link.url }}">{{ link.name }}</a>
           {% endfor %}
         </div>
-        <div class="navbar-search" onclick="">
+        <div class="navbar-search" id="navbar-search-toggle">
           <span class="icon-search"></span>
           <form id="cb-search-btn" role="search">
             <span class="search-box">

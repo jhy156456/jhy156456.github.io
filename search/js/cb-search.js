@@ -68,6 +68,10 @@
                     names.push(item.title);
                     urls.push(item.url);
                 }
+                
+                // 전역 변수로 설정하여 다른 스크립트에서 접근 가능하게 함
+                window.names = names;
+                window.urls = urls;
 
                 $("#cb-search-content").typeahead({
                     source: names,
