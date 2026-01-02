@@ -1,0 +1,956 @@
+
+<!DOCTYPE >
+<html lang="zh-cn" data-scribe-reduced-action-queue="true">
+  <head>
+    <meta content="[python] zip, map함수와 star(*) - Hayden J GitHub blog" name="title" />
+    <meta content="[python] zip, map함수와 star(*) - Hayden J GitHub blog" name="og:title" />
+    <title>[python] zip, map함수와 star(*) - Hayden J GitHub blog</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>[python] zip, map함수와 star(*) - Hayden J GitHub blog</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[python] zip, map함수와 star(*) - Hayden J GitHub blog">
+<meta name="twitter:keywords" content="[python] zip, map함수와 star(*) - Hayden J GitHub blog" property="og:description" />
+<meta property="og:type" content="article">
+<meta property="og:title" content="[python] zip, map함수와 star(*) - Hayden J GitHub blog">
+<meta name="og:keywords"
+      content="[python] zip, map함수와 star(*) - Hayden J GitHub blog|zip메서드같은 인덱스에 위치한 값들을 튜플로 묶는다.a = [0,1,2,3,4]b = [0,1,2,3]c = [2,4,6]print(zip(a,b,c))print(list(zip(a,b,c)))# &lt;zi..."
+      property="og:description" />
+<meta name="theme-Jekyll by liberxue" content="#eb5055">
+<link rel="icon" type="image/png" href="https://jhy156456.github.io/style/favicons/favicon.ico" />
+<link href="https://jhy156456.github.io/style/favicons/favicon.ico" rel="shortcut icon" type="image/png">
+<!-- 댓글 이슈 수정 -->
+<!-- <link rel="canonical" href="https://jhy156456.github.io/"> -->
+<link rel="canonical" href="" />
+<link rel="alternate" type="application/rss+xml" title="jhy156456" href="https://jhy156456.github.io/feed.xml">
+<meta charset="UTF-8">
+<!-- <link rel="manifest" href="/manifest.json"> -->
+<link rel="shortcut icon" href="https://jhy156456.github.io/style/favicons/favicon.ico" type="image/x-icon">
+<meta name="keywords" content="zip메서드같은 인덱스에 위치한 값들을 튜플로 묶는다.a = [0,1,2,3,4]b = [0,1,2,3]c = [2,4,6]print(zip(a,b,c))print(list(zip(a,b,c)))# &lt;zi..."
+      property="og:description" />
+<meta name="description" content="오늘 무언가를 하지않으면 내일은 저절로 오지않는다" />
+<!--<link href="https://cdn.bootcss.com/highlight.js/9.10.0/styles/xcode.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+
+<!--<link href="https://jhy156456.github.io/assets/css/syntax.css" rel="stylesheet">-->
+<link href="https://jhy156456.github.io/style/style-liberxue.css" rel="stylesheet">
+<!-- <link href="https://jhy156456.github.io/_sass/minimal-mistakes/_navigation.scss" rel="stylesheet"> -->
+
+<meta content="https://jhy156456.github.io/2023/03/17/python-zip,-map%ED%95%A8%EC%88%98%EC%99%80-star.html" property="og:url" />
+<meta content="https://jhy156456.github.io/2023/03/17/python-zip,-map%ED%95%A8%EC%88%98%EC%99%80-star.html|zip메서드같은 인덱스에 위치한 값들을 튜플로 묶는다.a = [0,1,2,3,4]b = [0,1,2,3]c = [2,4,6]print(zip(a,b,c))print(list(zip(a,b,c)))# &lt;zi..."
+      property="og:description" />
+<meta content="article" property="og:type" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S9G62LP1GS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag("js", new Date());
+  gtag("config", "G-S9G62LP1GS");
+</script>
+<!--  -->
+
+    
+  </head>
+
+  <body class="" gtools_scp_screen_capture_injected="true">
+    <header id="header" class="header bg-white">
+      <div class="navbar-container">
+        <a
+          href="/"
+          title="Hayden J GitHub blog"
+          class="navbar-logo">
+          <img src="https://jhy156456.github.io/style/images/logo-jhy156456.png" alt="Hayden J GitHub blog" />
+        </a>
+        <div class="navbar-menu">
+          
+            <a href="https://jhy156456.github.io/">홈</a>
+          
+            <a href="https://jhy156456.github.io/review">리뷰</a>
+          
+            <a href="https://jhy156456.github.io/study">카테고리</a>
+          
+            <a href="https://jhy156456.github.io/archives">기록</a>
+          
+            <a href="https://jhy156456.github.io/about">About Me</a>
+          
+        </div>
+        <div class="navbar-search" id="navbar-search-toggle">
+          <span class="icon-search"></span>
+          <form id="cb-search-btn" role="search">
+            <span class="search-box">
+              <input
+                type="text"
+                class="input"
+                id="cb-search-content"
+                required="true"
+                placeholder="검색..."
+                maxlength="30"
+                autocomplete="off" />
+            </span>
+          </form>
+        </div>
+        <div class="navbar-mobile-menu" onclick="">
+          <span class="icon-menu cross">
+            <span class="middle"></span>
+          </span>
+          <ul>
+            
+              <li>
+                <a href="https://jhy156456.github.io/">홈</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/review">리뷰</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/study">카테고리</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/archives">기록</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/about">About Me</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div class="post-header-thumb bg-white}">
+      <!-- <div class="post-header-thumb-op"></div> -->
+      <div class="post-header-thumb">
+        <div class="post-header-thumb-container">
+          <h1 class="post-title" itemprop="name headline">[python] zip, map함수와 star(*)</h1>
+          <div class="post-data">
+            <time datetime="2023-03-17 19:40:00" itemprop="datePublished">작성일자：2023-03-17 19:40:00</time>
+            <br/>
+            <span class="view-count-label">조회수: <span class="view-count">0</span></span>
+            <br/>
+            <a
+              href="/tags#study"
+              title="study"
+              data-hover="분류: study">
+              분류: study</a>
+            <!-- <a href="#read">
+            댓글: comments</a> -->
+          </div>
+          <div class="post-tags">
+            
+              
+              
+                
+                  <a
+                    href="/tags#python"
+                    title="python"
+                    data-hover="python">
+                    python
+                    <span>(21)</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#zip"
+                    title="zip"
+                    data-hover="zip">
+                    zip
+                    <span>(1)</span>
+                    
+                  </a>
+                
+              
+              
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <article
+      class="main-post post-page"
+      itemscope
+      itemtype="http://schema.org/Article">
+      <div class="post-header">
+        <h1 class="post-title" itemprop="name headline">[python] zip, map함수와 star(*)</h1>
+        <div class="post-data">
+          <time datetime="2023-03-17 19:40:00" itemprop="datePublished">2023-03-17 19:40:00</time>
+          <span class="view-count-label"> | 조회수: <span class="view-count">0</span></span>
+        </div>
+      </div>
+      <div
+        id="post-content"
+        class="post-content"
+        itemprop="articleBody">
+        <p class="post-tags">
+          
+            
+            
+              
+                <a
+                  href="/tags#python"
+                  title="python"
+                  data-hover="python">
+                  python
+                  <span>(21)</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#zip"
+                  title="zip"
+                  data-hover="zip">
+                  zip
+                  <span>(1)</span>
+                  
+                </a>
+              
+            
+            
+          
+        </p>
+        <h1 id="zip메서드">zip메서드</h1>
+
+<p>같은 인덱스에 위치한 값들을 튜플로 묶는다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)))</span>
+
+<span class="c1"># &lt;zip object at 0x1278dad40&gt; 
+# [(0, 0, 2), (1, 1, 4), (2, 2, 6)]
+</span></code></pre></div></div>
+
+<ul>
+  <li>가장 작은 리스트 사이즈 크기를 갖도록 list가 만들어진다.</li>
+</ul>
+
+<h2 id="zip을-통한-dict-변환">zip을 통한 dict 변환</h2>
+
+<p>zip() 함수를 통해 두 개의 리스트나 튜플울 dict로 변환 가능하다.<br />
+리스트를 zip() 함수에 넘긴 후, 그 결과를 다시 dict() 함수에 넘기면 됩니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span>
+<span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s">'A'</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">'B'</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s">'C'</span><span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="unzip">unzip</h1>
+
+<ul>
+  <li>zip() 함수로 엮어 놓은 데이터를 다시 해체(unzip)하고 싶을 때도 zip() 함수를 사용할 수 있습니다.</li>
+  <li><code class="language-plaintext highlighter-rouge">튜플 리스트의 튜플 아이템의 같은 위치의 값끼리 묶고자 할 때</code> 사용합니다.</li>
+</ul>
+
+<p>먼저 zip() 함수로 2개의 튜플의 데이터를 엮은 후 리스트로 변환해보겠습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">numbers</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">letters</span> <span class="o">=</span> <span class="p">(</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">letters</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">print</span><span class="p">(</span><span class="n">pairs</span><span class="p">)</span>
+<span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="s">'A'</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">'B'</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">'C'</span><span class="p">)]</span>
+</code></pre></div></div>
+
+<p>이 리스트 앞에 풀기(unpacking- 연산자 붙여서 다시 zip() 함수에 넘기면 다시 원래의 2개의 튜플을 얻을 수 있습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">numbers</span><span class="p">,</span> <span class="n">letters</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">pairs</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">numbers</span>
+<span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">letters</span>
+<span class="p">(</span><span class="s">'A'</span><span class="p">,</span> <span class="s">'B'</span><span class="p">,</span> <span class="s">'C'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="star-추가">star 추가</h2>
+
+<ul>
+  <li>외부에 감싼 타입을 unpack 해준다.</li>
+  <li>곱셈 및 거듭제곱 연산으로 사용할 때</li>
+  <li>리스트형 컨테이너 타입의 데이터를 반복 확장하고자 할 때</li>
+  <li>가변인자 (Variadic Arguments)를 사용하고자 할 때</li>
+  <li>컨테이너 타입의 데이터를 Unpacking 할 때</li>
+</ul>
+
+<h3 id="데이터-unpacking">데이터 unpacking</h3>
+
+<p>list나 tuple 또는 dict 형태의 데이터를 가지고 있고 어떤 함수가 가변인자를 받는 경우에 사용할 수 있다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">c</span><span class="p">)))</span>
+
+<span class="c1"># (0, 0, 2) (1, 1, 4) (2, 2, 6)
+</span></code></pre></div></div>
+
+<p>또는 product 함수가 가변인자 파라미터를 받기 때문에 튜플 형태로 받는다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">primes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span>
+<span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="o">*</span><span class="n">primes</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">primes</span><span class="p">)</span>
+<span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">primes</span><span class="p">)</span>
+<span class="n">product</span><span class="p">(</span><span class="n">primes</span><span class="p">)</span>
+
+<span class="c1"># (2, 3, 5, 7, 11, 13)
+# ([2, 3, 5, 7, 11, 13],)
+</span></code></pre></div></div>
+
+<h1 id="map">map</h1>
+
+<p><code class="language-plaintext highlighter-rouge">map(func, *iterables)</code>
+첫번째 인자로 function 을 넣고, 두번째 인자에는 임의의 iterable</p>
+
+<h2 id="사용법1---iterator-1개">사용법1 - iterator 1개</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">list_1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">squre</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">squre</span><span class="p">,</span><span class="n">list_1</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">squre</span><span class="p">,</span><span class="n">list_1</span><span class="p">)))</span>
+
+<span class="c1"># &lt;map object at 0x1108a9be0&gt;
+# [4, 9, 16]
+</span></code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]))</span>
+<span class="c1"># [1.0, 2.0, 3.0, 4.0]
+</span></code></pre></div></div>
+
+<h2 id="사용법2---iterator-2개">사용법2 - iterator 2개</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">list_1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">list_2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">]</span>
+<span class="n">list_3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">squre</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+
+
+<span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">squre</span><span class="p">,</span> <span class="n">list_1</span><span class="p">,</span> <span class="n">list_2</span><span class="p">)))</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">squre</span><span class="p">,</span> <span class="n">list_1</span><span class="p">,</span> <span class="n">list_3</span><span class="p">)))</span>
+<span class="c1"># [40, 90]
+# [40, 90, 160]
+</span></code></pre></div></div>
+
+<h2 id="사용법3---lambda-함수사용">사용법3 - lambda 함수사용</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">list_1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">list_2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">]</span>
+<span class="n">list_3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">,</span> <span class="n">list_1</span><span class="p">,</span> <span class="n">list_3</span><span class="p">)))</span>
+<span class="c1"># [40, 90, 160]
+</span></code></pre></div></div>
+
+<h1 id="zip과-list-comprehension">zip과 list comprehension</h1>
+
+<p>이제 zip 과 리스트를 사용해 보겠습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">list_1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">list_2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
+<span class="p">[</span><span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">list_1</span><span class="p">,</span> <span class="n">list_2</span><span class="p">)]</span>
+<span class="c1"># [40, 90, 160]
+</span></code></pre></div></div>
+
+<h1 id="실제-사용-코드">실제 사용 코드</h1>
+
+<p>이제 실제 현업에서 사용되는 list, map, zip 함수를 하나하나 확인해보겠습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> <span class="k">if</span> <span class="n">y</span> <span class="o">==</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]))</span>
+</code></pre></div></div>
+
+<p>먼저 x_train, y_train의 shape를 알아보겠습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">x_train</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">y_train</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="c1"># (60000, 28, 28)
+# (60000,)
+</span></code></pre></div></div>
+
+<p>위와같이 있을때</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span> <span class="k">if</span> <span class="n">y</span> <span class="o">==</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>이 표현식은</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="p">,</span><span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span><span class="n">y_train</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>이렇게 될 것입니다. 각각 size를 계산해보면</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+<span class="s">"""
+12665
+2
+(28, 28)
+0
+"""</span>
+</code></pre></div></div>
+
+<p>12665개의 훈련데이터 리스트이고, 각 리스트에는 튜플형태의 원소들이 들어가있고<br />
+각 튜플의 첫번째 값은 28,28 shape를 갖는 리스트, 두번째 값은 레이블입니다.<br />
+마지막 <code class="language-plaintext highlighter-rouge">map(list, zip(*data))</code> 를 간소화 해보면 unzip을 하는것을 볼 수 있습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">test</span> <span class="o">=</span> <span class="p">[([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="mi">3</span><span class="p">),</span> <span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="mi">4</span><span class="p">)]</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">test</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="c1"># [[1, 2], [3, 4], [5, 6]]
+# [1, 3, 4] 
+</span></code></pre></div></div>
+
+<p>위 코드처럼 *test를 통해 데이터 언패킹을 수행하고 각 튜플 (훈련데이터, 레이블)에 대해 훈련데이터와 레이블을 때내는 작업입니다.<br />
+예제를 보시면</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">test</span> <span class="o">=</span> <span class="p">[([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="mi">4</span><span class="p">)]</span>
+<span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">test</span><span class="p">)))</span>
+<span class="c1"># [([1, 2], [3, 4], [5, 6]), (1, 3, 4)]
+</span></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">map(lambda x: x, zip(*test)</code> 해당 함수를 적용하게 되면 () () 2개의 원소가 생성되는데 lambda 대신 list함수를 적용시키면
+[],[] 2개의 원소가 생성되어 리스트 2개가 생성됨을 알 수 있습니다.</p>
+
+<p>더 간단히 풀어보자면 map함수 없이 test의 0번째 인덱스를 list로 묶어서 구조 분해 할당을 통해 x,y에 할당하는 행위를 전체 데이터에 대해 반복한다고 보시면 됩니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="k">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="c1"># [1, 2]
+# 1
+</span></code></pre></div></div>
+
+<p>추가적으로 map함수를 구조분해 할당 하지 않고 list로 한번 더 묶는다면</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">test</span><span class="p">)))</span>
+<span class="c1"># [[[1, 2], [3, 4], [5, 6]], [1, 3, 4]]
+</span></code></pre></div></div>
+
+<p>위 코드처럼 분리됩니다. 위 코드는 아래와 같습니다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">unzipped_list</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">test</span><span class="p">],</span>
+				 <span class="p">[</span><span class="n">j</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">test</span><span class="p">]]</span>
+</code></pre></div></div>
+
+<hr />
+<p>참고<br />
+[1] https://yeko90.tistory.com/entry/%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%A4%91%EA%B8%89-map-filter-zip-list-comprehension<br />
+[2] https://www.daleseo.com/python-zip/</p>
+
+        <div>
+          <p class="post-info">
+            <!-- <link rel="canonical" href="http://jhy156456.github.io/"/> -->
+            <script
+              src="https://utteranc.es/client.js"
+              repo="jhy156456/github.io-comments"
+              issue-term="pathname"
+              label="Comment"
+              theme="github-light"
+              crossorigin="anonymous"
+              rel="canonical"
+              async></script>
+          </p>
+        </div>
+
+        <p class="post-info">
+          이 문서는<a href="/">
+            jhy156456</a>에 의해 작성되었습니다.<br/>
+          <!-- <a
+          href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank"
+          rel="external nofollow">creative commons 4.0</a>
+          라이센스에 대한 국제 라이센스 계약<br/> -->
+          마지막 수정 날짜:2023-03-17 19:40:00
+        </p>
+      </div>
+    </article>
+
+    <!-- <div class="related-post-lists">
+    <div class="post-lists">
+    <div class="post-lists-body">
+    <div class="post-list-item">
+    <div class="post-list-item-container">
+    <div class="item-label">
+    <div class="item-title"><a href="induction.html">归纳的随想</a></div>
+    <div class="item-meta clearfix">
+    <div class="item-meta-ico bg-ico-image" style="background: url('../usr/themes/pinghsu/images/bg-ico.png') no-repeat;background-size: 40px auto;"></div>
+    <div class="item-meta-cat"><a href="../category/thoughts/index.html">Thoughts</a></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div> -->
+
+    <footer class="footer bg-white">
+  
+
+  <div class="footer-social">
+    <div class="footer-container clearfix">
+      <div class="social-list">
+        <a
+          class="social github"
+          target="blank"
+          href="https://github.com/jhy156456"
+          title="github"
+          data-hover="GitHub">GitHub</a>
+        <a
+          class="social tistory"
+          target="blank"
+          href="http://jhy156456.tistory.com"
+          title="tistory"
+          data-hover="Tistory">Tistory</a>
+        <a
+          class="social linkedin"
+          target="blank"
+          href="https://www.linkedin.com/in/%ED%98%84%EC%98%81-%EC%A0%95-6b2660252/"
+          title="linkedin"
+          data-hover="LinkedIn">LinkedIn</a>
+        <a
+          class="social rss"
+          target="blank"
+          href="mailto:jcypher1024@outlook.com"
+          title="E-mail"
+          data-hover="E-mail">E-mail</a>
+
+      </div>
+    </div>
+  </div>
+  <div class="footer-meta">
+    <div class="footer-container">
+      <div class="meta-item meta-copyright">
+        <div class="meta-copyright-info">
+          <a href="/" class="info-logo">
+            <img
+              src="https://jhy156456.github.io/style/images/logo-jhy156456.png"
+              title="jhy156456_blog"
+              data-hover="jhy156456_blog"
+              alt="jhy156456_blog" />
+          </a>
+          <div class="info-text">
+            <p>
+              Theme is
+              <a
+                href="http://www.liberxue.com/2017/08/03/Jekyllthemes.html"
+                title="访问 Jekyll liberxue主题"
+                data-hover="Jekyll liberxue"
+                target="_blank">Jekyll liberxue</a>
+              by
+              <a href="http://www.liberxue.com/about" target="_blank">liberxue</a>
+            </p>
+            <p>
+              Powered by
+              <a
+                href="https://jhy156456.github.io/tags/#Jekyll"
+                title="Jekyll"
+                data-hover="Jekyll"
+                target="_blank"
+                rel="nofollow">Jekyll</a>
+            </p>
+            <!-- <p>&copy; 2017 <a href="/feed.xml" title="访问 liberxue blog RSS" -->
+            <!-- data-hover="liberxue blog RSS">liberxue blog RSS</a></p> -->
+            <!-- <p>게시글：개</p> --><p>총 게시글：102개
+          </p>
+            <!-- <p>이blog는 Fork되었습니다.</p><iframe
+            src="http://ghbtns.com/github-btn.html?user=liberxue&repo=liberxue.github.io&type=fork&count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe> -->
+          </div>
+        </div>
+      </div>
+      <div class="meta-item meta-posts">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">다른 게시글</h3>
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+      <div class="meta-item meta-comments">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">최신글</h3>
+
+        
+          
+            <li>
+              <a
+                href="/2026/01/02/os-zip-shell-script.html"
+                title="[de] test"
+                data-hover="[de] test">
+                [de] test</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/12/10/os-local-dns-issue.html"
+                title="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)"
+                data-hover="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)">
+                [infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/11/22/DE-hdfs-cli-not-working.html"
+                title="[DE] hdfs cli 명령어 수행 안될 때"
+                data-hover="[DE] hdfs cli 명령어 수행 안될 때">
+                [DE] hdfs cli 명령어 수행 안될 때</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/11/12/oracle-delete-from-table.html"
+                title="[oracle] delete from table 했을 때 복구방법"
+                data-hover="[oracle] delete from table 했을 때 복구방법">
+                [oracle] delete from table 했을 때 복구방법</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/04/15/spring-Missing-IN-or-OUT-parameter.html"
+                title="[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 "
+                data-hover="[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 ">
+                [spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 </a>
+            </li>
+          
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.js"></script>
+<script src="/search/js/cb-search.js"></script>
+<script>
+  // 검색창 클릭 토글 기능
+  $(document).ready(function() {
+    // ID가 없으면 클래스로 찾기
+    var $searchToggle = $('#navbar-search-toggle');
+    if ($searchToggle.length === 0) {
+      $searchToggle = $('.navbar-search');
+    }
+    
+    var $searchInput = $('#cb-search-content');
+    var $iconSearch = $searchToggle.find('.icon-search');
+    
+    if ($searchToggle.length === 0) {
+      console.log('검색 토글 요소를 찾을 수 없습니다.');
+      return;
+    }
+    
+    // 검색 아이콘 클릭 시 토글
+    $iconSearch.on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      $searchToggle.toggleClass('active');
+      
+      // 검색창이 열리면 포커스
+      if ($searchToggle.hasClass('active')) {
+        setTimeout(function() {
+          $searchInput.focus();
+        }, 150);
+      }
+    });
+    
+    // 검색 입력창이나 form 클릭 시 이벤트 전파 방지
+    $searchToggle.find('form, input').on('click', function(e) {
+      e.stopPropagation();
+    });
+    
+    // 검색창 닫기 함수
+    function closeSearch() {
+      $searchToggle.removeClass('active');
+      $searchInput.val('').blur();
+    }
+    
+    // ESC 키로 검색창 닫기
+    $(document).on('keydown', function(e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        if ($searchToggle.hasClass('active')) {
+          closeSearch();
+        }
+      }
+    });
+    
+    // 검색창 외부 클릭 시 닫기
+    $(document).on('click', function(e) {
+      if ($searchToggle.hasClass('active')) {
+        if (!$searchToggle.is(e.target) && !$searchToggle.has(e.target).length) {
+          closeSearch();
+        }
+      }
+    });
+    
+    // 검색 결과 클릭 시 해당 게시글로 이동
+    $(document).on('click', '.navbar-search form .search-box ul li', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      var $li = $(this);
+      var text = $li.text().trim();
+      
+      // typeahead의 afterSelect를 트리거하거나 직접 이동
+      if (typeof window.names !== 'undefined' && typeof window.urls !== 'undefined') {
+        var index = window.names.indexOf(text);
+        if (index !== -1 && window.urls[index]) {
+          window.location.href = window.urls[index];
+          closeSearch();
+          return false;
+        }
+      }
+      
+      // typeahead가 생성한 링크인 경우
+      var $link = $li.find('a');
+      if ($link.length && $link.attr('href')) {
+        window.location.href = $link.attr('href');
+        closeSearch();
+        return false;
+      }
+    });
+  });
+  
+  $(function() {
+    setTimeout(function() {
+      $("code").removeClass("hljs");
+      $("code").removeClass("language");
+    }, 90);
+  });
+  (function() {
+    var bp = document.createElement("script");
+    var curProtocol = window.location.protocol.split(":")[0];
+    if (curProtocol === "https") {
+      bp.src = "https://zz.bdstatic.com/linksubmit/push.js";
+    } else {
+      bp.src = "http://push.zhanzhang.baidu.com/push.js";
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+    <!-- Firebase SDK (Firebase를 사용하는 경우에만 필요) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <!-- 조회수 카운터 스크립트 -->
+    <script src="https://jhy156456.github.io/assets/js/view-counter.js"></script>
+    <div id="directory-content" class="directory-content">
+      <div id="directory"></div>
+    </div>
+    <script>
+      var postDirectoryBuild = function() {
+        var postChildren = function children(childNodes, reg) {
+            var result = [],
+              isReg = typeof reg === "object",
+              isStr = typeof reg === "string",
+              node,
+              i,
+              len;
+            for (i = 0, len = childNodes.length; i < len; i++) {
+              node = childNodes[i];
+              if ((node.nodeType === 1 || node.nodeType === 9) && (! reg || (isReg && reg.test(node.tagName.toLowerCase())) || (isStr && node.tagName.toLowerCase() === reg))) {
+                result.push(node);
+              }
+            }
+            return result;
+          },
+          createPostDirectory = function(article, directory, isDirNum) {
+            var contentArr = [],
+              titleId = [],
+              levelArr,
+              root,
+              level,
+              currentList,
+              list,
+              li,
+              link,
+              i,
+              len;
+            levelArr = (function(article, contentArr, titleId) {
+              var titleElem = postChildren(article.childNodes, /^h\d$/),
+                levelArr = [],
+                lastNum = 1,
+                lastRevNum = 1,
+                count = 0,
+                guid = 1,
+                id = "directory" + (
+                  Math.random() + ""
+                ).replace(/\D/, ""),
+                lastRevNum,
+                num,
+                elem;
+              while (titleElem.length) {
+                elem = titleElem.shift();
+                contentArr.push(elem.innerHTML);
+                num = + elem.tagName.match(/\d/)[0];
+                if (num > lastNum) {
+                  levelArr.push(1);
+                  lastRevNum += 1;
+                } else if (num === lastRevNum || (num > lastRevNum && num <= lastNum)) {
+                  levelArr.push(0);
+                  lastRevNum = lastRevNum;
+                } else if (num < lastRevNum) {
+                  levelArr.push(num - lastRevNum);
+                  lastRevNum = num;
+                }
+                count += levelArr[levelArr.length - 1];
+                lastNum = num;
+                elem.id = elem.id || id + guid++;
+                titleId.push(elem.id);
+              }
+              if (count !== 0 && levelArr[0] === 1) 
+                levelArr[0] = 0;
+              
+
+
+              return levelArr;
+            })(article, contentArr, titleId);
+            currentList = root = document.createElement("ul");
+            dirNum = [0];
+            for (i = 0, len = levelArr.length; i < len; i++) {
+              level = levelArr[i];
+              if (level === 1) {
+                list = document.createElement("ul");
+                if (! currentList.lastElementChild) {
+                  currentList.appendChild(document.createElement("li"));
+                }
+                currentList.lastElementChild.appendChild(list);
+                currentList = list;
+                dirNum.push(0);
+              } else if (level < 0) {
+                level *= 2;
+                while (level++) {
+                  if (level % 2) 
+                    dirNum.pop();
+                  
+
+
+                  currentList = currentList.parentNode;
+                }
+              }
+              dirNum[dirNum.length - 1]++;
+              li = document.createElement("li");
+              link = document.createElement("a");
+              link.href = "#" + titleId[i];
+              link.title = titleId[i];
+              link.title = titleId[i];
+              link.innerHTML = ! isDirNum
+                ? contentArr[i]
+                : dirNum.join(".") + " " + contentArr[i];
+              li.appendChild(link);
+              currentList.appendChild(li);
+            }
+            directory.appendChild(root);
+          };
+        createPostDirectory(document.getElementById("post-content"), document.getElementById("directory"), true);
+      };
+      postDirectoryBuild();
+    </script>
+    <script>//           window.addEventListener(
+//     "scroll",
+//     function () {
+//       console.log("??????????");
+//     },
+//     true
+// );
+  </script>
+  <!-- <script>
+  $(document).ready(function () {
+  var currentPosition = parseInt($("#directory").css("top"));
+  $(window).scroll(function () {
+  var position = $(window).scrollTop()-500;
+  $("#directory")
+  .stop()
+  .animate({ top: position + currentPosition + "px" }, 0);
+  });
+  });
+  </script> --><!-- <script>
+    $(function () {
+    var $win = $(window);
+    var top = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환
+
+    /*사용자 설정 값 시작*/
+    var speed = 500; // 따라다닐 속도 : "slow", "normal", or "fast" or        numeric(단위:msec)
+    var easing = "linear"; // 따라다니는 방법 기본 두가지 linear, swing
+    var $layer = $("#directory"); // 레이어 셀렉팅
+    // var layerTopOffset = 650; // 레이어 높이 상한선, 단위:px
+    var layerTopOffset = 0; // 레이어 높이 상한선, 단위:px
+    // $layer.css("position", "absolute");
+    $layer.css("top", "0px"); //첫 시작 위치
+    /*사용자 설정 값 끝*/
+
+    // 스크롤 바를 내린 상태에서 리프레시 했을 경우를 위해
+    if (top > 0) $win.scrollTop(layerTopOffset + top);
+    else $win.scrollTop(0);
+
+    //스크롤이벤트가 발생하면
+    $(window).scroll(function () {
+    yPosition = $win.scrollTop() + layerTopOffset;
+    //   console.log($win.scrollTop())
+    console.log($layer.css("top"))
+    if (yPosition < 0) {
+    yPosition = 0;
+    }
+    $layer.animate(
+    { top: yPosition},
+    { duration: speed, easing: easing, queue: false }
+    );
+    });
+    });
+    </script> --><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    lang = hljs.initHighlightingOnLoad();
+  </script>
+</body></html>

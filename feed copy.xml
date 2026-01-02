@@ -1,0 +1,2320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hayden J GitHub blog</title>
+    <description>Full Stack | AI</description>
+    <link>https://jhy156456.github.io/</link>
+    <atom:link href="https://jhy156456.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 02 Jan 2026 09:24:41 +0900</pubDate>
+    <lastBuildDate>Fri, 02 Jan 2026 09:24:41 +0900</lastBuildDate>
+    <generator>Jekyll v3.10.0</generator>
+    
+    <item>
+      <title>[de] test</title>
+      <description>&lt;h1 id=&quot;test&quot;&gt;test&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;test&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      <pubDate>Fri, 02 Jan 2026 17:00:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2026/01/02/os-zip-shell-script.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2026/01/02/os-zip-shell-script.html</guid>
+        
+      <category>test</category>
+        
+        
+      <category>data-engineer</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)</title>
+      <description>&lt;h1 id=&quot;개요&quot;&gt;개요&lt;/h1&gt;
+
+&lt;p&gt;내부망에서 원래 쓰던 DNS 서버(이하 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UPSTREAM_DNS&lt;/code&gt;)가 따로 있고,&lt;br /&gt;
+리눅스 서버 하나(이하 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt;)에는 BIND가 동작만 하고 있었다.&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt;는 원래 DNS 전용 서버가 아니라, 애플리케이션 서버 + BIND 정도의 상태.&lt;/p&gt;
+
+&lt;p&gt;특정 이슈 때문에 내부 클라이언트들이 참조하는 DNS를 잠깐&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;기존: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UPSTREAM_DNS&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;변경: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt; → 내부적으로는 다시 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UPSTREAM_DNS&lt;/code&gt;로 forward&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이렇게 바꾸고 나서, &lt;strong&gt;특정 도메인(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;install.internal-example.com&lt;/code&gt; 같은 내부 도메인)&lt;/strong&gt; 만&lt;br /&gt;
+계속 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SERVFAIL&lt;/code&gt; / timeout 이 나는 문제가 발생했다.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;환경-정리-간단&quot;&gt;환경 정리 (간단)&lt;/h1&gt;
+
+&lt;p&gt;실제 IP, 도메인 등은 전부 가명 처리했다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;원래 사내 DNS: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UPSTREAM_DNS&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;임시 DNS 역할: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt; (BIND)&lt;/li&gt;
+  &lt;li&gt;문제 도메인: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;install.internal-example.com&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt; 의 BIND 핵심 설정 (개념만):&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;DNS 설정 : &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/named.conf&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;내부에 include 및 directory 확인&lt;/li&gt;
+  &lt;li&gt;내 LOCAL_DNS는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include &quot;/etc/named.rfc~~&quot;&lt;/code&gt; + &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;directory &quot;/var/named &quot;&lt;/code&gt; 설정되어 있음&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;options&lt;/span&gt; {
+    &lt;span class=&quot;n&quot;&gt;directory&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/var/named&quot;&lt;/span&gt;;
+    &lt;span class=&quot;n&quot;&gt;recursion&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;;
+
+    &lt;span class=&quot;n&quot;&gt;forwarders&lt;/span&gt; {
+        &lt;span class=&quot;n&quot;&gt;UPSTREAM_DNS_IP&lt;/span&gt;;
+    };
+
+    // 기본값: &lt;span class=&quot;n&quot;&gt;dnssec&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;enable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;;
+    //        &lt;span class=&quot;n&quot;&gt;dnssec&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;validation&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;auto&lt;/span&gt;;
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;의도는 단순히:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“LOCAL_DNS는 캐시 + 포워더만 하고,&lt;br /&gt;
+실제 해석은 계속 UPSTREAM_DNS가 하게 두자.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;였다.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;증상&quot;&gt;증상&lt;/h1&gt;
+
+&lt;p&gt;윈도우에서 DNS 서버를 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt; 로 설정했을 때:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;nslookup&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;install.internal-example.com&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;LOCAL_DNS_IP&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;→&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;또는&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;SERVFAIL&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;반대로 DNS를 다시 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UPSTREAM_DNS&lt;/code&gt; 로 돌리면:&lt;/p&gt;
+
+&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;nslookup&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;install.internal-example.com&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;UPSTREAM_DNS_IP&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;→&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;정상&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;응답&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;리눅스 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt; 서버에서 테스트:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# 1) LOCAL_DNS 자신의 BIND에게 질의&lt;/span&gt;
+dig @127.0.0.1 install.internal-example.com +noall +answer +comments
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; status: SERVFAIL
+
+&lt;span class=&quot;c&quot;&gt;# 2) UPSTREAM_DNS 에 직접 질의&lt;/span&gt;
+dig @UPSTREAM_DNS_IP install.internal-example.com +noall +answer +comments
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; status: NOERROR &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;정상 응답&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;정리:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;업스트림 DNS에 직접 질의하면 항상 정상&lt;/li&gt;
+  &lt;li&gt;중간에 있는 BIND(LOCAL_DNS)를 거치면 SERVFAIL&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;원인-dnssec-검증-실패-broken-trust-chain&quot;&gt;원인: DNSSEC 검증 실패 (broken trust chain)&lt;/h1&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt; 의 named 로그를 보면 대략 이런 메시지가 있었다.&lt;/p&gt;
+
+&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo egrep -R &quot;internal-example.com&quot; /etc/named.conf /etc/named.* /var/named 2&amp;gt;/dev/null
+broken trust chain resolving &apos;install.internal-example.com/IN/A&apos; ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이 메시지는 BIND에서 &lt;strong&gt;DNSSEC 검증이 실패했을 때&lt;/strong&gt; 자주 등장한다.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;로컬 DNS는 DNS검증을 하고있었고 UPSTREAM_DNS는 DNS 검증을 하고있지 않았음&lt;/li&gt;
+  &lt;li&gt;DNSSEC = DNS 응답에 “전자서명+검증” 얹어서, 위조 여부를 잡아내는 기능&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;실제 흐름은 다음과 같다.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;클라이언트 → &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt; 에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;install.internal-example.com&lt;/code&gt; 질의&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt; → &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UPSTREAM_DNS&lt;/code&gt; 로 forward&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UPSTREAM_DNS&lt;/code&gt; 는 정상 응답(A 레코드)을 반환&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt; 는 이 응답에 대해 &lt;strong&gt;DNSSEC 검증 수행&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;해당 도메인의 trust chain 이 깨져 있어(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;broken trust chain&lt;/code&gt;)&lt;/li&gt;
+  &lt;li&gt;최종적으로 클라이언트에게 &lt;strong&gt;SERVFAIL&lt;/strong&gt; 리턴&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;즉, UPSTREAM_DNS 준 응답이 DNSSEC 규칙 기준으로는 ‘신뢰할 수 없는 상태’&lt;/p&gt;
+
+&lt;p&gt;그래서:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dig @UPSTREAM_DNS&lt;/code&gt; : 검증 없이 데이터만 보기 → 항상 NOERROR&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dig @127.0.0.1&lt;/code&gt; : 검증까지 하다가 실패 → SERVFAIL&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;DNSSEC 때문인지 확인할 때는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;+cdflag&lt;/code&gt; 옵션이 유용하다.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dig @127.0.0.1 install.internal-example.com +dnssec +noall +answer +comments
+&lt;span class=&quot;c&quot;&gt;## SERVFAIL&lt;/span&gt;
+dig @127.0.0.1 install.internal-example.com +cdflag +noall +answer +comments
+&lt;span class=&quot;c&quot;&gt;## 정상 응답&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;+cdflag&lt;/code&gt; = Checking Disabled&lt;/li&gt;
+  &lt;li&gt;즉 “검증은 하지 말고, 응답만 달라”는 의미&lt;/li&gt;
+  &lt;li&gt;여기서는 NOERROR + 정상 A 레코드가 떨어짐 → &lt;strong&gt;검증만 빼면 데이터는 정상&lt;/strong&gt;이라는 뜻&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;해결&quot;&gt;해결&lt;/h1&gt;
+
+&lt;p&gt;이번 환경에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LOCAL_DNS&lt;/code&gt; 는 &lt;strong&gt;내부 캐시/포워더용&lt;/strong&gt;이었고,&lt;br /&gt;
+굳이 이 서버에서까지 DNSSEC 검증을 할 필요는 없다고 판단했다.&lt;/p&gt;
+
+&lt;p&gt;그래서 &lt;strong&gt;DNSSEC 검증만 끄는 방향&lt;/strong&gt;으로 설정을 수정했다.&lt;/p&gt;
+
+&lt;p&gt;기존 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/named.conf&lt;/code&gt; (개념):&lt;/p&gt;
+
+&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;options&lt;/span&gt; {
+    &lt;span class=&quot;n&quot;&gt;directory&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/var/named&quot;&lt;/span&gt;;
+    &lt;span class=&quot;n&quot;&gt;recursion&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;;
+
+    &lt;span class=&quot;n&quot;&gt;forwarders&lt;/span&gt; {
+        &lt;span class=&quot;n&quot;&gt;UPSTREAM_DNS_IP&lt;/span&gt;;
+    };
+
+    &lt;span class=&quot;n&quot;&gt;dnssec&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;enable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;;
+    &lt;span class=&quot;n&quot;&gt;dnssec&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;validation&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;auto&lt;/span&gt;;
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;변경 후:&lt;/p&gt;
+
+&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;options&lt;/span&gt; {
+    &lt;span class=&quot;n&quot;&gt;directory&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/var/named&quot;&lt;/span&gt;;
+    &lt;span class=&quot;n&quot;&gt;recursion&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;;
+
+    &lt;span class=&quot;n&quot;&gt;forwarders&lt;/span&gt; {
+        &lt;span class=&quot;n&quot;&gt;UPSTREAM_DNS_IP&lt;/span&gt;;
+    };
+
+    &lt;span class=&quot;n&quot;&gt;dnssec&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;enable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;yes&lt;/span&gt;;        // 기능은 켜둬도 됨
+    &lt;span class=&quot;n&quot;&gt;dnssec&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;validation&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt;;     // 🔥 검증만 &lt;span class=&quot;n&quot;&gt;OFF&lt;/span&gt;
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;적용:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;named-checkconf
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;systemctl reload named
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;그리고 다시 테스트:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dig @127.0.0.1 install.internal-example.com +noall +answer +comments
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; status: NOERROR
+
+nslookup install.internal-example.com LOCAL_DNS_IP
+&lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt; 윈도우에서도 정상 응답
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이후 해당 도메인 접속 문제는 모두 해결되었다.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;메모&quot;&gt;메모&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;단순 &lt;strong&gt;캐시/포워딩 용도로 쓰는 BIND&lt;/strong&gt; 라도, 기본값이면 DNSSEC 검증을 수행할 수 있다.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SERVFAIL&lt;/code&gt; + 로그에 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;broken trust chain resolving ...&lt;/code&gt; 이 보이면&lt;br /&gt;
+→ &lt;strong&gt;DNSSEC 검증 실패&lt;/strong&gt;를 우선 의심해볼 것.&lt;/li&gt;
+  &lt;li&gt;빠르게 확인할 포인트:
+    &lt;ol&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dig @UPSTREAM_DNS&lt;/code&gt; vs &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dig @LOCAL_DNS&lt;/code&gt; 비교&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dig @LOCAL_DNS ... +cdflag&lt;/code&gt; 로 검증 우회해 보기&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/named.conf&lt;/code&gt; 의 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dnssec-validation&lt;/code&gt; 값 확인&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;이번 케이스의 한 줄 정리:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“원래 DNS는 따로 있는데, 임시로 올려둔 리눅스 BIND를 DNS로 쓰다가&lt;br /&gt;
+이 서버가 DNSSEC 검증까지 하면서 내부 도메인 체인이 깨진 걸 SERVFAIL로 막고 있었다.”&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+      <pubDate>Wed, 10 Dec 2025 17:00:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2025/12/10/os-local-dns-issue.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2025/12/10/os-local-dns-issue.html</guid>
+        
+      <category>dns  - bind  - linux  - dnssec</category>
+        
+        
+      <category>infra</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[DE] hdfs cli 명령어 수행 안될 때</title>
+      <description>&lt;h1 id=&quot;hdfs-명령어&quot;&gt;hdfs 명령어&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;hdfs 명령어가 잘 작동하는지 확인하려면 아래와같은 명령어를 수행한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hdfs getconf &lt;span class=&quot;nt&quot;&gt;-confKey&lt;/span&gt; fs.defaultFS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이때 출력이 file:/// 이런 식으로 나오면 지금 hdfs dfs가 로컬 파일시스템을 보고 있는 상태이다.&lt;br /&gt;
+이를 해결하기 위해 hdfs가 보고있는 configuration이 정상 심볼릭링크를 통해 바라보고있는지 확인해야한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ls -ld /etc/alternatives/hadoop-conf
+# /etc/hadoop/conf -&amp;gt; /etc/alternatives/hadoop-conf
+ls -ld /etc/alternatives/hadoop-conf
+# /etc/alternatives/hadoop-conf -&amp;gt; /etc/hadoop/conf.cloudera.hdfs
+
+# 한 번에 확인하기
+sudo alternatives --display hadoop-conf  2&amp;gt;/dev/null || sudo update-alternatives --display hadoop-conf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;보통 이렇게 되어있다. 하지만 나의 경우엔 아래와 같이 되어있었다.
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/hadoop/conf -&amp;gt; /etc/alternatives/hadoop-conf -&amp;gt; /etc/hadoop/conf.cloudera.core_settings&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;이것을 원래대로 맞추기 위해 정상 동작하는 서버에서 명령어로 확인 후에&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo alternatives --display hadoop-conf  2&amp;gt;/dev/null || sudo update-alternatives --display hadoop-conf
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이 명령어를 통해 정상적으로 링크를 구성한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sudo alternatives --config hadoop-conf  2&amp;gt;/dev/null || sudo update-alternatives --config hadoop-conf
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;기존에 나는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;conf.cloudera.core_settings/core-site.xml&lt;/code&gt; 의 설정을 읽고있었지만 이 설정에는 fs.defaultFS 가 없었다.&lt;br /&gt;
+하지만 제대로 경로를 설정해주어 이후 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/hadoop/conf.cloudera.hdfs 의 core-site.xml + hdfs-site.xml&lt;/code&gt; 의 설정을 보고
+이 후 명령어 부턴 HDFS의 네임노드와 통신 할 수 있었다.&lt;/p&gt;
+</description>
+      <pubDate>Sat, 22 Nov 2025 04:40:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2025/11/22/DE-hdfs-cli-not-working.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2025/11/22/DE-hdfs-cli-not-working.html</guid>
+        
+      <category>de</category>
+        
+      <category>apache</category>
+        
+      <category>data-engineer</category>
+        
+        
+      <category>data-engineer/apache</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[oracle] delete from table 했을 때 복구방법</title>
+      <description>&lt;h1 id=&quot;문제발생&quot;&gt;문제발생&lt;/h1&gt;
+
+&lt;p&gt;테이블 명을 비슷하게 지어서 Table_a를 delete all 할 것을 Table_b를 해버림..&lt;/p&gt;
+
+&lt;h1 id=&quot;해결&quot;&gt;해결&lt;/h1&gt;
+
+&lt;p&gt;디비 설정에 따라 다르겠지만 내가 사용하는 오라클 DB는 스냅샷이 저장되고 있었다.&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;SELECT * FROM Table_b AS OF timestamp to_timestamp(&apos;2025-11-01 16:23:00&apos;, &apos;YYYY-MM-DD HH24:MI:SS&apos;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위 쿼리를 시간을 뒤로 돌리면서 수행하다 보면 저장되어있는 테이블의 스냅샷 데이터를 확인할 수 있다.
+이 결과를 다시 insert하여 복구한다.&lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+</description>
+      <pubDate>Wed, 12 Nov 2025 18:58:42 +0900</pubDate>
+      <link>https://jhy156456.github.io/2025/11/12/oracle-delete-from-table.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2025/11/12/oracle-delete-from-table.html</guid>
+        
+      <category>db</category>
+        
+      <category>oracle</category>
+        
+        
+      <category>db/oracle</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 </title>
+      <description>&lt;h1 id=&quot;문제&quot;&gt;문제&lt;/h1&gt;
+
+&lt;p&gt;spring에서 jdbc와 dao-hqml로 연결된 oracle 쿼리에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;인덱스에서 누락된 IN 또는 OUT 매개변수::11 &lt;/code&gt;가 발생했다.&lt;br /&gt;
+오류가 발생한 쿼리를 DBeaver에서 실행해 본 결과 정상적으로 실행되었다.&lt;/p&gt;
+
+&lt;h1 id=&quot;원인&quot;&gt;원인&lt;/h1&gt;
+
+&lt;p&gt;쿼리를 dbeaver기본에서 제공하는 reformat메뉴로 줄정리를 실행했을때 문제가 발생했다.&lt;/p&gt;
+
+&lt;h4 id=&quot;줄정리-수행항-쿼리&quot;&gt;줄정리 수행항 쿼리&lt;/h4&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;PIVOT&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;&amp;lt;#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IF&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;customWhere&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;??&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customWhere&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;&amp;lt;/#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IF&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;    
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;정상-쿼리&quot;&gt;정상 쿼리&lt;/h4&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;PIVOT&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;&amp;lt;#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;customWhere&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;??&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;customWhere&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;&amp;lt;/#&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;기존에 if문법이 대문자 IF로 변경되고데 ??가 띄어쓰기가 들어가면서 spring framework에서 정상 인식하지 않았다.&lt;/p&gt;
+
+&lt;h1 id=&quot;해결&quot;&gt;해결&lt;/h1&gt;
+
+&lt;p&gt;??앞 띄어쓰기를 제거하고 대문자를 소문자로 변경하여 해결했다. 줄정리 할 때 조심해야 함&lt;/p&gt;
+
+</description>
+      <pubDate>Tue, 15 Apr 2025 22:16:42 +0900</pubDate>
+      <link>https://jhy156456.github.io/2025/04/15/spring-Missing-IN-or-OUT-parameter.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2025/04/15/spring-Missing-IN-or-OUT-parameter.html</guid>
+        
+      <category>db</category>
+        
+      <category>oracle</category>
+        
+        
+      <category>java</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[spring] attribute key must be unique</title>
+      <description>&lt;h1 id=&quot;문제&quot;&gt;문제&lt;/h1&gt;
+
+&lt;p&gt;spring에서 jdbc와 dao-hqml로 연결된 oracle 쿼리에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;attribute key must be unique&lt;/code&gt;가 발생했다.&lt;br /&gt;
+오류가 발생한 쿼리를 DBeaver에서 실행해 본 결과 정상적으로 실행되었다.&lt;/p&gt;
+
+&lt;h1 id=&quot;원인&quot;&gt;원인&lt;/h1&gt;
+
+&lt;p&gt;쿼리에 중복 컬럼이 존재했다. 중복컬럼이 존재할 경우 스프링에서 로우별로 map에 저장할 때 동일한 이름의 key가 존재하여 발생한 오류였다.&lt;br /&gt;
+쿼리에 NAME컬럼이 2개가 있었는데, 1개의 NAME 컬럼은 다른 테이블에서 가져온 후 AS NAME으로 이름을 설정해 주었기 때문에 실행시엔 컬럼명이 동일해도 오류가 발생하지 않았다.&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;NO&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ko_Kr&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;ko_Kr&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                               &lt;span class=&quot;n&quot;&gt;ENG_NAME&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;ITEM&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+               &lt;span class=&quot;k&quot;&gt;AND&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CD&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CD&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+       &lt;span class=&quot;n&quot;&gt;NAME&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;STAT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;       
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;해결&quot;&gt;해결&lt;/h1&gt;
+
+&lt;p&gt;사용하지않는 NAME 컬럼을 삭제&lt;/p&gt;
+
+</description>
+      <pubDate>Fri, 04 Apr 2025 22:16:42 +0900</pubDate>
+      <link>https://jhy156456.github.io/2025/04/04/spring-attribute-key-must-be-unique.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2025/04/04/spring-attribute-key-must-be-unique.html</guid>
+        
+      <category>db</category>
+        
+      <category>oracle</category>
+        
+        
+      <category>java</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[oracle] primary key 수정 후 무결성 제약조건(ORA-00001) 사라지지 않음 현상</title>
+      <description>&lt;h1 id=&quot;문제발생&quot;&gt;문제발생&lt;/h1&gt;
+
+&lt;p&gt;A_TABLE에 A,B,C 컬럼 외에 D 컬럼을 프라이머리키로 추가했다.&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;ALTER&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;TABLE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A_TABLE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;DROP&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;CONSTRAINT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SYS_0&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;ALTER&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;TABLE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A_TABLE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;ADD&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;CONSTRAINT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SYS_0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;PRIMARY&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;KEY&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;C&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;D&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위 명령어로 추가 후 MERGE WHEN MATCHED THEN 명령어로 ON절에 A,B,C,D를 넣고 SQL을 실행했지만,&lt;br /&gt;
+D값의 PRIMARY KEY가 반영되지 않아, A,B,C 값 중복으로 인해 무결성 제약조건 오류가 발생했다.&lt;/p&gt;
+
+&lt;h1 id=&quot;원인&quot;&gt;원인&lt;/h1&gt;
+
+&lt;p&gt;몇 시간 동안 GPT와 쿼리를 쳐다보다가 DDL을 확인해보니 SYS_0_PK라는 INDEX가 있었다&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;UNIQUE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;INDEX&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;&quot;OWNER&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;&quot;A_TABLE_PK&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;ON&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;&quot;OWNER&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;&quot;A_TABLE&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;&quot;C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;~~&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;PK에 대한 인덱스는 A,B,C이고 프라이머리키를 수정했지만 인덱스는 반영되지 않았다.&lt;/p&gt;
+
+&lt;p&gt;이렇게 생성된 원인은 정확히 모르겠지만, 인덱스 값 때문에 기존 인덱스를 그대로 재사용하여 수정 한 키값을 제대로 탐색하지 않았었다.&lt;/p&gt;
+
+&lt;h1 id=&quot;해결&quot;&gt;해결&lt;/h1&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;테이블 전체 삭제 후 다시 생성&lt;/li&gt;
+  &lt;li&gt;INDEX값 확인 후 PRIMARY KEY와 INDEX값이 다르다면, 둘 다 삭제후 ALTER
+나의 경우는 2번으로 진행했다.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;-- 1. 기존 제약조건 삭제&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ALTER&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;TABLE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;OWNER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A_TABLE&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;DROP&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;CONSTRAINT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SYS_0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;-- 2. 필요하다면 기존 인덱스도 삭제&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;DROP&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;INDEX&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;OWNER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A_TABLE_PK&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;-- 3. 새로운 PRIMARY KEY 제약조건 추가 (원하는 컬럼으로)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ALTER&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;TABLE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;OWNER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A_TABLE&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;ADD&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;CONSTRAINT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SYS_0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;PRIMARY&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;KEY&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;D&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+      <pubDate>Tue, 18 Mar 2025 18:58:42 +0900</pubDate>
+      <link>https://jhy156456.github.io/2025/03/18/oracle-primary-key-index-error.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2025/03/18/oracle-primary-key-index-error.html</guid>
+        
+      <category>db</category>
+        
+      <category>oracle</category>
+        
+        
+      <category>db/etc</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[nlp] KLUE STS 데이터셋 다운로드 오류</title>
+      <description>&lt;h1 id=&quot;nlp-klue-sts-데이터셋-다운로드-오류&quot;&gt;[nlp] KLUE STS 데이터셋 다운로드 오류&lt;/h1&gt;
+
+&lt;h2 id=&quot;오류-발생&quot;&gt;오류 발생&lt;/h2&gt;
+
+&lt;p&gt;아래 코드로 데이터 다운로드 시 오류가 발생했다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;datasets&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;load_dataset&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;load_dataset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;klue&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;ynat&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;train&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# ValueError: Couldn&apos;t find cache for klue for config &apos;ynat&apos;
+# Available configs in the cache: [&apos;mrc&apos;]
+# Using the latest cached version of the dataset since klue couldn&apos;t be found on the Hugging Face Hub
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;원인&quot;&gt;원인&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;load_dataset&lt;/code&gt; 함수를 제공하고 있는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dataset&lt;/code&gt; 라이브러리와 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;huggingface_hub&lt;/code&gt; 라이브러리의 버전이 안맞아서 생기는 오류였다.&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dataset&lt;/code&gt; 라이브러리 내에서 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;huggingface_hub&lt;/code&gt; 라이브러리의 함수를 호출하는데 이때 발생하였다.
+오류가 발생한 버전은 아래와 같다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pip&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sentence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;transformers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2.7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;datasets&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;2.19&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;huggingface_hub&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.23&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;faiss&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cpu&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;qqq&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;해결&quot;&gt;해결&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;huggingface_hub&lt;/code&gt;의 버전만 업데이트 할 경우 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;load_dataset&lt;/code&gt; 함수 실행은 되지만&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;transformer_model = models.Transformer(&apos;klue/roberta-base&apos;)&lt;/code&gt; 함수로 모델을 불러올 때 다시 오류가 발생한다.&lt;br /&gt;
+따라서 모든 라이브러리를 업데이트 해주어야 한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pip&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upgrade&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;huggingface_hub&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;transformers&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;datasets&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+</description>
+      <pubDate>Wed, 08 Jan 2025 12:38:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2025/01/08/nlp-KLUE-STS-error.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2025/01/08/nlp-KLUE-STS-error.html</guid>
+        
+      <category>ai</category>
+        
+      <category>nlp</category>
+        
+      <category>rag</category>
+        
+      <category>llm</category>
+        
+        
+      <category>ai/nlp</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[k8s] service</title>
+      <description>&lt;p&gt;&lt;a href=&quot;../../../../assets/images/study/infra/kubernets/image.png&quot;&gt;
+  &lt;img src=&quot;../../../../assets/images/study/infra/kubernets/image.png&quot; alt=&quot;Screenshot&quot; width=&quot;50%&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;k8s-service&quot;&gt;[k8s] service&lt;/h1&gt;
+
+&lt;h2 id=&quot;selector&quot;&gt;selector&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Service를 생성하면, label Selector에서 특정 label을 가진 Pod들만 탐지한다. Service는 이렇게 필터된 Pod의 IP들을 엔드포인트로 묶어 관리하게 된다. 그래서 하나의 Service를 통해 여러 Pod에 로드밸런싱이 이루어질 수 있는 것이다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;nodeport&quot;&gt;nodePort&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;이는 서비스가 쿠버네티스 클러스터 외부에서 노드의 IP 주소와 이 속성에 정의된 포트로 보일수 있도록 한다. &lt;br /&gt;
+이 때, 서비스는 type: NodePort로 지정해야 한다 이 필드는 정의되어 있지 않을 경우 쿠버네티스가 자동으로 할당한다.&lt;/li&gt;
+  &lt;li&gt;쿠버네티스에 요청할 포트번호 ( ex) 192.~~~:30080 )&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;port&quot;&gt;port&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;서비스를 클러스터 안에서 지정된 포트를 통해 내부적으로 노출한다.&lt;br /&gt;
+즉, 서비스는 이 포트에 대해서 보일 수 있게 되며 이 포트로 보내진 요청은 서비스에 의해 선택된 파드로 전달된다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;targetport&quot;&gt;targetPort&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;이 포트는 파드로 전달되는 요청이 도달하는 포트이다.&lt;br /&gt;
+서비스가 동작하기 위해서는 애플리케이션이 이 포트에 대해 네트워크 요청을 listening을 하고 있어야 한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;type&quot;&gt;type&lt;/h2&gt;
+
+&lt;h3 id=&quot;clusterip&quot;&gt;clusterIP&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;러스터 내부에서만 접근 가능하며, 외부 트래픽을 직접 처리하지 않습니다. 주로 내부 서비스 간 통신에 사용됩니다.&lt;/li&gt;
+  &lt;li&gt;Ingress와 함께 사용될 때, Ingress Controller가 내부적으로 ClusterIP 서비스를 통해 트래픽을 라우팅하므로 외부에 NodePort를 노출할 필요가 없습니다.&lt;/li&gt;
+  &lt;li&gt;클러스터는 모든 노드와 애플리케이션을 포함하는 전체 환경이고, ClusterIP는 그 클러스터 내에서 서비스 간의 통신을 가능하게 하는 네트워킹 메커니즘&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;nodeport-1&quot;&gt;nodePort&lt;/h3&gt;
+
+&lt;p&gt;클러스터의 각 노드에 고정된 포트를 열어 외부에서 직접 접근할 수 있도록 합니다. 클라우드 외부 환경이나 자체 로드 밸런서를 설정하지 않은 온프레미스 환경에서 유용합니다.&lt;/p&gt;
+
+&lt;h3 id=&quot;loadbalancer&quot;&gt;LoadBalancer&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;port : LoadBalancer에  할당되는 가상 IP와 클러스터IP에서 수신할 포트 번호&lt;/li&gt;
+  &lt;li&gt;LoadBalancer는 기본적으로 외부에 존재하며, 보통 클라우드 프로바이더와 함께 사용되어 외부 트래픽을 받는 역할을 받는다.&lt;/li&gt;
+  &lt;li&gt;받은 트래픽을 각각의 Service로 전달해서 L4 분배가 일어나게 된다.&lt;/li&gt;
+  &lt;li&gt;역시 마찬가지로 흐름은 처음엔 LoadBalancer를 통하고, 이후엔 NodePort를 거쳐 ClusterIP로 이어지기 때문에 해당 기능을 모두 사용할 수 있다.&lt;/li&gt;
+  &lt;li&gt;클라우드 프로바이더를 사용하는 경우 클라우드 로드밸런서를 사용하여 외부로 노출시킨다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;스터노드-워커노드가-나뉘어져있을-때-외부에서-어떤아이피노드포트로-접속해야-하는가-파드가-속해있는-워커노드는-계속-바뀔-수도-있지-않는가&quot;&gt;스터노드, 워커노드가 나뉘어져있을 때 외부에서 어떤아이피:노드포트로 접속해야 하는가? 파드가 속해있는 워커노드는 계속 바뀔 수도 있지 않는가?&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;마스터 노드: 192.168.1.10&lt;/li&gt;
+  &lt;li&gt;워커 노드 1: 192.168.1.11&lt;/li&gt;
+  &lt;li&gt;워커 노드 2: 192.168.1.12&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http://192.168.1.10:30007
+http://192.168.1.11:30007
+http://192.168.1.12:30007
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;동적 파드 스케줄링과 무관함: 파드가 특정 워커 노드에 스케줄링되더라도, NodePort는 클러스터 내 모든 노드에서 서비스를 접근할 수 있게 해주므로, 특정 노드에 파드가 위치하든 다른 노드에 위치하든 외부
+접근에는 영향이 없습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;워커-노드의-동적-변경-시-고려사항&quot;&gt;워커 노드의 동적 변경 시 고려사항&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;노드 추가/제거: 클러스터에 새로운 노드가 추가되거나 기존 노드가 제거되더라도, NodePort는 자동으로 해당 노드에서도 서비스 포트를 열기 때문에, 추가된 노드의 IP와 기존 노드들의 IP를 통해 접근이 가능합니다.&lt;/li&gt;
+  &lt;li&gt;노드 IP 변경: 만약 노드의 IP가 변경되는 경우(예: 클라우드 환경에서 동적으로 IP가 할당되는 경우), 외부 접근 설정을 업데이트해야 합니다. 이를 방지하기 위해 고정 IP를 사용하거나, 클러스터 앞에 로드 밸런서를 두는 것이 좋습니다.&lt;/li&gt;
+  &lt;li&gt;워커 노드의 IP가 변경되더라도 마스터 노드의 IP와 NodePort를 통해 서비스에 지속적으로 접근할 수 있습니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://kimmj.github.io/kubernetes/port-targetport-nodeport-in-kubernetes/&lt;br /&gt;
+[2] chatGPT&lt;br /&gt;
+[3] https://velog.io/@pinion7/Kubernetes-%EB%A6%AC%EC%86%8C%EC%8A%A4-Service%EC%97%90-%EB%8C%80%ED%95%B4-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B3%A0-%EC%8B%A4%EC%8A%B5%ED%95%B4%EB%B3%B4%EA%B8%B0&lt;/p&gt;
+</description>
+      <pubDate>Mon, 30 Dec 2024 18:40:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/12/30/k8s-service.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/12/30/k8s-service.html</guid>
+        
+      <category>infra</category>
+        
+      <category>k8s</category>
+        
+      <category>docker</category>
+        
+        
+      <category>infra/docker</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[statistics] z-scoring, f, t..</title>
+      <description>&lt;h1 id=&quot;분위수&quot;&gt;분위수&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;확률 p에 위치해있는 수가 어떤수인지를 구하는 방법&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-ex)&quot;&gt;24, 28, 37, 43, 46
+x1, x2, x3, x4, x5 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;일때 p가 0.5인 경우의 분위수 값은? 5개 x 0.5 = 2.5 -&amp;gt; 2.5번째의 데이터 -&amp;gt; 2.5값은 없으므로 인접한 자연수로 만들어 준다 -&amp;gt; 올림&lt;/p&gt;
+
+&lt;h1 id=&quot;z-scoring&quot;&gt;z-scoring&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;자료가 평균으로부터 표준편차의 몇 배만큼 떨어져 있는지를 나타낸다
+&lt;a href=&quot;../../../assets/images/study/statistics/img.png&quot;&gt;
+&lt;img src=&quot;../../../assets/images/study/statistics/img.png&quot; alt=&quot;Screenshot&quot; width=&quot;80%&quot; height=&quot;50%&quot; /&gt;
+&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;위 그림은 표준 정규 분포에서의 분포 모형이다.&lt;/li&gt;
+  &lt;li&gt;위 그림에서 Z의 절대값이 3 이상이 나온다면 좀 튀는 값이라고 생각 할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;t---test&quot;&gt;t - test&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;두 집단의 평균 차이를 통계적으로 차이가 있는지 검정하기 위한 방법.&lt;/li&gt;
+  &lt;li&gt;두 집단의 평균이 얼마나 차이가 있는지 통계적으로 확인하는 test&lt;/li&gt;
+  &lt;li&gt;t : 그룹 간 차이에 비례하는 값..&lt;/li&gt;
+  &lt;li&gt;t : 표본 평균 차이 / 불확실도&lt;/li&gt;
+  &lt;li&gt;독립변수, 종속변수가 있음
+    &lt;ul&gt;
+      &lt;li&gt;독립 변수 : 정석적 변수(집단) : 명목, 서열 -&amp;gt; 성별&lt;/li&gt;
+      &lt;li&gt;종속 변수 : 분석 대상이 되는 종류인 정량적 변수 : 등간, 비율 -&amp;gt; 수분 섭취량&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;t값으로 유의확률이 나오게 된다.&lt;/li&gt;
+  &lt;li&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ex)
+대한민국 20대 남녀 키비교
+여자 키 30명 vs 남자 키 30명&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://www.youtube.com/watch?v=p5Nfm3vQWVQ&amp;amp;ab_channel=%ED%86%B5%EA%B3%84%EC%9D%98%EB%B3%B8%EC%A7%88EOStatistics&lt;br /&gt;
+[2] https://drhongdatanote.tistory.com/50&lt;br /&gt;
+[3] https://www.youtube.com/watch?v=mQXj456SWco&amp;amp;ab_channel=%EA%B3%B5%EB%8F%8C%EC%9D%B4%EC%9D%98%EC%88%98%ED%95%99%EC%A0%95%EB%A6%AC%EB%85%B8%ED%8A%B8&lt;br /&gt;
+[4] https://www.youtube.com/watch?v=k1-GLghpt_o&amp;amp;ab_channel=%EB%93%9C%EB%A6%BC%EC%85%80%ED%8C%8C%28%EB%85%BC%EB%AC%B8%EC%BB%A8%EC%84%A4%ED%8C%851%3A1%EB%A7%9E%EC%B6%A4%29&lt;/p&gt;
+</description>
+      <pubDate>Sat, 23 Nov 2024 00:06:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/11/23/statistics-z-scoring,-f,-t/.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/11/23/statistics-z-scoring,-f,-t/.html</guid>
+        
+      <category>statistics</category>
+        
+      <category>likelihood</category>
+        
+        
+      <category>statistics</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[tips] logitech mx keys for mac f13~f15(with. fn) 불편한 점 개선</title>
+      <description>&lt;h1 id=&quot;mx-keys&quot;&gt;mx keys&lt;/h1&gt;
+
+&lt;p&gt;logitech 에서 출시한 기기 3개의 연결이 가능한 소리가 적은 키보드&lt;/p&gt;
+
+&lt;h2 id=&quot;문제점&quot;&gt;문제점&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;로지텍에는 logi options에서 설정 가능한 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F1,F2등을 기본 기능키로 사용&lt;/code&gt;이라는 메뉴가 있음&lt;/li&gt;
+  &lt;li&gt;나는 f1~f12를 자주 사용하므로 이 설정을 on해놓고 사용함&lt;/li&gt;
+  &lt;li&gt;하지만 이렇게 사용할 경우 연결 기기 변경시 fn+f13, fn+f14, fn+f15조합으로 변경해야하는 불편함이 있었음&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;해결&quot;&gt;해결&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;logi options에서 설정을 변경함&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;F1,F2등을 기본 기능키로 사용&lt;/code&gt; 을 off시킨 후&lt;/li&gt;
+  &lt;li&gt;각 기능키(밝기조절, 백라이팅 등)에 f1~f12를 할당시킴&lt;/li&gt;
+  &lt;li&gt;자주 사용하는 볼륨조절등은 f17,f18에 설정&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;../../../assets/images/study/tips/ScreenShot 2024-09-19 11.25.54.png&quot;&gt;
+  &lt;img src=&quot;../../../assets/images/study/tips/ScreenShot 2024-09-19 11.25.54.png&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;../../../assets/images/study/tips/ScreenShot 2024-09-19 11.26.14.png&quot;&gt;
+  &lt;img src=&quot;../../../assets/images/study/tips/ScreenShot 2024-09-19 11.26.14.png&quot; alt=&quot;Screenshot&quot; width=&quot;80%&quot; height=&quot;50%&quot; /&gt;
+&lt;/a&gt;&lt;/p&gt;
+
+</description>
+      <pubDate>Thu, 19 Sep 2024 20:24:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/09/19/tips-logitech-mx-keys-for-mac-f13~f15(with.-fn).html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/09/19/tips-logitech-mx-keys-for-mac-f13~f15(with.-fn).html</guid>
+        
+      <category>logitech</category>
+        
+      <category>mx keys</category>
+        
+      <category>mac</category>
+        
+      <category>for mac</category>
+        
+        
+      <category>tips</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[python] path</title>
+      <description>&lt;h1 id=&quot;loggerpy&quot;&gt;logger.py&lt;/h1&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pathlib&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Path&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cwd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;logs&apos;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Path().cwd()&lt;/code&gt; : Return a new path pointing to the current working directory&lt;/p&gt;
+
+&lt;h2 id=&quot;문제&quot;&gt;문제&lt;/h2&gt;
+
+&lt;p&gt;위와 같은 코드로 로그파일을 만들고 있었다. 이 때 메인경로에 있는 파일을 실행 시키는 것이 아닌&lt;br /&gt;
+src/script 폴더 안에서 파일을 실행시켰을 때 경로를 못찾아서 오류가 발생하는 문제가 있었다.&lt;/p&gt;
+
+&lt;h2 id=&quot;해결&quot;&gt;해결&lt;/h2&gt;
+
+&lt;p&gt;src/script 폴더 안에서 파일을 실행시키면 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Path().cwd()&lt;/code&gt;함수는 실행시킨 파일을 메인 경로로 인식하여&lt;br /&gt;
+여기에 뒷경로를 붙이면 처음 설정해놓은 기댓값인 메인경로/logs가 아닌 메인경로/src/script/logs로 인식하여&lt;br /&gt;
+FileNotFoundError가 발생하게 된다. 따라서 특정 폴더 안에서 실행시킬 일이 있으면 경로를 수정해주어야 한다.&lt;/p&gt;
+
+</description>
+      <pubDate>Fri, 09 Aug 2024 22:27:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/08/09/python-path.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/08/09/python-path.html</guid>
+        
+      <category>python</category>
+        
+      <category>path</category>
+        
+        
+      <category>python</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[backend] gunicorn, argparse conflict issue</title>
+      <description>&lt;h1 id=&quot;문제&quot;&gt;문제&lt;/h1&gt;
+
+&lt;p&gt;위와 같이 arg_parse.py파일이 있을때 gunicorn으로 파이썬을 실행시켰을 때 해당 모듈의 get_args()함수를 실행시키는 코드가 있었다. &lt;br /&gt;
+이 때 gunicorn 실행 인자들을 argparse가 인식하여 실행 인자들이 충돌해 오류가 발생하는 문제가 있었음.&lt;/p&gt;
+
+&lt;h1 id=&quot;argparse-사용&quot;&gt;argparse 사용&lt;/h1&gt;
+
+&lt;p&gt;arg_parser.py&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;argparse&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argparse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ArgumentParser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Example with required argument&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_argument&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;--myarg&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;help&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A required argument&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_argument&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;--myarg2&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;required&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;help&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A required argument&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  
+  &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse_args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;gunicorn-실행-명령어&quot;&gt;gunicorn 실행 명령어&lt;/h1&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gunicorn main:app --log-level debug --access-logfile&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;해결&quot;&gt;해결&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;parse_args()&lt;/code&gt;함수를 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;parse_known_args()&lt;/code&gt; 함수로 변경하여 알고있는 인자와 모르는 인자를 분리한다.&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;argparse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ArgumentParser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Example with required argument&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_argument&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;--myarg&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;help&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A required argument&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add_argument&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;--myarg2&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;help&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A required argument&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  
+  &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unknown&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;parser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parse_known_args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# NameSpace(myarg=None)..
+&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unknown&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# [&apos;main:app&apos;, &apos;--log-level&apos;, &apos;debug&apos;,..]
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+      <pubDate>Wed, 07 Aug 2024 02:20:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/08/07/backend-gunicorn,-argparse-%EC%B6%A9%EB%8F%8C-%EC%9D%B4%EC%8A%88.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/08/07/backend-gunicorn,-argparse-%EC%B6%A9%EB%8F%8C-%EC%9D%B4%EC%8A%88.html</guid>
+        
+      <category>python</category>
+        
+      <category>fastapi</category>
+        
+      <category>asgi</category>
+        
+      <category>argparse</category>
+        
+        
+      <category>python/backend</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[nlp] RAG</title>
+      <description>&lt;h2 id=&quot;ragretrieval-augmented-generation-개념&quot;&gt;RAG(Retrieval Augmented Generation) 개념&lt;/h2&gt;
+
+&lt;h3 id=&quot;정의&quot;&gt;정의&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;검색 증강 생성. 문서 기반의 검색 및 답변 생성 기술.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;프로세스&quot;&gt;프로세스&lt;/h3&gt;
+
+&lt;p&gt;전처리 작업: 문서 로드, 스플릿(청킹), 임베딩, 벡터 데이터베이스 저장.
+후반부 작업: 사용자 질문 임베딩, 문서 검색, 답변 생성.&lt;/p&gt;
+
+&lt;h2 id=&quot;문서-전처리-단계&quot;&gt;문서 전처리 단계&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;각 단계에는 수 많은 알고리즘이 있다.&lt;/li&gt;
+  &lt;li&gt;각 알고리즘의 조합은 수억개가 되므로 파이프라인 구성 시 기존 사례를 참고해야한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;document-loader&quot;&gt;Document Loader&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;PDF, Excel, CSV, Json 등등의 문서를 로드할 있다.&lt;/li&gt;
+  &lt;li&gt;PDF 인코딩 문제와 메타데이터(페이지 번호, 파일명) 처리가 중요.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;pdf-loader&quot;&gt;PDF Loader&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;fitz
+    &lt;ul&gt;
+      &lt;li&gt;페이지 번호 제공&lt;/li&gt;
+      &lt;li&gt;Metadata 미지&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;PyPDFLoader
+    &lt;ul&gt;
+      &lt;li&gt;예제코드에 자주 등장함&lt;/li&gt;
+      &lt;li&gt;한글인코딩 처리 수준이 우수하고 속도 빠름&lt;/li&gt;
+      &lt;li&gt;metadata
+        &lt;ul&gt;
+          &lt;li&gt;파일명, 페이지 번호 제공&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;UnstructuredPDFLoader
+    &lt;ul&gt;
+      &lt;li&gt;세부적인 메타정보를 주기 때문에 속도가 느리다.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;PDFPlumber
+    &lt;ul&gt;
+      &lt;li&gt;가장 선호하는 PDF Loader
+&lt;a href=&quot;../../../../assets/images/study/ai/nlp/ScreenShot%202024-07-22%2011.33.29.png&quot;&gt;
+&lt;img src=&quot;../../../../assets/images/study/ai/nlp/ScreenShot%202024-07-22%2011.33.29.png&quot; width=&quot;50%&quot; height=&quot;50%&quot; /&gt;
+&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;text-splitter&quot;&gt;Text Splitter&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;소제목을 끊지 않고 가져오는 것이 중요하다.&lt;/li&gt;
+  &lt;li&gt;문서를 작은 조각으로 나누는 작업.&lt;/li&gt;
+  &lt;li&gt;캐릭터 텍스트 스플리터
+    &lt;ul&gt;
+      &lt;li&gt;공백이나 점을 기준으로 분할.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;리커시브 캐릭터 텍스트 스플리터
+    &lt;ul&gt;
+      &lt;li&gt;단락, 문장, 단어 순으로 분할.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;토큰 텍스트 스플리터
+    &lt;ul&gt;
+      &lt;li&gt;한글 처리 문제 해결을 위해 KoNLPy 텍스트 스플리터 사용.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;허깅페이스
+    &lt;ul&gt;
+      &lt;li&gt;다양한 토크나이저 쉽게 활용 가능&lt;/li&gt;
+      &lt;li&gt;BPE&lt;/li&gt;
+      &lt;li&gt;Subword Tokenizer&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;시맨틱 청커
+    &lt;ul&gt;
+      &lt;li&gt;텍스트를 의미 유사성에 따라 분할.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;embedding&quot;&gt;Embedding&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;문서와 사용자 질문을 벡터로 표현하여 벡터 데이터베이스에 저장.&lt;/li&gt;
+  &lt;li&gt;오픈 AI 임베딩
+    &lt;ul&gt;
+      &lt;li&gt;유료 모델, 한글 처리 우수, API 사용으로 인프라 부담 감소.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;캐시백 임베딩
+    &lt;ul&gt;
+      &lt;li&gt;중복 과금 방지를 위한 캐싱 기능 제공.&lt;/li&gt;
+      &lt;li&gt;임베딩을 저장하거나 임시로 캐싱하여 다시 계산 할 필요가 없도록 함
+        &lt;ul&gt;
+          &lt;li&gt;임베딩을 key-value 저장소에 캐싱&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;여러 임베딩 모델을 사용하는 경우 네임스페이스를 설정하여, 1개의 문서에 대한 서로다른 캐싱 가능&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;허깅페이스 임베딩
+    &lt;ul&gt;
+      &lt;li&gt;MGE&lt;/li&gt;
+      &lt;li&gt;Mistal&lt;/li&gt;
+      &lt;li&gt;다양한 무료 임베딩 모델 제공, 로컬 서버 구축 필요.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;vector-store&quot;&gt;Vector Store&lt;/h3&gt;
+
+&lt;h3 id=&quot;retrievers&quot;&gt;Retrievers&lt;/h3&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://www.youtube.com/watch?v=NfQrRQmDrcc&amp;amp;ab_channel=%ED%85%8C%EB%94%94%EB%85%B8%ED%8A%B8TeddyNote&lt;/p&gt;
+</description>
+      <pubDate>Mon, 22 Jul 2024 08:58:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/07/22/nlp-RAG.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/07/22/nlp-RAG.html</guid>
+        
+      <category>ai</category>
+        
+      <category>nlp</category>
+        
+      <category>rag</category>
+        
+        
+      <category>ai/nlp</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[python] reduce</title>
+      <description>&lt;h1 id=&quot;reduce&quot;&gt;reduce&lt;/h1&gt;
+
+&lt;p&gt;Python의 reduce 함수는 functools 모듈에 포함된 고차 함수로, &lt;br /&gt;
+주어진 이터러블(iterable) 객체에 지정된 이진 함수(binary function)를 누적하여 하나의 값으로 줄이는 역할을 한다. &lt;br /&gt;
+reduce 함수는 리스트나 튜플과 같은 시퀀스 자료형을 처리할 때 유용하게 사용할 수 있다.&lt;/p&gt;
+
+&lt;h2 id=&quot;예제코드&quot;&gt;예제코드&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;리스트의 모든 요소를 더하여 하나의 값으로 줄이는 예제&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;functools&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;reduce&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# 두 수를 더하는 함수 정의
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# reduce 함수를 사용하여 리스트 요소의 합 계산
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;reduce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# 출력: 15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;reduce 함수에 초기값을 지정하여 첫 번째 인수로 초기값이 사용&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;functools&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;reduce&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# 두 수를 더하는 함수 정의
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# 초기값을 10으로 지정하여 리스트 요소의 합 계산
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;reduce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# 출력: 25
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+      <pubDate>Wed, 10 Jul 2024 18:44:42 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/07/10/python-reduce.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/07/10/python-reduce.html</guid>
+        
+      <category>python</category>
+        
+      <category>reduce</category>
+        
+        
+      <category>python</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[Dataframe] dataframe groupby, agg</title>
+      <description>&lt;h1 id=&quot;dataframe-생성&quot;&gt;Dataframe 생성&lt;/h1&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;raw_data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;20221201&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;20221202&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;20221202&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;20221202&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;20230102&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;&apos;col1&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;&apos;col2&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DataFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;raw_data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+       &lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col1&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col2&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221201&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20230102&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;groupby&quot;&gt;groupby&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;그룹객체를 만들어주는 함수로 Dataframe객체.groupby(기준이 되는 열이름)로 사용&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;grouped&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grouped&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;group&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;grouped&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;* key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;* count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# &amp;lt;pandas.core.groupby.groupby.DataFrameGroupBy object at 0x0000021974982A90&amp;gt;
+&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20221201&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+       &lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col1&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col2&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221201&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;
+
+
+&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
+       &lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col1&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col2&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;
+
+
+&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20230102&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+       &lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col1&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col2&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20230102&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;agg&quot;&gt;agg&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;여러개의 함수를 여러 열에 적용&lt;/li&gt;
+  &lt;li&gt;한번에 여러 컬럼을 다르게 연산할 수 있다.&lt;/li&gt;
+  &lt;li&gt;문자열 같은 경우 join, 중복제거(set)등 으로 만들 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;groupby-후-agg&quot;&gt;groupby 후 agg&lt;/h2&gt;
+
+&lt;h3 id=&quot;1-col1만-aggset&quot;&gt;1 col1만 agg(set)&lt;/h3&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;col1&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;col1&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;20221201&lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;20230102&lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;col1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;object&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;pandas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;series&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Series&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;&amp;gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;2-전체-컬럼-agg&quot;&gt;2 전체 컬럼 agg&lt;/h3&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+              &lt;span class=&quot;n&quot;&gt;col1&lt;/span&gt;             &lt;span class=&quot;n&quot;&gt;col2&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;                               
+&lt;span class=&quot;mi&quot;&gt;20221201&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;20230102&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;pandas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DataFrame&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;&amp;gt;
+
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;3-groupby-후-agg로-특정-컬럼-sum하여-series반환하기&quot;&gt;3 groupby 후 agg로 특정 컬럼 sum하여 series반환하기&lt;/h3&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;col1&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;sum&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;col1&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&apos;sum&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})))&lt;/span&gt;
+
+          &lt;span class=&quot;n&quot;&gt;col1&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;          
+&lt;span class=&quot;mi&quot;&gt;20221201&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;70&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;20230102&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;pandas&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;core&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DataFrame&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;&amp;gt;
+
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;4-groupby-후-agg함수-적용-후-reset_index하여-값-열-변경&quot;&gt;4 groupby 후 agg함수 적용 후 reset_index하여 값 열 변경&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Series의 인덱스를 리셋하는 reset_index() 사용 후 매게변수로 name을 사용하면 값(value) 열의 이름을 지정하는 데 사용됩니다. [2]&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;col1&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#                   unit_list(value)
+#  MATL_CD          
+#        A       {Pump, Valve}
+#        B       {Pump, Valve}
+#        C              {Pump}
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groupby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;col1&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reset_index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;hi&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;#      date                 hi
+# 0       A       {Pump, Valve}
+# 1       B       {Pump, Valve}
+# 2       C              {Pump}
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://yganalyst.github.io/data_handling/Pd_13/&lt;br /&gt;
+[2] https://pandas.pydata.org/docs/reference/api/pandas.Series.reset_index.html&lt;/p&gt;
+</description>
+      <pubDate>Thu, 25 Apr 2024 23:20:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/04/25/Dataframe-dataframe-groupby-agg.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/04/25/Dataframe-dataframe-groupby-agg.html</guid>
+        
+      <category>python</category>
+        
+      <category>groupby</category>
+        
+      <category>agg</category>
+        
+      <category>dataframe</category>
+        
+        
+      <category>python/dataframe</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[backend] gunicorn, webserver, asgi</title>
+      <description>&lt;h1 id=&quot;fastapi와-gunicorn-도식도&quot;&gt;Fastapi와 gunicorn 도식도&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;python 웹서비스 아키텍처&lt;/p&gt;
+
+    &lt;p&gt;&lt;a href=&quot;../../../../assets/images/study/python/backend/fastapi.png&quot;&gt;&lt;img src=&quot;../../../../assets/images/study/python/backend/fastapi.png&quot; alt=&quot;&quot; width=&quot;80%&quot; height=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;web-server&quot;&gt;Web server&lt;/h1&gt;
+
+&lt;h3 id=&quot;역할&quot;&gt;역할&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;정적 요청에 대한 응답&lt;/li&gt;
+  &lt;li&gt;Reverse Proxy를 이용하여 어플리케이션 서버로 동적인 요청을 전달&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;wsgi-asgi&quot;&gt;WSGI, ASGI&lt;/h1&gt;
+
+&lt;h2 id=&quot;wsgiweb-server-gateway-interface---unvicorn&quot;&gt;WSGI(Web Server Gateway Interface) - unvicorn&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Python 웹 애플리케이션과 웹 서버 간의 동기적 통신&lt;/li&gt;
+  &lt;li&gt;요청당 하나의 스레드 또는 프로세스를 사용&lt;/li&gt;
+  &lt;li&gt;FastAPI는 내부적으로 Uvicorn이라는 ASGI 서버를 사용하여 단독으로 실행될 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;fastapi-실행-방법&quot;&gt;fastapi 실행 방법&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-cmd&quot;&gt;python.exe -m uvicorn main:app --reload
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;fastapi-실행-방법-2&quot;&gt;fastapi 실행 방법 2&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;위 직접 실행의 경우 디버깅이 불가능 하기 때문에 main 함수에 uvicorn을 호출하여 실행하는 방법&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;__main__&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;uvicorn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;0.0.0.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-cmd&quot;&gt;python ./main.py
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;asgiasynchronous-server-gateway-interface---gunicorn&quot;&gt;ASGI(Asynchronous Server Gateway Interface) - gunicorn&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Python 웹 애플리케이션과 웹 서버 간의 비동기적 통신&lt;/li&gt;
+  &lt;li&gt;동시에 여러 요청을 처리할 수 있는 비동기적 모델&lt;/li&gt;
+  &lt;li&gt;Unix 기반 시스템에서만 작동하도록 설계&lt;/li&gt;
+  &lt;li&gt;gunicorn은 프로세스 매니저로서 동작하게 된다. 프로세스 매니저로서 Master 프로세스를 띄우고 Worker 프로세스로, 단일 프로세스로 실행하는 uvicorn  (uvicorn 에는 Gunicorn-호환
+worker class 가 존재한다) 프로세스를 여러개 미리 띄워 요청을 처리하는 구조&lt;/li&gt;
+  &lt;li&gt;Gunicorn은 WSGI 서버이지만, uvicorn.workers.UvicornWorker를 사용하여 ASGI 애플리케이션인 FastAPI를 호스팅할 수 있습니다. 이를 통해 FastAPI 애플리케이션을 여러
+워커 프로세스에서 실행하여 처리 능력을 확장할 수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://breezymind.com/start-asgi-framework/&lt;br /&gt;
+[2] ChatCPT 4&lt;/p&gt;
+</description>
+      <pubDate>Thu, 22 Feb 2024 23:20:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/02/22/backend-gunicorn,-webserver,-asgi.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/02/22/backend-gunicorn,-webserver,-asgi.html</guid>
+        
+      <category>python</category>
+        
+      <category>fastapi</category>
+        
+      <category>asgi</category>
+        
+        
+      <category>python/backend</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[Dataframe] dataframe에서 중복 컬럼 가져오기</title>
+      <description>&lt;h1 id=&quot;dataframe-생성&quot;&gt;Dataframe 생성&lt;/h1&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;raw_data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;20221201&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;20221202&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;20221202&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;20221202&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;20230102&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;&apos;col1&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+            &lt;span class=&quot;s&quot;&gt;&apos;col2&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DataFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;raw_data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+       &lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col1&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col2&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221201&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20230102&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;duplicated-함수-실행&quot;&gt;duplicated 함수 실행&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;date컬럼으로 중복 검사&lt;/li&gt;
+  &lt;li&gt;여러개 컬럼으로 가능&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;중복되는-행들에서-첫번째-행만-false&quot;&gt;중복되는 행들에서 첫번째 행만 False&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;keep : {‘first’, ‘last’, False}, default ‘first’&lt;/li&gt;
+  &lt;li&gt;keep=’first’와 같다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;duplicated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;
+
+&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;    &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;    &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;    &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;bool&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;중복되는-행들에서-마지막-행만-false&quot;&gt;중복되는 행들에서 마지막 행만 False&lt;/h2&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;duplicated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keep&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;last&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;    &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;    &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;    &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;bool&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;중복되는-행들에서-모든-행-true&quot;&gt;중복되는 행들에서 모든 행 True&lt;/h2&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;duplicated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keep&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;    &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;    &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;dtype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;bool&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;사용예&quot;&gt;사용예&lt;/h1&gt;
+
+&lt;h2 id=&quot;중복된-값-제거-후-1가지-값첫번째-행만-가져오기&quot;&gt;중복된 값 제거 후 1가지 값(첫번째 행)만 가져오기&lt;/h2&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;duplicated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;subset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&apos;date&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])])&lt;/span&gt;
+
+       &lt;span class=&quot;n&quot;&gt;date&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col1&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;col2&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221201&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20221202&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;20230102&lt;/span&gt;    &lt;span class=&quot;mi&quot;&gt;40&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+      <pubDate>Wed, 14 Feb 2024 23:20:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/02/14/Dataframe-dataframe-duplicated.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/02/14/Dataframe-dataframe-duplicated.html</guid>
+        
+      <category>python</category>
+        
+      <category>dataframe</category>
+        
+        
+      <category>python/dataframe</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[os] window의 cmd와 linux의 bash 명령어 비교</title>
+      <description>&lt;h1 id=&quot;리눅스--윈도우&quot;&gt;리눅스 / 윈도우&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;기능&lt;/th&gt;
+      &lt;th&gt;리눅스&lt;/th&gt;
+      &lt;th&gt;윈도우&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;파일목록&lt;/td&gt;
+      &lt;td&gt;ls&lt;/td&gt;
+      &lt;td&gt;dir&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;현재디렉토리&lt;/td&gt;
+      &lt;td&gt;pwd&lt;/td&gt;
+      &lt;td&gt;cd&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;디렉토리이동&lt;/td&gt;
+      &lt;td&gt;cd&lt;/td&gt;
+      &lt;td&gt;cd&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;파일내용표시&lt;/td&gt;
+      &lt;td&gt;cat&lt;/td&gt;
+      &lt;td&gt;type&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;파일이동&lt;/td&gt;
+      &lt;td&gt;mv&lt;/td&gt;
+      &lt;td&gt;move&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;파일복사&lt;/td&gt;
+      &lt;td&gt;cp&lt;/td&gt;
+      &lt;td&gt;copy&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;파일삭제&lt;/td&gt;
+      &lt;td&gt;rm&lt;/td&gt;
+      &lt;td&gt;del,erase&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://bbaek-gwi-story.tistory.com/17&lt;/p&gt;
+</description>
+      <pubDate>Tue, 13 Feb 2024 17:00:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/02/13/os-cmd-vs-bash.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/02/13/os-cmd-vs-bash.html</guid>
+        
+      <category>os</category>
+        
+      <category>windows</category>
+        
+      <category>linux</category>
+        
+      <category>bash</category>
+        
+        
+      <category>os</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[os] shell script로 특정 폴더, 파일을 제외하고 zip파일 만들기</title>
+      <description>&lt;h1 id=&quot;shell-코드&quot;&gt;shell 코드&lt;/h1&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 압축 파일의 이름&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;zip_file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;htomss_mobile_web.zip&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;destination_folder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;D:&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\d&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ev-htomss&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\w&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;orkspace&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\h&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;tomss-mobile-app&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\a&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;pp&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\m&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ain&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;es&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;aw&quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 제외할 폴더를 제외한 모든 파일 및 폴더를 압축&lt;/span&gt;
+zip &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$destination_folder&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$zip_file&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; ./node_modules&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt; ./.idea&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt; ./htomss_mobile_web&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt; ./makeZip&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;zip complete. zip name: &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$zip_file&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;shell파일에-주석달기&quot;&gt;shell파일에 주석달기&lt;/h1&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;:&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;START&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;&quot;
+&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;
+START
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;참고&quot;&gt;참고&lt;/h1&gt;
+
+&lt;p&gt;window는 zip명령어를 사용하기 위해&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;gitbash 설치&lt;/li&gt;
+  &lt;li&gt;아래 참고[1]을 참고하여 zip.exe, bzip2.dll다운&lt;/li&gt;
+  &lt;li&gt;다운받은 파일 2개를 C:\Program Files\Git\usr\bin 경로로 이동&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://velog.io/@proshy/git-bash-zip%EB%AA%85%EB%A0%B9%EB%AC%B8%EC%9D%B4-%EC%9E%91%EB%8F%99%ED%95%98%EC%A7%80-%EC%95%8A%EC%9D%84-%EB%95%8C&lt;/p&gt;
+</description>
+      <pubDate>Tue, 23 Jan 2024 17:00:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/01/23/os-zip-shell-script.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/01/23/os-zip-shell-script.html</guid>
+        
+      <category>os</category>
+        
+      <category>shell</category>
+        
+      <category>divergence</category>
+        
+        
+      <category>os/mac</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[os] shell script로 특정 폴더, 파일을 제외하고 zip파일 만들기</title>
+      <description>&lt;h1 id=&quot;shell-코드&quot;&gt;shell 코드&lt;/h1&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 압축 파일의 이름&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;zip_file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;htomss_mobile_web.zip&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;destination_folder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;D:&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\d&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ev-htomss&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\w&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;orkspace&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\h&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;tomss-mobile-app&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\a&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;pp&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\m&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ain&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;es&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;aw&quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 제외할 폴더를 제외한 모든 파일 및 폴더를 압축&lt;/span&gt;
+zip &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$destination_folder&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$zip_file&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; ./node_modules&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt; ./.idea&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt; ./htomss_mobile_web&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt; ./makeZip&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;zip complete. zip name: &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$zip_file&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;shell파일에-주석달기&quot;&gt;shell파일에 주석달기&lt;/h1&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;:&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;START&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;&quot;
+&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;
+START
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;참고&quot;&gt;참고&lt;/h1&gt;
+
+&lt;p&gt;window는 zip명령어를 사용하기 위해&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;gitbash 설치&lt;/li&gt;
+  &lt;li&gt;아래 참고[1]을 참고하여 zip.exe, bzip2.dll다운&lt;/li&gt;
+  &lt;li&gt;다운받은 파일 2개를 C:\Program Files\Git\usr\bin 경로로 이동&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://velog.io/@proshy/git-bash-zip%EB%AA%85%EB%A0%B9%EB%AC%B8%EC%9D%B4-%EC%9E%91%EB%8F%99%ED%95%98%EC%A7%80-%EC%95%8A%EC%9D%84-%EB%95%8C&lt;/p&gt;
+</description>
+      <pubDate>Tue, 23 Jan 2024 17:00:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/01/23/os-zip-shell-script.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/01/23/os-zip-shell-script.html</guid>
+        
+      <category>os</category>
+        
+      <category>shell</category>
+        
+      <category>divergence</category>
+        
+        
+      <category>os/linux</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[os] shell script로 특정 폴더, 파일을 제외하고 zip파일 만들기</title>
+      <description>&lt;h1 id=&quot;shell-코드&quot;&gt;shell 코드&lt;/h1&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 압축 파일의 이름&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;zip_file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;htomss_mobile_web.zip&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;destination_folder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;D:&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\d&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ev-htomss&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\w&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;orkspace&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\h&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;tomss-mobile-app&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\a&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;pp&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;rc&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\m&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ain&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;es&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;aw&quot;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 제외할 폴더를 제외한 모든 파일 및 폴더를 압축&lt;/span&gt;
+zip &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$destination_folder&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$zip_file&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; ./node_modules&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt; ./.idea&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt; ./htomss_mobile_web&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt; ./makeZip&lt;span class=&quot;k&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\*&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;zip complete. zip name: &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$zip_file&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;shell파일에-주석달기&quot;&gt;shell파일에 주석달기&lt;/h1&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;:&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;START&lt;/span&gt;&lt;span class=&quot;sh&quot;&gt;&quot;
+&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;
+START
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;참고&quot;&gt;참고&lt;/h1&gt;
+
+&lt;p&gt;window는 zip명령어를 사용하기 위해&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;gitbash 설치&lt;/li&gt;
+  &lt;li&gt;아래 참고[1]을 참고하여 zip.exe, bzip2.dll다운&lt;/li&gt;
+  &lt;li&gt;다운받은 파일 2개를 C:\Program Files\Git\usr\bin 경로로 이동&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://velog.io/@proshy/git-bash-zip%EB%AA%85%EB%A0%B9%EB%AC%B8%EC%9D%B4-%EC%9E%91%EB%8F%99%ED%95%98%EC%A7%80-%EC%95%8A%EC%9D%84-%EB%95%8C&lt;/p&gt;
+</description>
+      <pubDate>Tue, 23 Jan 2024 17:00:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2024/01/23/os-zip-shell-script.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2024/01/23/os-zip-shell-script.html</guid>
+        
+      <category>os</category>
+        
+      <category>shell</category>
+        
+      <category>divergence</category>
+        
+        
+      <category>os</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[android] android 권한관련 내용 정리</title>
+      <description>&lt;p&gt;OS 6.0이상, 미만으로 권한 여부가 나뉘지만 OS 6.0이상으로만 정리&lt;/p&gt;
+
+&lt;h1 id=&quot;권한이란&quot;&gt;권한이란?&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;앱 서비스 제공자는 해당 서비스를 제공하기 위하여 이용자의 스마트폰 내의 정보 및 기능에 대한 접근권한이 필요한 경우,&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;필수적 접근권한과 선택적 접근권한을 구분하여,&lt;/li&gt;
+  &lt;li&gt;접근권한이 필요한 항목 및 그 이유 등을 이용자에게 명확하게 알리고,&lt;/li&gt;
+  &lt;li&gt;접근권한에 대한 이용자의 동의를 받아야 함&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;앱 서비스 제공자는 이용자가 선택적 접근권한에 동의하지 않는다는 이유로 이용자에게 해당 서비스의 제공을 거부해서는 안 됨&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;안드로이드-권한의종류&quot;&gt;안드로이드 권한의종류&lt;/h1&gt;
+
+&lt;p&gt;약 140가지 이상&lt;br /&gt;
+https://developer.android.com/reference/android/Manifest.permission&lt;/p&gt;
+
+&lt;h1 id=&quot;권한의-종류&quot;&gt;권한의 종류&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;위험한 권한(런타임 권한)
+    &lt;ul&gt;
+      &lt;li&gt;필수 권한&lt;/li&gt;
+      &lt;li&gt;선택적 권한&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;일반 권한&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;위험한-권한&quot;&gt;위험한 권한&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;../../../assets/images/study/android/ScreenShot 2023-12-20 9.07.15.png&quot;&gt;&lt;img src=&quot;../../../assets/images/study/android/ScreenShot 2023-12-20 9.07.15.png&quot; alt=&quot;&quot; width=&quot;30%&quot; height=&quot;30%&quot; /&gt;&lt;/a&gt;
+앱이 이용자의 개인 정보를 포함하거나 이용자의 저장된 데이터나 다른 앱의 작업에 영향을 미칠 수 있는 데이터나 리소스를 필요로 하는 권한입니다.&lt;/p&gt;
+
+&lt;h2 id=&quot;필수-권한&quot;&gt;필수 권한&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;사용자가 권한 접근에 동의하지 않으면 해당 서비스의 이용이 제한될 수 있다.&lt;/li&gt;
+  &lt;li&gt;일반적으로 앱 최초 실행시 동의를 구함&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;선택적-권한&quot;&gt;선택적 권한&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;사용자가 선택에 따라 접근 권한을 동의하지 않을 수 있으며, 이용자가 동의하지 않더라도 앱을 이용할 수 있습니다.&lt;/li&gt;
+  &lt;li&gt;일반적으로 해당 기능을 이용할 때 동의를 구함&lt;/li&gt;
+  &lt;li&gt;선택적 접근 권한만 있다면 최초 실행 화면이 아닌 해당 정보와 기능에 최초에 접근할 때 고지해도 상관없다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ex&quot;&gt;EX&lt;/h3&gt;
+
+&lt;h4 id=&quot;알림notifications&quot;&gt;알림(Notifications)&lt;/h4&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;uses-permission&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;android.permission.POST_NOTIFICATIONS&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;targetsdk--13&quot;&gt;targetSDK &amp;gt;= 13&lt;/h5&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;사용자로부터 알림권한을 요청하고 허가받은 뒤부터 알림을 표시할 수 있도록 하는 권한.&lt;/li&gt;
+  &lt;li&gt;Notification 권한요청을 개발자가 원하는 타이밍에 노출 가능&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;targetsdk--13-1&quot;&gt;targetSDK &amp;lt; 13&lt;/h5&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;targetSdkVersion이 Android 13(API 33)이상이 아니라면 내가 원하는 시점에 권한요청을 할 수 없다.&lt;/li&gt;
+  &lt;li&gt;Notification Channel을 생성한뒤 Activity가 실행되는 시점에 알림권한 요청 팝업이 뜨게 된다.&lt;/li&gt;
+  &lt;li&gt;Manifest에 권한을 추가해주지 않아도 된다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;위치정보&quot;&gt;위치정보&lt;/h4&gt;
+
+&lt;p&gt;[1] https://developer.android.com/training/location/permissions?hl=ko&lt;br /&gt;
+[2] https://stackoverflow.com/questions/40142331/how-to-request-location-permission-at-runtime&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;uses-permission&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;android.permission.ACCESS_COARSE_LOCATION&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;uses-permission&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;android:name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;android.permission.ACCESS_FINE_LOCATION&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        기타등등
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;일반권한&quot;&gt;일반권한&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;낮은 수준의 보호 권한으로써 App 사용자(User)에게 권한 부여 요청을 필요로 하지 않고 App 설치 시 자동으로 권한을 부여 받는다.&lt;/li&gt;
+  &lt;li&gt;ex) INTERNET, BLUETOOTH, VIBRATE, SET_ALARM&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://developer.android.com/reference/android/Manifest.permission&lt;br /&gt;
+[2] https://developer.android.com/training/permissions/requesting?hl=ko&lt;br /&gt;
+[3] https://medium.com/%EB%B0%95%EC%83%81%EA%B6%8C%EC%9D%98-%EC%82%BD%EC%A7%88%EB%B8%94%EB%A1%9C%EA%B7%B8/%EC%95%8C%EB%A6%BC-%EA%B6%8C%ED%95%9C-%EC%9A%94%EC%B2%AD%EC%97%90-%EA%B4%80%ED%95%9C-%EB%AA%A8%EB%93%A0%EA%B2%83-feat-android-13-5f20d17b5d09&lt;/p&gt;
+</description>
+      <pubDate>Wed, 20 Dec 2023 18:00:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2023/12/20/android-permission.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2023/12/20/android-permission.html</guid>
+        
+      <category>android</category>
+        
+      <category>permission</category>
+        
+        
+      <category>android</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[python] 현재 path 구하기</title>
+      <description>&lt;h1 id=&quot;코드가-들어있는-파일까지의-경로&quot;&gt;코드가 들어있는 파일까지의 경로&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;실행 경로가 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/main/run.py&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;코드가 들어있는 경로는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~main/src/utils/logger.py&lt;/code&gt; 일때&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__file__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;realpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__file__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;abspath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__file__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;utils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;utils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;utils&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;실행시킨-파일기준&quot;&gt;실행시킨 파일기준&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;실행 경로가 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/main/run.py&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;코드가 들어있는 경로는 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~main/src/utils/logger.py&lt;/code&gt; 일때&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getcwd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dirname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;realpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__file__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;src&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;utils&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+      <pubDate>Tue, 28 Nov 2023 17:49:42 +0900</pubDate>
+      <link>https://jhy156456.github.io/2023/11/28/python-import-os-path.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2023/11/28/python-import-os-path.html</guid>
+        
+      <category>phyton</category>
+        
+      <category>os</category>
+        
+        
+      <category>python</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[javascript] object안에있는 object및 Array 및 Array안에있는 object들 모두를 map으로 recursive하게 변환하기</title>
+      <description>&lt;h1 id=&quot;object-to-map&quot;&gt;Object To MAp&lt;/h1&gt;
+
+&lt;h2 id=&quot;질문&quot;&gt;질문&lt;/h2&gt;
+
+&lt;p&gt;javascript 에서 object 타입을 map타입으로 변환할 때 배열 안에 있는 object들도 map으로 변환시킬 수 있게 reucrsive형태로 짜줘&lt;/p&gt;
+
+&lt;h2 id=&quot;답변&quot;&gt;답변&lt;/h2&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;objectToMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// 만약 obj가 객체가 아니라면 그냥 반환&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!==&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;object&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 만약 obj가 배열이라면 배열의 각 요소에 대해 재귀적으로 objectToMap 호출&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;isArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;objectToMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 만약 obj가 객체라면 각 속성을 맵으로 변환&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapObj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;hasOwnProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;mapObj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;objectToMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]));&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapObj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 예제 사용&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;originalObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;John&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;age&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;city&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;New York&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;country&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;USA&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;hobbies&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;reading&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;traveling&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;resultMap&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;objectToMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;originalObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;resultMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;/**
+ Map(4) {
+ &apos;name&apos; =&amp;gt; &apos;John&apos;,
+ &apos;age&apos; =&amp;gt; 30,
+ &apos;address&apos; =&amp;gt; Map(2) { &apos;city&apos; =&amp;gt; &apos;New York&apos;, &apos;country&apos; =&amp;gt; &apos;USA&apos; },
+ &apos;hobbies&apos; =&amp;gt; [ &apos;reading&apos;, &apos;traveling&apos; ]
+ }
+ */&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;map-to-object&quot;&gt;Map To Object&lt;/h1&gt;
+
+&lt;h2 id=&quot;질문-1&quot;&gt;질문&lt;/h2&gt;
+
+&lt;p&gt;javascript 에서 Map타입을 Object타입으로 변환할 때 배열 안에 있는 Map들도 전부 Object로 변환시킬 수 있게 reucrsive형태로 짜줘&lt;/p&gt;
+
+&lt;h2 id=&quot;답변-1&quot;&gt;답변&lt;/h2&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapToObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;instanceof&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{};&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;isArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapToObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;instanceof&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapToObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;obj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 예제 사용&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;originalMap&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;John&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;age&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;city&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;New York&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;country&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;USA&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;])],&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;hobbies&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;reading&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;level&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;high&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;traveling&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;level&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;medium&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;resultObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapToObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;originalMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;resultObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;cm&quot;&gt;/**
+ {
+ name: &apos;John&apos;,
+ age: 30,
+ address: { city: &apos;New York&apos;, country: &apos;USA&apos; },
+ hobbies: [
+ { type: &apos;reading&apos;, level: &apos;high&apos; },
+ { type: &apos;traveling&apos;, level: &apos;medium&apos; }
+ ]
+ }
+ */&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] chatGPT&lt;/p&gt;
+</description>
+      <pubDate>Thu, 09 Nov 2023 19:12:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2023/11/09/javascript-objectToMap.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2023/11/09/javascript-objectToMap.html</guid>
+        
+      <category>object</category>
+        
+      <category>Type</category>
+        
+      <category>Map</category>
+        
+      <category>javascript</category>
+        
+        
+      <category>web/javascript</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[javascript] ==연산자와 ===</title>
+      <description>&lt;h1 id=&quot;연산자와-&quot;&gt;==연산자와 ===&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;’==’는 비교하는 두 개의 값(피연산자)을 강제로 같은 형으로 변환한 후, 비교를 수행합니다.즉, 두 값의 타입이 다르더라도, 형 변환된 값이 같다면 true를 리턴합니다.&lt;/li&gt;
+  &lt;li&gt;’===’는 비교하는 두 개의 값(피연산자)의 타입과 값이 모두 같을 경우에만, true를 리턴합니다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;prototype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;equals&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+
+&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;//true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;prototype&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;equals&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+
+&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;equals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; 
+&lt;span class=&quot;c1&quot;&gt;//object&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위 코드에서 this는 객체이기때문에 값이 같더라도 타입이 다르므로 false로 리턴된다.&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://hianna.tistory.com/375&lt;/p&gt;
+</description>
+      <pubDate>Thu, 09 Nov 2023 19:12:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2023/11/09/javascript-==,-===.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2023/11/09/javascript-==,-===.html</guid>
+        
+      <category>==</category>
+        
+      <category>===</category>
+        
+      <category>javascript</category>
+        
+        
+      <category>web/javascript</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[java] LocalDateTime으로 차이 달 및 차이 시간 구하기</title>
+      <description>&lt;h1 id=&quot;1&quot;&gt;1&lt;/h1&gt;
+
+&lt;p&gt;구하고자 하는 날짜 시간으로 변경&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;DEFAULT_PATTERN&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;yyyyMMddHHmmss&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;DEFAULT_PATTERN2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;yyyyMMddHHmmss&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;LocalDateTime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;startLDT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DateUtil&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;202301&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;01&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;yyyyMMdd&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;LocalDateTime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nextLDT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DateUtil&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parseDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;202305&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;01&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;yyyyMMdd&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;2&quot;&gt;2&lt;/h1&gt;
+
+&lt;p&gt;차이 시간 및 차이 달을 함수로 만든다.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;cm&quot;&gt;/**
+	 * 차이 시간 구하기
+	 * 
+	 * @param fromDate 이전 시간
+	 * @param toDate   이후 시간
+	 * @return long 차이 시간 (시간 단위)
+	 */&lt;/span&gt;
+	&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;hoursBetween&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;LocalDateTime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fromDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;LocalDateTime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fromDateMilli&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fromDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;atZone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;ZoneId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;systemDefault&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toInstant&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toEpochMilli&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+		&lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toDateMilli&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;atZone&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;ZoneId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;systemDefault&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toInstant&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toEpochMilli&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+		&lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;term&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toDateMilli&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fromDateMilli&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;term&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;AVERAGE_MILLIS_PER_HOUR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;cm&quot;&gt;/**
+	 * 차이 달 구하기
+	 * 
+	 * @param fromDate 이전 시간
+	 * @param toDate   이후 시간
+	 * @return int 차이 달 (달 단위) 같으면 0, 202304, 202305 -&amp;gt; 1 202306, 202305 -&amp;gt; -1
+	 */&lt;/span&gt;
+	&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;monthsBetween&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;LocalDateTime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fromDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;LocalDateTime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;nc&quot;&gt;YearMonth&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fromYearMonth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;YearMonth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+		&lt;span class=&quot;nc&quot;&gt;YearMonth&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toYearMonth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;YearMonth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;toDate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+		
+		&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Long&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;ChronoUnit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;MONTHS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;between&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fromYearMonth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;toYearMonth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;intValue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+</description>
+      <pubDate>Tue, 07 Nov 2023 17:40:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2023/11/07/java-diff-from-LocalDateTime.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2023/11/07/java-diff-from-LocalDateTime.html</guid>
+        
+      <category>java</category>
+        
+        
+      <category>java</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[javascript] evenetlistener 삭제 방법</title>
+      <description>&lt;h1 id=&quot;문제-발생&quot;&gt;문제 발생&lt;/h1&gt;
+
+&lt;p&gt;특정 상황에 따라 eventListener 함수를 변경해야 한다.&lt;br /&gt;
+웹 검색 결과 eventListener 들을 전체 삭제하는 방법이 몇가지 있었다.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;box&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;replaceWith&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;box&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;cloneNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;위 함수와&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;box&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;outerHTML&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;box&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;outerHTML&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;하지만 위 방법 다 작동하지 않았다.&lt;/p&gt;
+
+&lt;h1 id=&quot;해결&quot;&gt;해결&lt;/h1&gt;
+
+&lt;p&gt;방법은 익명함수를 사용하지않고 함수를 선언한 후에 세번째 인자를 true로 주어 remove를 적용하는 방법이다.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addSpot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;clientX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;clientY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addFlag&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addEventListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;removeEventListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;click&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;이때 유의 할 점은 세번째인자를 꼭 true로 줘야한다.&lt;br /&gt;
+세번째 인자는  https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener 사이트에 의하면,&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;options&lt;/code&gt;&lt;/strong&gt; Optional
+An object that specifies characteristics about the event listener. The available options are:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;capture&lt;/code&gt; Optional
+A boolean value indicating that events of this type will be dispatched to the registered listener before being
+dispatched to any EventTarget beneath it in the DOM tree. If not specified, defaults to false.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;once&lt;/code&gt; Optional
+A boolean value indicating that the listener should be invoked at most once after being added. If true, the listener
+would be automatically removed when invoked. If not specified, defaults to false.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;passive&lt;/code&gt; Optional
+A boolean value that, if true, indicates that the function specified by listener will never call preventDefault(). If a
+passive listener does call preventDefault(), the user agent will do nothing other than generate a console warning.&lt;/p&gt;
+
+&lt;p&gt;If this option is not specified it defaults to false – except that in browsers other than Safari, it defaults to true
+for wheel, mousewheel, touchstart and touchmove events. See Using passive listeners to learn more.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;signal&lt;/code&gt; Optional
+An AbortSignal. The listener will be removed when the given AbortSignal object’s abort() method is called. If not
+specified, no AbortSignal is associated with the listener.
+—&lt;/p&gt;
+
+&lt;p&gt;랍니다^^&lt;/p&gt;
+
+&lt;h2 id=&quot;자주-사용하는-이벤트의-종류&quot;&gt;자주 사용하는 이벤트의 종류&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;click&lt;/strong&gt; – 마우스버튼을 클릭하고 버튼에서 손가락을 떼면 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;mouseover&lt;/strong&gt; – 마우스를 HTML요소 위에 올리면 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;mouseout&lt;/strong&gt; – 마우스가 HTML요소 밖으로 벗어날 때 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;mousedown&lt;/strong&gt; – 클릭을 하기 위해 마우스버튼을 누르고 아직 떼기 전인 그 순간, HTML요소를 드래그할 때 사용할 수 있다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;mouseup&lt;/strong&gt; – 마우스버튼을 떼는 그 순간, 드래그한 HTML요소를 어딘가에 놓을 때 사용할 수 있다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;mousemove&lt;/strong&gt; – 마우스가 움직일때마다 발생한다. 마우스커서의 현재 위치를 계속 기록하는 것에 사용할 수 있다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;focus&lt;/strong&gt; – HTML요소에 포커스가 갔을때 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;blur&lt;/strong&gt; – HTML요소가 포커스에서 벗어났을때 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;keypress&lt;/strong&gt; – 키를 누르는 순간에 발생하고 키를 누르고 있는 동안 계속해서 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;keydown&lt;/strong&gt; – 키를 누를 때 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;keyup&lt;/strong&gt; – 키를 눌렀다가 떼는 순간에 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;load&lt;/strong&gt; – 웹페이지에서 사용할 모든 파일의 다운로드가 완료되었을때 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;resize&lt;/strong&gt; – 브라우저 창의 크기를 조절할때 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;scroll&lt;/strong&gt; – 스크롤바를 드래그하거나 키보드(up, down)를 사용하거나 마우스 휠을 사용해서 웹페이지를 스크롤할 때 발생한다. 페이지에 스크롤바가 없다면 이벤트는 발생하지 않다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;unload&lt;/strong&gt; – 링크를 클릭해서 다른 페이지로 이동하거나 브라우저 탭을 닫을 때 혹은 브라우저 창을 닫을 때 이벤트가 발생한다.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;change&lt;/strong&gt; – 폼 필드의 상태가 변경되었을 때 발생한다. 라디오 버튼을 클릭하거나 셀렉트 박스에서 값을 선택하는 경우를 예로 들수 있다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://stackoverflow.com/questions/10444077/javascript-removeeventlistener-not-working&lt;br /&gt;
+[2] https://kyounghwan01.github.io/blog/JS/JSbasic/addEventListener/~~&lt;/p&gt;
+</description>
+      <pubDate>Wed, 25 Oct 2023 19:12:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2023/10/25/javascript-removeEventListener.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2023/10/25/javascript-removeEventListener.html</guid>
+        
+      <category>remove</category>
+        
+      <category>click</category>
+        
+      <category>web</category>
+        
+      <category>javascript</category>
+        
+        
+      <category>web/javascript</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[javascript] ? 연산자와 ?? 연산자</title>
+      <description>&lt;h1 id=&quot;-연산자&quot;&gt;?? 연산자&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a ?? b&lt;/code&gt; 의 결과는 a가 null 또는 undefined가 아니면 a이고 그 외에는 b이다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;옵셔널-체이닝-&quot;&gt;옵셔널 체이닝 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;?.&lt;/code&gt;&lt;/h1&gt;
+
+&lt;h2 id=&quot;특징&quot;&gt;특징&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;프로퍼티가 없는 중첩 객체에 에러 없이 접근하기 위해 생긴 문법&lt;/li&gt;
+  &lt;li&gt;이전까지는 &amp;amp;&amp;amp;연산자를 사용해서 없으면 undefined를 반환하도록 했었다.&lt;/li&gt;
+  &lt;li&gt;옵셔널 체이닝은 obj?.prop 뿐만아니라 obj?.[prop] , obj?.method() 와 같은 형태로도 사용할 수 있으며, 각각 obj.prop, obj[prop], obj.method()를 반환 또는
+호출하고, 그렇지 않으면 undefined를 반환&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;사용법&quot;&gt;사용법&lt;/h2&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{};&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;phone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// undefined&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{};&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;phone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// undefined&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://haesoo9410.tistory.com/156&lt;/p&gt;
+</description>
+      <pubDate>Mon, 16 Oct 2023 19:12:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2023/10/16/javascript-question,-double-question-operator.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2023/10/16/javascript-question,-double-question-operator.html</guid>
+        
+      <category>question</category>
+        
+      <category>operator</category>
+        
+      <category>web</category>
+        
+      <category>javascript</category>
+        
+        
+      <category>web/javascript</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+    <item>
+      <title>[javascript] 문서 로드 함수들(DOM, DOMContentLoaded, load, beforeunload, unload, onload등)</title>
+      <description>&lt;h1 id=&quot;domdocument-object-model&quot;&gt;DOM(Document Object Model)&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;XML 및 HTML 문서를 응용프로그램에서 사용하기 위한 API 규격&lt;/li&gt;
+  &lt;li&gt;문서 객체란 &amp;lt;html&amp;gt;이나 &amp;lt;body&amp;gt; 같은 html문서의 태그들을 JavaScript가 이용할 수 있는 객체(object)로 만들면 그것을 문서 객체라고 한다&lt;/li&gt;
+  &lt;li&gt;DOM은 넓은 의미로 웹 브라우저가 HTML 페이지를 인식하는 방식을 의미, 조금 좁은 의미로는 document 객체와 관련된 객체의 집합&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;domcontentloaded&quot;&gt;DOMContentLoaded&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;브라우저가 HTML을 전부 읽고 DOM 트리를 완성하는 즉시 발생한다. 이미지 파일(&lt;img /&gt;)이나 스타일시트 등의 기타 자원은 기다리지 않는다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;loadonload-이벤트와의-차이점은&quot;&gt;load(onload) 이벤트와의 차이점은?&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;load는 돔트리 이후 모든 리소스까지 완벽히 끝난 후 발생하는 이벤트&lt;/li&gt;
+  &lt;li&gt;DOMContentLoaded는 돔트리까지만 형성되면 발생하는 이벤트&lt;/li&gt;
+  &lt;li&gt;즉 DOMContentLoaded 이벤트가 load이벤트보다 앞서 발생&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;loadonload&quot;&gt;load(onload)&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;HTML로 DOM 트리를 만드는 게 완성되었을 뿐만 아니라 이미지, 스타일시트 같은 외부 자원도 모두 불러오는 것이 끝났을 때 발생한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;beforeunloadunload&quot;&gt;beforeunload/unload&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;사용자가 페이지를 떠날 때 발생한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;참고&lt;br /&gt;
+[1] https://mine-it-record.tistory.com/577&lt;br /&gt;
+[2] https://velog.io/@hoon_dev/%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-DOMContentLoaded-%EC%9D%B4%EB%B2%A4%ED%8A%B8&lt;br /&gt;
+[3] https://na27.tistory.com/228&lt;/p&gt;
+</description>
+      <pubDate>Thu, 12 Oct 2023 19:12:00 +0900</pubDate>
+      <link>https://jhy156456.github.io/2023/10/12/javascript-document-load-functions.html</link>
+      <guid isPermaLink="true">https://jhy156456.github.io/2023/10/12/javascript-document-load-functions.html</guid>
+        
+      <category>DOM</category>
+        
+      <category>web</category>
+        
+      <category>javascript</category>
+        
+        
+      <category>web/javascript</category>
+        
+      <category>study</category>
+        
+    </item>
+    
+  </channel>
+</rss>

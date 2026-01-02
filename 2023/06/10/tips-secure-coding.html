@@ -1,0 +1,953 @@
+
+<!DOCTYPE >
+<html lang="zh-cn" data-scribe-reduced-action-queue="true">
+  <head>
+    <meta content="[tips] secure coding - Hayden J GitHub blog" name="title" />
+    <meta content="[tips] secure coding - Hayden J GitHub blog" name="og:title" />
+    <title>[tips] secure coding - Hayden J GitHub blog</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>[tips] secure coding - Hayden J GitHub blog</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[tips] secure coding - Hayden J GitHub blog">
+<meta name="twitter:keywords" content="[tips] secure coding - Hayden J GitHub blog" property="og:description" />
+<meta property="og:type" content="article">
+<meta property="og:title" content="[tips] secure coding - Hayden J GitHub blog">
+<meta name="og:keywords"
+      content="[tips] secure coding - Hayden J GitHub blog|개발 방법론의 의해위협모델링  해킹, 재난, 재해등등  화면설계서보고 발생 가능한 위협들을 뽑아낸다.  설계단계 보안 가이드가 필요함  설계단계부터 위협모델링을 하고 보안 통제 기준을 설정하자구현  단위테스트를..."
+      property="og:description" />
+<meta name="theme-Jekyll by liberxue" content="#eb5055">
+<link rel="icon" type="image/png" href="https://jhy156456.github.io/style/favicons/favicon.ico" />
+<link href="https://jhy156456.github.io/style/favicons/favicon.ico" rel="shortcut icon" type="image/png">
+<!-- 댓글 이슈 수정 -->
+<!-- <link rel="canonical" href="https://jhy156456.github.io/"> -->
+<link rel="canonical" href="" />
+<link rel="alternate" type="application/rss+xml" title="jhy156456" href="https://jhy156456.github.io/feed.xml">
+<meta charset="UTF-8">
+<!-- <link rel="manifest" href="/manifest.json"> -->
+<link rel="shortcut icon" href="https://jhy156456.github.io/style/favicons/favicon.ico" type="image/x-icon">
+<meta name="keywords" content="개발 방법론의 의해위협모델링  해킹, 재난, 재해등등  화면설계서보고 발생 가능한 위협들을 뽑아낸다.  설계단계 보안 가이드가 필요함  설계단계부터 위협모델링을 하고 보안 통제 기준을 설정하자구현  단위테스트를..."
+      property="og:description" />
+<meta name="description" content="오늘 무언가를 하지않으면 내일은 저절로 오지않는다" />
+<!--<link href="https://cdn.bootcss.com/highlight.js/9.10.0/styles/xcode.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+
+<!--<link href="https://jhy156456.github.io/assets/css/syntax.css" rel="stylesheet">-->
+<link href="https://jhy156456.github.io/style/style-liberxue.css" rel="stylesheet">
+<!-- <link href="https://jhy156456.github.io/_sass/minimal-mistakes/_navigation.scss" rel="stylesheet"> -->
+
+<meta content="https://jhy156456.github.io/2023/06/10/tips-secure-coding.html" property="og:url" />
+<meta content="https://jhy156456.github.io/2023/06/10/tips-secure-coding.html|개발 방법론의 의해위협모델링  해킹, 재난, 재해등등  화면설계서보고 발생 가능한 위협들을 뽑아낸다.  설계단계 보안 가이드가 필요함  설계단계부터 위협모델링을 하고 보안 통제 기준을 설정하자구현  단위테스트를..."
+      property="og:description" />
+<meta content="article" property="og:type" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S9G62LP1GS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag("js", new Date());
+  gtag("config", "G-S9G62LP1GS");
+</script>
+<!--  -->
+
+    
+  </head>
+
+  <body class="" gtools_scp_screen_capture_injected="true">
+    <header id="header" class="header bg-white">
+      <div class="navbar-container">
+        <a
+          href="/"
+          title="Hayden J GitHub blog"
+          class="navbar-logo">
+          <img src="https://jhy156456.github.io/style/images/logo-jhy156456.png" alt="Hayden J GitHub blog" />
+        </a>
+        <div class="navbar-menu">
+          
+            <a href="https://jhy156456.github.io/">홈</a>
+          
+            <a href="https://jhy156456.github.io/review">리뷰</a>
+          
+            <a href="https://jhy156456.github.io/study">카테고리</a>
+          
+            <a href="https://jhy156456.github.io/archives">기록</a>
+          
+            <a href="https://jhy156456.github.io/about">About Me</a>
+          
+        </div>
+        <div class="navbar-search" id="navbar-search-toggle">
+          <span class="icon-search"></span>
+          <form id="cb-search-btn" role="search">
+            <span class="search-box">
+              <input
+                type="text"
+                class="input"
+                id="cb-search-content"
+                required="true"
+                placeholder="검색..."
+                maxlength="30"
+                autocomplete="off" />
+            </span>
+          </form>
+        </div>
+        <div class="navbar-mobile-menu" onclick="">
+          <span class="icon-menu cross">
+            <span class="middle"></span>
+          </span>
+          <ul>
+            
+              <li>
+                <a href="https://jhy156456.github.io/">홈</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/review">리뷰</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/study">카테고리</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/archives">기록</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/about">About Me</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div class="post-header-thumb bg-white}">
+      <!-- <div class="post-header-thumb-op"></div> -->
+      <div class="post-header-thumb">
+        <div class="post-header-thumb-container">
+          <h1 class="post-title" itemprop="name headline">[tips] secure coding</h1>
+          <div class="post-data">
+            <time datetime="2023-06-10 01:00:00" itemprop="datePublished">작성일자：2023-06-10 01:00:00</time>
+            <br/>
+            <span class="view-count-label">조회수: <span class="view-count">0</span></span>
+            <br/>
+            <a
+              href="/tags#study"
+              title="study"
+              data-hover="분류: study">
+              분류: study</a>
+            <!-- <a href="#read">
+            댓글: comments</a> -->
+          </div>
+          <div class="post-tags">
+            
+              
+              
+                
+                  <a
+                    href="/tags#secure"
+                    title="secure"
+                    data-hover="secure">
+                    secure
+                    <span>(1)</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#coding"
+                    title="coding"
+                    data-hover="coding">
+                    coding
+                    <span>(1)</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#java"
+                    title="java"
+                    data-hover="java">
+                    java
+                    <span>(5)</span>
+                    
+                  </a>
+                
+              
+              
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <article
+      class="main-post post-page"
+      itemscope
+      itemtype="http://schema.org/Article">
+      <div class="post-header">
+        <h1 class="post-title" itemprop="name headline">[tips] secure coding</h1>
+        <div class="post-data">
+          <time datetime="2023-06-10 01:00:00" itemprop="datePublished">2023-06-10 01:00:00</time>
+          <span class="view-count-label"> | 조회수: <span class="view-count">0</span></span>
+        </div>
+      </div>
+      <div
+        id="post-content"
+        class="post-content"
+        itemprop="articleBody">
+        <p class="post-tags">
+          
+            
+            
+              
+                <a
+                  href="/tags#secure"
+                  title="secure"
+                  data-hover="secure">
+                  secure
+                  <span>(1)</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#coding"
+                  title="coding"
+                  data-hover="coding">
+                  coding
+                  <span>(1)</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#java"
+                  title="java"
+                  data-hover="java">
+                  java
+                  <span>(5)</span>
+                  
+                </a>
+              
+            
+            
+          
+        </p>
+        <h1 id="개발-방법론의-의해">개발 방법론의 의해</h1>
+
+<h2 id="위협모델링">위협모델링</h2>
+
+<ul>
+  <li>해킹, 재난, 재해등등</li>
+  <li>화면설계서보고 발생 가능한 위협들을 뽑아낸다.</li>
+  <li>설계단계 보안 가이드가 필요함</li>
+  <li>설계단계부터 위협모델링을 하고 보안 통제 기준을 설정하자</li>
+</ul>
+
+<h2 id="구현">구현</h2>
+
+<ul>
+  <li>단위테스트를 통한 보안 약점을 제거할거에염</li>
+</ul>
+
+<h2 id="유지보수">유지보수</h2>
+
+<ul>
+  <li>개발 할때 사용했던 구성 요소들을 빠짐없이 기입하고 버전정보들을 기입해서 모니터링 한다.</li>
+</ul>
+
+<h1 id="sw개발-생명주기-단계별-보안">SW개발 생명주기 단계별 보안</h1>
+
+<h2 id="테스트">테스트</h2>
+
+<ul>
+  <li>위협 도출하고 위협마다 보안 통제 기준들이 있는데 맵핑을 한다</li>
+  <li>소프트웨어 진단 도구
+    <ul>
+      <li>NIST Source Code Security</li>
+    </ul>
+  </li>
+  <li>국내는 IT보안인증 사무국에서 참고 가능하다.</li>
+  <li>한국인터넷진흥원 -&gt; 지식플랫폼 -&gt; 가이드라인 -&gt; 보안취약점 및 침해사고대응 -&gt; 소프트웨어 보안약점 진단가이드</li>
+  <li>ZAP
+    <ul>
+      <li>도메인 입력하면 자동으로 진단해준다.</li>
+    </ul>
+  </li>
+  <li>Fiddler</li>
+</ul>
+
+<h2 id="유지보수-1">유지보수</h2>
+
+<h3 id="사례">사례</h3>
+
+<ul>
+  <li>새로운 기능 추가, 기능 삭제시 발생
+    <ul>
+      <li>이벤트 페이지 만듦
+        <ul>
+          <li>보안 활동 추가되지 않은 경우가 많음</li>
+        </ul>
+      </li>
+      <li>기능삭제요청
+        <ul>
+          <li>삭제가 아니고 주석처리</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>보안패치
+    <ul>
+      <li>소프트웨어 개발시 사용한 구성요소들</li>
+      <li>SW 구성요소 (프레임워크 종류 버전, 라이브러리 종류 버전)</li>
+      <li>자재명세서를 통한 모니터링</li>
+      <li>해당 버전의 취약점이 발견 또는 발표되는 경우</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="공개sw-진단도구">공개SW 진단도구</h1>
+
+<ul>
+  <li>PMD
+    <ul>
+      <li>문법상 오류</li>
+    </ul>
+  </li>
+  <li>SpotBugs
+    <ul>
+      <li>SQL삽입 등의 취약점</li>
+      <li>자바 바이트 코드를 분석하여 버그 패턴을 발견하는 정적분석 공개SW</li>
+      <li>기존에 존재하던 정적분석 공개SW FindBugs를 계승한 프로젝트</li>
+      <li>Java 프로그램에서 발생 가능한 100여개의 잠재적인 에러탐지 및 XML로 결과 저장</li>
+      <li>Linux, Windows, MacOSX 운영체제를 지원하며 GUI 기반의 단독 실행</li>
+    </ul>
+  </li>
+  <li>burp
+    <ul>
+      <li>프록시 설정하여 url intercept가능</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="실습">실습</h1>
+
+<ul>
+  <li>burp로 로깅하여 다운로드 받고자하는 파일 이름을 변경해서 소스코드 다운로드 가능</li>
+  <li>루트디렉토리에 있는 web.cfg 파일을 다운로드 할 수도 있음</li>
+  <li>디비 접속정보 암호화 필요</li>
+  <li>암호화 해도 key source가 포함돼있으면 소용없음</li>
+</ul>
+
+<h1 id="구현단계-보안-강화를-위한-기준">구현단계 보안 강화를 위한 기준</h1>
+
+<h2 id="입력데이터-검증-및-표현">입력데이터 검증 및 표현</h2>
+
+<ul>
+  <li>DB쪽
+    <ul>
+      <li>검증되지 않은</li>
+      <li>정상적인 숫자 외에 개인정보를 질의하는 SQL구문 삽입 실행이 가능</li>
+      <li>SQL 삽입 취약여부 판단 점검 방법
+        <ul>
+          <li>SQL특수 문자 또는 임의의 Query 삽입 후 DB에러페이지 발생
+            <ul>
+              <li>’</li>
+              <li>”</li>
+              <li>–
+                <ul>
+                  <li>;</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li>참쿼리, 거짓쿼리를 차례로 입력 후 반응이 다른지 확인
+            <ul>
+              <li>‘or 1=1 – / ‘or ‘a’=’a’</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>경로 조작 및 자원 삽입</li>
+  <li>크로스사이트 스크립트</li>
+  <li>위험한 형식 파일 업로드</li>
+  <li>서버사이드 요청 위조</li>
+  <li>가장 많은 항목을 차지하고 있음</li>
+</ul>
+
+<h2 id="보안기능">보안기능</h2>
+
+<ul>
+  <li>인증이 정상적으로 이루어지지 않음</li>
+  <li>적절한 인증 없는 중요기능 허용</li>
+  <li>정형화 돼있지 않고 응용된 취약점</li>
+  <li>로직상의 문제는 수동으로 찾아야한다.</li>
+</ul>
+
+<h2 id="시간-및-상태">시간 및 상태</h2>
+
+<h2 id="에러처리">에러처리</h2>
+
+<h1 id="공격들">공격들</h1>
+
+<h2 id="크로스사이트-공격">크로스사이트 공격</h2>
+
+<h2 id="iframe-script-태그-삽입공격">iframe, script 태그 삽입공격</h2>
+
+<ul>
+  <li>게시글의 내용에있는 꺽쇠태그를 &amp;gt로 바꿔준다</li>
+  <li>라이브러리 사용</li>
+  <li>게시판태그의 p, string,img 태그 사용하면 예쁘지 않다</li>
+  <li>허용하는 태그들은 다시 역치환을 해준다.</li>
+  <li>C#은 antixss library 사용</li>
+</ul>
+
+<h2 id="서버-측-요청-위조">서버 측 요청 위조</h2>
+
+<ul>
+  <li>url받아와서 open connection함수 사용할때 발생한다</li>
+  <li>내부 시스템에 연계돼있는 중요시스템 정보 유출 가능성이 있다.</li>
+</ul>
+
+<h2 id="서버-측-요청-위조ssrf">서버 측 요청 위조(SSRF)</h2>
+
+<h3 id="해결법">해결법</h3>
+
+<ul>
+  <li>내부 URL을 블랙리스트로 지정</li>
+  <li>key에 맵핑되는 url만 사용하게 만든다</li>
+  <li>통신구간 암호화 사용
+    <ul>
+      <li>Secure Socket Layer</li>
+      <li>Transport Layer Security</li>
+    </ul>
+  </li>
+  <li>Nmap
+    <ul>
+      <li>이거로 진단한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="무결성-검사-없는-코드-다운로드">무결성 검사 없는 코드 다운로드</h2>
+
+<ul>
+  <li>A시스템에서 B라는 시스템에 jar 파일 전송할 때</li>
+  <li>패치파일 전송할 때</li>
+  <li>기타 실행파일 전송할 때</li>
+  <li>주는쪽에서 전달해주기전에 코드가 변조되지 않았는지 무결성 검사를 해야한다.</li>
+  <li>알약등의 업데이트서버를 해킹하여 이용자들에게 악성코드 심음</li>
+</ul>
+
+<h3 id="해결법---무결성-검사">해결법 - 무결성 검사</h3>
+
+<ul>
+  <li>파일의 hash값이 달라졌는지 체크</li>
+  <li>Anti Virus를 가지고 체크
+    <ul>
+      <li>파일 건내주기전에 백신으로 검사</li>
+    </ul>
+  </li>
+  <li>전자 서명 코드</li>
+</ul>
+
+        <div>
+          <p class="post-info">
+            <!-- <link rel="canonical" href="http://jhy156456.github.io/"/> -->
+            <script
+              src="https://utteranc.es/client.js"
+              repo="jhy156456/github.io-comments"
+              issue-term="pathname"
+              label="Comment"
+              theme="github-light"
+              crossorigin="anonymous"
+              rel="canonical"
+              async></script>
+          </p>
+        </div>
+
+        <p class="post-info">
+          이 문서는<a href="/">
+            jhy156456</a>에 의해 작성되었습니다.<br/>
+          <!-- <a
+          href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank"
+          rel="external nofollow">creative commons 4.0</a>
+          라이센스에 대한 국제 라이센스 계약<br/> -->
+          마지막 수정 날짜:2023-06-10 01:00:00
+        </p>
+      </div>
+    </article>
+
+    <!-- <div class="related-post-lists">
+    <div class="post-lists">
+    <div class="post-lists-body">
+    <div class="post-list-item">
+    <div class="post-list-item-container">
+    <div class="item-label">
+    <div class="item-title"><a href="induction.html">归纳的随想</a></div>
+    <div class="item-meta clearfix">
+    <div class="item-meta-ico bg-ico-image" style="background: url('../usr/themes/pinghsu/images/bg-ico.png') no-repeat;background-size: 40px auto;"></div>
+    <div class="item-meta-cat"><a href="../category/thoughts/index.html">Thoughts</a></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div> -->
+
+    <footer class="footer bg-white">
+  
+
+  <div class="footer-social">
+    <div class="footer-container clearfix">
+      <div class="social-list">
+        <a
+          class="social github"
+          target="blank"
+          href="https://github.com/jhy156456"
+          title="github"
+          data-hover="GitHub">GitHub</a>
+        <a
+          class="social tistory"
+          target="blank"
+          href="http://jhy156456.tistory.com"
+          title="tistory"
+          data-hover="Tistory">Tistory</a>
+        <a
+          class="social linkedin"
+          target="blank"
+          href="https://www.linkedin.com/in/%ED%98%84%EC%98%81-%EC%A0%95-6b2660252/"
+          title="linkedin"
+          data-hover="LinkedIn">LinkedIn</a>
+        <a
+          class="social rss"
+          target="blank"
+          href="mailto:jcypher1024@outlook.com"
+          title="E-mail"
+          data-hover="E-mail">E-mail</a>
+
+      </div>
+    </div>
+  </div>
+  <div class="footer-meta">
+    <div class="footer-container">
+      <div class="meta-item meta-copyright">
+        <div class="meta-copyright-info">
+          <a href="/" class="info-logo">
+            <img
+              src="https://jhy156456.github.io/style/images/logo-jhy156456.png"
+              title="jhy156456_blog"
+              data-hover="jhy156456_blog"
+              alt="jhy156456_blog" />
+          </a>
+          <div class="info-text">
+            <p>
+              Theme is
+              <a
+                href="http://www.liberxue.com/2017/08/03/Jekyllthemes.html"
+                title="访问 Jekyll liberxue主题"
+                data-hover="Jekyll liberxue"
+                target="_blank">Jekyll liberxue</a>
+              by
+              <a href="http://www.liberxue.com/about" target="_blank">liberxue</a>
+            </p>
+            <p>
+              Powered by
+              <a
+                href="https://jhy156456.github.io/tags/#Jekyll"
+                title="Jekyll"
+                data-hover="Jekyll"
+                target="_blank"
+                rel="nofollow">Jekyll</a>
+            </p>
+            <!-- <p>&copy; 2017 <a href="/feed.xml" title="访问 liberxue blog RSS" -->
+            <!-- data-hover="liberxue blog RSS">liberxue blog RSS</a></p> -->
+            <!-- <p>게시글：개</p> --><p>총 게시글：102개
+          </p>
+            <!-- <p>이blog는 Fork되었습니다.</p><iframe
+            src="http://ghbtns.com/github-btn.html?user=liberxue&repo=liberxue.github.io&type=fork&count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe> -->
+          </div>
+        </div>
+      </div>
+      <div class="meta-item meta-posts">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">다른 게시글</h3>
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+      <div class="meta-item meta-comments">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">최신글</h3>
+
+        
+          
+            <li>
+              <a
+                href="/2026/01/02/os-zip-shell-script.html"
+                title="[de] test"
+                data-hover="[de] test">
+                [de] test</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/12/10/os-local-dns-issue.html"
+                title="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)"
+                data-hover="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)">
+                [infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/11/22/DE-hdfs-cli-not-working.html"
+                title="[DE] hdfs cli 명령어 수행 안될 때"
+                data-hover="[DE] hdfs cli 명령어 수행 안될 때">
+                [DE] hdfs cli 명령어 수행 안될 때</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/11/12/oracle-delete-from-table.html"
+                title="[oracle] delete from table 했을 때 복구방법"
+                data-hover="[oracle] delete from table 했을 때 복구방법">
+                [oracle] delete from table 했을 때 복구방법</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/04/15/spring-Missing-IN-or-OUT-parameter.html"
+                title="[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 "
+                data-hover="[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 ">
+                [spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 </a>
+            </li>
+          
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.js"></script>
+<script src="/search/js/cb-search.js"></script>
+<script>
+  // 검색창 클릭 토글 기능
+  $(document).ready(function() {
+    // ID가 없으면 클래스로 찾기
+    var $searchToggle = $('#navbar-search-toggle');
+    if ($searchToggle.length === 0) {
+      $searchToggle = $('.navbar-search');
+    }
+    
+    var $searchInput = $('#cb-search-content');
+    var $iconSearch = $searchToggle.find('.icon-search');
+    
+    if ($searchToggle.length === 0) {
+      console.log('검색 토글 요소를 찾을 수 없습니다.');
+      return;
+    }
+    
+    // 검색 아이콘 클릭 시 토글
+    $iconSearch.on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      $searchToggle.toggleClass('active');
+      
+      // 검색창이 열리면 포커스
+      if ($searchToggle.hasClass('active')) {
+        setTimeout(function() {
+          $searchInput.focus();
+        }, 150);
+      }
+    });
+    
+    // 검색 입력창이나 form 클릭 시 이벤트 전파 방지
+    $searchToggle.find('form, input').on('click', function(e) {
+      e.stopPropagation();
+    });
+    
+    // 검색창 닫기 함수
+    function closeSearch() {
+      $searchToggle.removeClass('active');
+      $searchInput.val('').blur();
+    }
+    
+    // ESC 키로 검색창 닫기
+    $(document).on('keydown', function(e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        if ($searchToggle.hasClass('active')) {
+          closeSearch();
+        }
+      }
+    });
+    
+    // 검색창 외부 클릭 시 닫기
+    $(document).on('click', function(e) {
+      if ($searchToggle.hasClass('active')) {
+        if (!$searchToggle.is(e.target) && !$searchToggle.has(e.target).length) {
+          closeSearch();
+        }
+      }
+    });
+    
+    // 검색 결과 클릭 시 해당 게시글로 이동
+    $(document).on('click', '.navbar-search form .search-box ul li', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      var $li = $(this);
+      var text = $li.text().trim();
+      
+      // typeahead의 afterSelect를 트리거하거나 직접 이동
+      if (typeof window.names !== 'undefined' && typeof window.urls !== 'undefined') {
+        var index = window.names.indexOf(text);
+        if (index !== -1 && window.urls[index]) {
+          window.location.href = window.urls[index];
+          closeSearch();
+          return false;
+        }
+      }
+      
+      // typeahead가 생성한 링크인 경우
+      var $link = $li.find('a');
+      if ($link.length && $link.attr('href')) {
+        window.location.href = $link.attr('href');
+        closeSearch();
+        return false;
+      }
+    });
+  });
+  
+  $(function() {
+    setTimeout(function() {
+      $("code").removeClass("hljs");
+      $("code").removeClass("language");
+    }, 90);
+  });
+  (function() {
+    var bp = document.createElement("script");
+    var curProtocol = window.location.protocol.split(":")[0];
+    if (curProtocol === "https") {
+      bp.src = "https://zz.bdstatic.com/linksubmit/push.js";
+    } else {
+      bp.src = "http://push.zhanzhang.baidu.com/push.js";
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+    <!-- Firebase SDK (Firebase를 사용하는 경우에만 필요) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <!-- 조회수 카운터 스크립트 -->
+    <script src="https://jhy156456.github.io/assets/js/view-counter.js"></script>
+    <div id="directory-content" class="directory-content">
+      <div id="directory"></div>
+    </div>
+    <script>
+      var postDirectoryBuild = function() {
+        var postChildren = function children(childNodes, reg) {
+            var result = [],
+              isReg = typeof reg === "object",
+              isStr = typeof reg === "string",
+              node,
+              i,
+              len;
+            for (i = 0, len = childNodes.length; i < len; i++) {
+              node = childNodes[i];
+              if ((node.nodeType === 1 || node.nodeType === 9) && (! reg || (isReg && reg.test(node.tagName.toLowerCase())) || (isStr && node.tagName.toLowerCase() === reg))) {
+                result.push(node);
+              }
+            }
+            return result;
+          },
+          createPostDirectory = function(article, directory, isDirNum) {
+            var contentArr = [],
+              titleId = [],
+              levelArr,
+              root,
+              level,
+              currentList,
+              list,
+              li,
+              link,
+              i,
+              len;
+            levelArr = (function(article, contentArr, titleId) {
+              var titleElem = postChildren(article.childNodes, /^h\d$/),
+                levelArr = [],
+                lastNum = 1,
+                lastRevNum = 1,
+                count = 0,
+                guid = 1,
+                id = "directory" + (
+                  Math.random() + ""
+                ).replace(/\D/, ""),
+                lastRevNum,
+                num,
+                elem;
+              while (titleElem.length) {
+                elem = titleElem.shift();
+                contentArr.push(elem.innerHTML);
+                num = + elem.tagName.match(/\d/)[0];
+                if (num > lastNum) {
+                  levelArr.push(1);
+                  lastRevNum += 1;
+                } else if (num === lastRevNum || (num > lastRevNum && num <= lastNum)) {
+                  levelArr.push(0);
+                  lastRevNum = lastRevNum;
+                } else if (num < lastRevNum) {
+                  levelArr.push(num - lastRevNum);
+                  lastRevNum = num;
+                }
+                count += levelArr[levelArr.length - 1];
+                lastNum = num;
+                elem.id = elem.id || id + guid++;
+                titleId.push(elem.id);
+              }
+              if (count !== 0 && levelArr[0] === 1) 
+                levelArr[0] = 0;
+              
+
+
+              return levelArr;
+            })(article, contentArr, titleId);
+            currentList = root = document.createElement("ul");
+            dirNum = [0];
+            for (i = 0, len = levelArr.length; i < len; i++) {
+              level = levelArr[i];
+              if (level === 1) {
+                list = document.createElement("ul");
+                if (! currentList.lastElementChild) {
+                  currentList.appendChild(document.createElement("li"));
+                }
+                currentList.lastElementChild.appendChild(list);
+                currentList = list;
+                dirNum.push(0);
+              } else if (level < 0) {
+                level *= 2;
+                while (level++) {
+                  if (level % 2) 
+                    dirNum.pop();
+                  
+
+
+                  currentList = currentList.parentNode;
+                }
+              }
+              dirNum[dirNum.length - 1]++;
+              li = document.createElement("li");
+              link = document.createElement("a");
+              link.href = "#" + titleId[i];
+              link.title = titleId[i];
+              link.title = titleId[i];
+              link.innerHTML = ! isDirNum
+                ? contentArr[i]
+                : dirNum.join(".") + " " + contentArr[i];
+              li.appendChild(link);
+              currentList.appendChild(li);
+            }
+            directory.appendChild(root);
+          };
+        createPostDirectory(document.getElementById("post-content"), document.getElementById("directory"), true);
+      };
+      postDirectoryBuild();
+    </script>
+    <script>//           window.addEventListener(
+//     "scroll",
+//     function () {
+//       console.log("??????????");
+//     },
+//     true
+// );
+  </script>
+  <!-- <script>
+  $(document).ready(function () {
+  var currentPosition = parseInt($("#directory").css("top"));
+  $(window).scroll(function () {
+  var position = $(window).scrollTop()-500;
+  $("#directory")
+  .stop()
+  .animate({ top: position + currentPosition + "px" }, 0);
+  });
+  });
+  </script> --><!-- <script>
+    $(function () {
+    var $win = $(window);
+    var top = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환
+
+    /*사용자 설정 값 시작*/
+    var speed = 500; // 따라다닐 속도 : "slow", "normal", or "fast" or        numeric(단위:msec)
+    var easing = "linear"; // 따라다니는 방법 기본 두가지 linear, swing
+    var $layer = $("#directory"); // 레이어 셀렉팅
+    // var layerTopOffset = 650; // 레이어 높이 상한선, 단위:px
+    var layerTopOffset = 0; // 레이어 높이 상한선, 단위:px
+    // $layer.css("position", "absolute");
+    $layer.css("top", "0px"); //첫 시작 위치
+    /*사용자 설정 값 끝*/
+
+    // 스크롤 바를 내린 상태에서 리프레시 했을 경우를 위해
+    if (top > 0) $win.scrollTop(layerTopOffset + top);
+    else $win.scrollTop(0);
+
+    //스크롤이벤트가 발생하면
+    $(window).scroll(function () {
+    yPosition = $win.scrollTop() + layerTopOffset;
+    //   console.log($win.scrollTop())
+    console.log($layer.css("top"))
+    if (yPosition < 0) {
+    yPosition = 0;
+    }
+    $layer.animate(
+    { top: yPosition},
+    { duration: speed, easing: easing, queue: false }
+    );
+    });
+    });
+    </script> --><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    lang = hljs.initHighlightingOnLoad();
+  </script>
+</body></html>

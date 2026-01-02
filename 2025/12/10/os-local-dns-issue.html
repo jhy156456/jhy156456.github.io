@@ -1,0 +1,947 @@
+
+<!DOCTYPE >
+<html lang="zh-cn" data-scribe-reduced-action-queue="true">
+  <head>
+    <meta content="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC) - Hayden J GitHub blog" name="title" />
+    <meta content="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC) - Hayden J GitHub blog" name="og:title" />
+    <title>[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC) - Hayden J GitHub blog</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC) - Hayden J GitHub blog</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC) - Hayden J GitHub blog">
+<meta name="twitter:keywords" content="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC) - Hayden J GitHub blog" property="og:description" />
+<meta property="og:type" content="article">
+<meta property="og:title" content="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC) - Hayden J GitHub blog">
+<meta name="og:keywords"
+      content="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC) - Hayden J GitHub blog|개요내부망에서 원래 쓰던 DNS 서버(이하 UPSTREAM_DNS)가 따로 있고,리눅스 서버 하나(이하 LOCAL_DNS)에는 BIND가 동작만 하고 있었다.LOCAL_DNS는 원래 DNS 전용 서버가 아니라,..."
+      property="og:description" />
+<meta name="theme-Jekyll by liberxue" content="#eb5055">
+<link rel="icon" type="image/png" href="https://jhy156456.github.io/style/favicons/favicon.ico" />
+<link href="https://jhy156456.github.io/style/favicons/favicon.ico" rel="shortcut icon" type="image/png">
+<!-- 댓글 이슈 수정 -->
+<!-- <link rel="canonical" href="https://jhy156456.github.io/"> -->
+<link rel="canonical" href="" />
+<link rel="alternate" type="application/rss+xml" title="jhy156456" href="https://jhy156456.github.io/feed.xml">
+<meta charset="UTF-8">
+<!-- <link rel="manifest" href="/manifest.json"> -->
+<link rel="shortcut icon" href="https://jhy156456.github.io/style/favicons/favicon.ico" type="image/x-icon">
+<meta name="keywords" content="개요내부망에서 원래 쓰던 DNS 서버(이하 UPSTREAM_DNS)가 따로 있고,리눅스 서버 하나(이하 LOCAL_DNS)에는 BIND가 동작만 하고 있었다.LOCAL_DNS는 원래 DNS 전용 서버가 아니라,..."
+      property="og:description" />
+<meta name="description" content="오늘 무언가를 하지않으면 내일은 저절로 오지않는다" />
+<!--<link href="https://cdn.bootcss.com/highlight.js/9.10.0/styles/xcode.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+
+<!--<link href="https://jhy156456.github.io/assets/css/syntax.css" rel="stylesheet">-->
+<link href="https://jhy156456.github.io/style/style-liberxue.css" rel="stylesheet">
+<!-- <link href="https://jhy156456.github.io/_sass/minimal-mistakes/_navigation.scss" rel="stylesheet"> -->
+
+<meta content="https://jhy156456.github.io/2025/12/10/os-local-dns-issue.html" property="og:url" />
+<meta content="https://jhy156456.github.io/2025/12/10/os-local-dns-issue.html|개요내부망에서 원래 쓰던 DNS 서버(이하 UPSTREAM_DNS)가 따로 있고,리눅스 서버 하나(이하 LOCAL_DNS)에는 BIND가 동작만 하고 있었다.LOCAL_DNS는 원래 DNS 전용 서버가 아니라,..."
+      property="og:description" />
+<meta content="article" property="og:type" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S9G62LP1GS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag("js", new Date());
+  gtag("config", "G-S9G62LP1GS");
+</script>
+<!--  -->
+
+    
+      <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+  TeX: {
+            equationNumbers: {
+              autoNumber: "AMS"
+            }
+          },
+          tex2jax: {
+          inlineMath: [ ['$', '$'] ],
+          displayMath: [ ['$$', '$$'] ],
+          processEscapes: true,
+        }
+      });
+      MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
+            alert("Math Processing Error: "+message[1]);
+          });
+      MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
+            alert("Math Processing Error: "+message[1]);
+          });
+</script>
+<script
+  type="text/javascript"
+  async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"
+></script>
+
+    
+  </head>
+
+  <body class="" gtools_scp_screen_capture_injected="true">
+    <header id="header" class="header bg-white">
+      <div class="navbar-container">
+        <a
+          href="/"
+          title="Hayden J GitHub blog"
+          class="navbar-logo">
+          <img src="https://jhy156456.github.io/style/images/logo-jhy156456.png" alt="Hayden J GitHub blog" />
+        </a>
+        <div class="navbar-menu">
+          
+            <a href="https://jhy156456.github.io/">홈</a>
+          
+            <a href="https://jhy156456.github.io/review">리뷰</a>
+          
+            <a href="https://jhy156456.github.io/study">카테고리</a>
+          
+            <a href="https://jhy156456.github.io/archives">기록</a>
+          
+            <a href="https://jhy156456.github.io/about">About Me</a>
+          
+        </div>
+        <div class="navbar-search" id="navbar-search-toggle">
+          <span class="icon-search"></span>
+          <form id="cb-search-btn" role="search">
+            <span class="search-box">
+              <input
+                type="text"
+                class="input"
+                id="cb-search-content"
+                required="true"
+                placeholder="검색..."
+                maxlength="30"
+                autocomplete="off" />
+            </span>
+          </form>
+        </div>
+        <div class="navbar-mobile-menu" onclick="">
+          <span class="icon-menu cross">
+            <span class="middle"></span>
+          </span>
+          <ul>
+            
+              <li>
+                <a href="https://jhy156456.github.io/">홈</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/review">리뷰</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/study">카테고리</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/archives">기록</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/about">About Me</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div class="post-header-thumb bg-white}">
+      <!-- <div class="post-header-thumb-op"></div> -->
+      <div class="post-header-thumb">
+        <div class="post-header-thumb-container">
+          <h1 class="post-title" itemprop="name headline">[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)</h1>
+          <div class="post-data">
+            <time datetime="2025-12-10 17:00:00" itemprop="datePublished">작성일자：2025-12-10 17:00:00</time>
+            <br/>
+            <span class="view-count-label">조회수: <span class="view-count">0</span></span>
+            <br/>
+            <a
+              href="/tags#study"
+              title="study"
+              data-hover="분류: study">
+              분류: study</a>
+            <!-- <a href="#read">
+            댓글: comments</a> -->
+          </div>
+          <div class="post-tags">
+            
+              
+              
+                
+                  <a
+                    href="/tags#dns  - bind  - linux  - dnssec"
+                    title="dns  - bind  - linux  - dnssec"
+                    data-hover="dns  - bind  - linux  - dnssec">
+                    dns  - bind  - linux  - dnssec
+                    <span>(1)</span>
+                    
+                  </a>
+                
+              
+              
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <article
+      class="main-post post-page"
+      itemscope
+      itemtype="http://schema.org/Article">
+      <div class="post-header">
+        <h1 class="post-title" itemprop="name headline">[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)</h1>
+        <div class="post-data">
+          <time datetime="2025-12-10 17:00:00" itemprop="datePublished">2025-12-10 17:00:00</time>
+          <span class="view-count-label"> | 조회수: <span class="view-count">0</span></span>
+        </div>
+      </div>
+      <div
+        id="post-content"
+        class="post-content"
+        itemprop="articleBody">
+        <p class="post-tags">
+          
+            
+            
+              
+                <a
+                  href="/tags#dns  - bind  - linux  - dnssec"
+                  title="dns  - bind  - linux  - dnssec"
+                  data-hover="dns  - bind  - linux  - dnssec">
+                  dns  - bind  - linux  - dnssec
+                  <span>(1)</span>
+                  
+                </a>
+              
+            
+            
+          
+        </p>
+        <h1 id="개요">개요</h1>
+
+<p>내부망에서 원래 쓰던 DNS 서버(이하 <code class="language-plaintext highlighter-rouge">UPSTREAM_DNS</code>)가 따로 있고,<br />
+리눅스 서버 하나(이하 <code class="language-plaintext highlighter-rouge">LOCAL_DNS</code>)에는 BIND가 동작만 하고 있었다.<br />
+<code class="language-plaintext highlighter-rouge">LOCAL_DNS</code>는 원래 DNS 전용 서버가 아니라, 애플리케이션 서버 + BIND 정도의 상태.</p>
+
+<p>특정 이슈 때문에 내부 클라이언트들이 참조하는 DNS를 잠깐</p>
+
+<ul>
+  <li>기존: <code class="language-plaintext highlighter-rouge">UPSTREAM_DNS</code></li>
+  <li>변경: <code class="language-plaintext highlighter-rouge">LOCAL_DNS</code> → 내부적으로는 다시 <code class="language-plaintext highlighter-rouge">UPSTREAM_DNS</code>로 forward</li>
+</ul>
+
+<p>이렇게 바꾸고 나서, <strong>특정 도메인(<code class="language-plaintext highlighter-rouge">install.internal-example.com</code> 같은 내부 도메인)</strong> 만<br />
+계속 <code class="language-plaintext highlighter-rouge">SERVFAIL</code> / timeout 이 나는 문제가 발생했다.</p>
+
+<hr />
+
+<h1 id="환경-정리-간단">환경 정리 (간단)</h1>
+
+<p>실제 IP, 도메인 등은 전부 가명 처리했다.</p>
+
+<ul>
+  <li>원래 사내 DNS: <code class="language-plaintext highlighter-rouge">UPSTREAM_DNS</code></li>
+  <li>임시 DNS 역할: <code class="language-plaintext highlighter-rouge">LOCAL_DNS</code> (BIND)</li>
+  <li>문제 도메인: <code class="language-plaintext highlighter-rouge">install.internal-example.com</code></li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">LOCAL_DNS</code> 의 BIND 핵심 설정 (개념만):</p>
+
+<ul>
+  <li>DNS 설정 : <code class="language-plaintext highlighter-rouge">/etc/named.conf</code></li>
+  <li>내부에 include 및 directory 확인</li>
+  <li>내 LOCAL_DNS는 <code class="language-plaintext highlighter-rouge">include "/etc/named.rfc~~"</code> + <code class="language-plaintext highlighter-rouge">directory "/var/named "</code> 설정되어 있음</li>
+</ul>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">options</span> {
+    <span class="n">directory</span> <span class="s2">"/var/named"</span>;
+    <span class="n">recursion</span> <span class="n">yes</span>;
+
+    <span class="n">forwarders</span> {
+        <span class="n">UPSTREAM_DNS_IP</span>;
+    };
+
+    // 기본값: <span class="n">dnssec</span>-<span class="n">enable</span> <span class="n">yes</span>;
+    //        <span class="n">dnssec</span>-<span class="n">validation</span> <span class="n">auto</span>;
+};
+</code></pre></div></div>
+
+<p>의도는 단순히:</p>
+
+<blockquote>
+  <p>“LOCAL_DNS는 캐시 + 포워더만 하고,<br />
+실제 해석은 계속 UPSTREAM_DNS가 하게 두자.”</p>
+</blockquote>
+
+<p>였다.</p>
+
+<hr />
+
+<h1 id="증상">증상</h1>
+
+<p>윈도우에서 DNS 서버를 <code class="language-plaintext highlighter-rouge">LOCAL_DNS</code> 로 설정했을 때:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nslookup</span><span class="w"> </span><span class="nx">install.internal-example.com</span><span class="w"> </span><span class="nx">LOCAL_DNS_IP</span><span class="w">
+</span><span class="p">;;</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">timeout</span><span class="w"> </span><span class="err">또는</span><span class="w"> </span><span class="nx">SERVFAIL</span><span class="w">
+</span></code></pre></div></div>
+
+<p>반대로 DNS를 다시 <code class="language-plaintext highlighter-rouge">UPSTREAM_DNS</code> 로 돌리면:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nslookup</span><span class="w"> </span><span class="nx">install.internal-example.com</span><span class="w"> </span><span class="nx">UPSTREAM_DNS_IP</span><span class="w">
+</span><span class="p">;;</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="err">정상</span><span class="w"> </span><span class="err">응답</span><span class="w">
+</span></code></pre></div></div>
+
+<p>리눅스 <code class="language-plaintext highlighter-rouge">LOCAL_DNS</code> 서버에서 테스트:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1) LOCAL_DNS 자신의 BIND에게 질의</span>
+dig @127.0.0.1 install.internal-example.com +noall +answer +comments
+<span class="p">;;</span> status: SERVFAIL
+
+<span class="c"># 2) UPSTREAM_DNS 에 직접 질의</span>
+dig @UPSTREAM_DNS_IP install.internal-example.com +noall +answer +comments
+<span class="p">;;</span> status: NOERROR <span class="o">(</span>정상 응답<span class="o">)</span>
+</code></pre></div></div>
+
+<p>정리:</p>
+
+<ul>
+  <li>업스트림 DNS에 직접 질의하면 항상 정상</li>
+  <li>중간에 있는 BIND(LOCAL_DNS)를 거치면 SERVFAIL</li>
+</ul>
+
+<hr />
+
+<h1 id="원인-dnssec-검증-실패-broken-trust-chain">원인: DNSSEC 검증 실패 (broken trust chain)</h1>
+
+<p><code class="language-plaintext highlighter-rouge">LOCAL_DNS</code> 의 named 로그를 보면 대략 이런 메시지가 있었다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo egrep -R "internal-example.com" /etc/named.conf /etc/named.* /var/named 2&gt;/dev/null
+broken trust chain resolving 'install.internal-example.com/IN/A' ...
+</code></pre></div></div>
+
+<p>이 메시지는 BIND에서 <strong>DNSSEC 검증이 실패했을 때</strong> 자주 등장한다.</p>
+
+<ul>
+  <li>로컬 DNS는 DNS검증을 하고있었고 UPSTREAM_DNS는 DNS 검증을 하고있지 않았음</li>
+  <li>DNSSEC = DNS 응답에 “전자서명+검증” 얹어서, 위조 여부를 잡아내는 기능</li>
+</ul>
+
+<p>실제 흐름은 다음과 같다.</p>
+
+<ol>
+  <li>클라이언트 → <code class="language-plaintext highlighter-rouge">LOCAL_DNS</code> 에 <code class="language-plaintext highlighter-rouge">install.internal-example.com</code> 질의</li>
+  <li><code class="language-plaintext highlighter-rouge">LOCAL_DNS</code> → <code class="language-plaintext highlighter-rouge">UPSTREAM_DNS</code> 로 forward</li>
+  <li><code class="language-plaintext highlighter-rouge">UPSTREAM_DNS</code> 는 정상 응답(A 레코드)을 반환</li>
+  <li><code class="language-plaintext highlighter-rouge">LOCAL_DNS</code> 는 이 응답에 대해 <strong>DNSSEC 검증 수행</strong></li>
+  <li>해당 도메인의 trust chain 이 깨져 있어(<code class="language-plaintext highlighter-rouge">broken trust chain</code>)</li>
+  <li>최종적으로 클라이언트에게 <strong>SERVFAIL</strong> 리턴</li>
+</ol>
+
+<p>즉, UPSTREAM_DNS 준 응답이 DNSSEC 규칙 기준으로는 ‘신뢰할 수 없는 상태’</p>
+
+<p>그래서:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">dig @UPSTREAM_DNS</code> : 검증 없이 데이터만 보기 → 항상 NOERROR</li>
+  <li><code class="language-plaintext highlighter-rouge">dig @127.0.0.1</code> : 검증까지 하다가 실패 → SERVFAIL</li>
+</ul>
+
+<p>DNSSEC 때문인지 확인할 때는 <code class="language-plaintext highlighter-rouge">+cdflag</code> 옵션이 유용하다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dig @127.0.0.1 install.internal-example.com +dnssec +noall +answer +comments
+<span class="c">## SERVFAIL</span>
+dig @127.0.0.1 install.internal-example.com +cdflag +noall +answer +comments
+<span class="c">## 정상 응답</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">+cdflag</code> = Checking Disabled</li>
+  <li>즉 “검증은 하지 말고, 응답만 달라”는 의미</li>
+  <li>여기서는 NOERROR + 정상 A 레코드가 떨어짐 → <strong>검증만 빼면 데이터는 정상</strong>이라는 뜻</li>
+</ul>
+
+<hr />
+
+<h1 id="해결">해결</h1>
+
+<p>이번 환경에서 <code class="language-plaintext highlighter-rouge">LOCAL_DNS</code> 는 <strong>내부 캐시/포워더용</strong>이었고,<br />
+굳이 이 서버에서까지 DNSSEC 검증을 할 필요는 없다고 판단했다.</p>
+
+<p>그래서 <strong>DNSSEC 검증만 끄는 방향</strong>으로 설정을 수정했다.</p>
+
+<p>기존 <code class="language-plaintext highlighter-rouge">/etc/named.conf</code> (개념):</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">options</span> {
+    <span class="n">directory</span> <span class="s2">"/var/named"</span>;
+    <span class="n">recursion</span> <span class="n">yes</span>;
+
+    <span class="n">forwarders</span> {
+        <span class="n">UPSTREAM_DNS_IP</span>;
+    };
+
+    <span class="n">dnssec</span>-<span class="n">enable</span> <span class="n">yes</span>;
+    <span class="n">dnssec</span>-<span class="n">validation</span> <span class="n">auto</span>;
+};
+</code></pre></div></div>
+
+<p>변경 후:</p>
+
+<div class="language-conf highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">options</span> {
+    <span class="n">directory</span> <span class="s2">"/var/named"</span>;
+    <span class="n">recursion</span> <span class="n">yes</span>;
+
+    <span class="n">forwarders</span> {
+        <span class="n">UPSTREAM_DNS_IP</span>;
+    };
+
+    <span class="n">dnssec</span>-<span class="n">enable</span> <span class="n">yes</span>;        // 기능은 켜둬도 됨
+    <span class="n">dnssec</span>-<span class="n">validation</span> <span class="n">no</span>;     // 🔥 검증만 <span class="n">OFF</span>
+};
+</code></pre></div></div>
+
+<p>적용:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>named-checkconf
+<span class="nb">sudo </span>systemctl reload named
+</code></pre></div></div>
+
+<p>그리고 다시 테스트:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dig @127.0.0.1 install.internal-example.com +noall +answer +comments
+<span class="p">;;</span> status: NOERROR
+
+nslookup install.internal-example.com LOCAL_DNS_IP
+<span class="p">;;</span> 윈도우에서도 정상 응답
+</code></pre></div></div>
+
+<p>이후 해당 도메인 접속 문제는 모두 해결되었다.</p>
+
+<hr />
+
+<h1 id="메모">메모</h1>
+
+<ul>
+  <li>단순 <strong>캐시/포워딩 용도로 쓰는 BIND</strong> 라도, 기본값이면 DNSSEC 검증을 수행할 수 있다.</li>
+  <li><code class="language-plaintext highlighter-rouge">SERVFAIL</code> + 로그에 <code class="language-plaintext highlighter-rouge">broken trust chain resolving ...</code> 이 보이면<br />
+→ <strong>DNSSEC 검증 실패</strong>를 우선 의심해볼 것.</li>
+  <li>빠르게 확인할 포인트:
+    <ol>
+      <li><code class="language-plaintext highlighter-rouge">dig @UPSTREAM_DNS</code> vs <code class="language-plaintext highlighter-rouge">dig @LOCAL_DNS</code> 비교</li>
+      <li><code class="language-plaintext highlighter-rouge">dig @LOCAL_DNS ... +cdflag</code> 로 검증 우회해 보기</li>
+      <li><code class="language-plaintext highlighter-rouge">/etc/named.conf</code> 의 <code class="language-plaintext highlighter-rouge">dnssec-validation</code> 값 확인</li>
+    </ol>
+  </li>
+</ul>
+
+<p>이번 케이스의 한 줄 정리:</p>
+
+<blockquote>
+  <p>“원래 DNS는 따로 있는데, 임시로 올려둔 리눅스 BIND를 DNS로 쓰다가<br />
+이 서버가 DNSSEC 검증까지 하면서 내부 도메인 체인이 깨진 걸 SERVFAIL로 막고 있었다.”</p>
+</blockquote>
+
+        <div>
+          <p class="post-info">
+            <!-- <link rel="canonical" href="http://jhy156456.github.io/"/> -->
+            <script
+              src="https://utteranc.es/client.js"
+              repo="jhy156456/github.io-comments"
+              issue-term="pathname"
+              label="Comment"
+              theme="github-light"
+              crossorigin="anonymous"
+              rel="canonical"
+              async></script>
+          </p>
+        </div>
+
+        <p class="post-info">
+          이 문서는<a href="/">
+            jhy156456</a>에 의해 작성되었습니다.<br/>
+          <!-- <a
+          href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank"
+          rel="external nofollow">creative commons 4.0</a>
+          라이센스에 대한 국제 라이센스 계약<br/> -->
+          마지막 수정 날짜:2025-12-10 17:00:00
+        </p>
+      </div>
+    </article>
+
+    <!-- <div class="related-post-lists">
+    <div class="post-lists">
+    <div class="post-lists-body">
+    <div class="post-list-item">
+    <div class="post-list-item-container">
+    <div class="item-label">
+    <div class="item-title"><a href="induction.html">归纳的随想</a></div>
+    <div class="item-meta clearfix">
+    <div class="item-meta-ico bg-ico-image" style="background: url('../usr/themes/pinghsu/images/bg-ico.png') no-repeat;background-size: 40px auto;"></div>
+    <div class="item-meta-cat"><a href="../category/thoughts/index.html">Thoughts</a></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div> -->
+
+    <footer class="footer bg-white">
+  
+
+  <div class="footer-social">
+    <div class="footer-container clearfix">
+      <div class="social-list">
+        <a
+          class="social github"
+          target="blank"
+          href="https://github.com/jhy156456"
+          title="github"
+          data-hover="GitHub">GitHub</a>
+        <a
+          class="social tistory"
+          target="blank"
+          href="http://jhy156456.tistory.com"
+          title="tistory"
+          data-hover="Tistory">Tistory</a>
+        <a
+          class="social linkedin"
+          target="blank"
+          href="https://www.linkedin.com/in/%ED%98%84%EC%98%81-%EC%A0%95-6b2660252/"
+          title="linkedin"
+          data-hover="LinkedIn">LinkedIn</a>
+        <a
+          class="social rss"
+          target="blank"
+          href="mailto:jcypher1024@outlook.com"
+          title="E-mail"
+          data-hover="E-mail">E-mail</a>
+
+      </div>
+    </div>
+  </div>
+  <div class="footer-meta">
+    <div class="footer-container">
+      <div class="meta-item meta-copyright">
+        <div class="meta-copyright-info">
+          <a href="/" class="info-logo">
+            <img
+              src="https://jhy156456.github.io/style/images/logo-jhy156456.png"
+              title="jhy156456_blog"
+              data-hover="jhy156456_blog"
+              alt="jhy156456_blog" />
+          </a>
+          <div class="info-text">
+            <p>
+              Theme is
+              <a
+                href="http://www.liberxue.com/2017/08/03/Jekyllthemes.html"
+                title="访问 Jekyll liberxue主题"
+                data-hover="Jekyll liberxue"
+                target="_blank">Jekyll liberxue</a>
+              by
+              <a href="http://www.liberxue.com/about" target="_blank">liberxue</a>
+            </p>
+            <p>
+              Powered by
+              <a
+                href="https://jhy156456.github.io/tags/#Jekyll"
+                title="Jekyll"
+                data-hover="Jekyll"
+                target="_blank"
+                rel="nofollow">Jekyll</a>
+            </p>
+            <!-- <p>&copy; 2017 <a href="/feed.xml" title="访问 liberxue blog RSS" -->
+            <!-- data-hover="liberxue blog RSS">liberxue blog RSS</a></p> -->
+            <!-- <p>게시글：개</p> --><p>총 게시글：102개
+          </p>
+            <!-- <p>이blog는 Fork되었습니다.</p><iframe
+            src="http://ghbtns.com/github-btn.html?user=liberxue&repo=liberxue.github.io&type=fork&count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe> -->
+          </div>
+        </div>
+      </div>
+      <div class="meta-item meta-posts">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">다른 게시글</h3>
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+      <div class="meta-item meta-comments">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">최신글</h3>
+
+        
+          
+            <li>
+              <a
+                href="/2026/01/02/os-zip-shell-script.html"
+                title="[de] test"
+                data-hover="[de] test">
+                [de] test</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/12/10/os-local-dns-issue.html"
+                title="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)"
+                data-hover="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)">
+                [infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/11/22/DE-hdfs-cli-not-working.html"
+                title="[DE] hdfs cli 명령어 수행 안될 때"
+                data-hover="[DE] hdfs cli 명령어 수행 안될 때">
+                [DE] hdfs cli 명령어 수행 안될 때</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/11/12/oracle-delete-from-table.html"
+                title="[oracle] delete from table 했을 때 복구방법"
+                data-hover="[oracle] delete from table 했을 때 복구방법">
+                [oracle] delete from table 했을 때 복구방법</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/04/15/spring-Missing-IN-or-OUT-parameter.html"
+                title="[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 "
+                data-hover="[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 ">
+                [spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 </a>
+            </li>
+          
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.js"></script>
+<script src="/search/js/cb-search.js"></script>
+<script>
+  // 검색창 클릭 토글 기능
+  $(document).ready(function() {
+    // ID가 없으면 클래스로 찾기
+    var $searchToggle = $('#navbar-search-toggle');
+    if ($searchToggle.length === 0) {
+      $searchToggle = $('.navbar-search');
+    }
+    
+    var $searchInput = $('#cb-search-content');
+    var $iconSearch = $searchToggle.find('.icon-search');
+    
+    if ($searchToggle.length === 0) {
+      console.log('검색 토글 요소를 찾을 수 없습니다.');
+      return;
+    }
+    
+    // 검색 아이콘 클릭 시 토글
+    $iconSearch.on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      $searchToggle.toggleClass('active');
+      
+      // 검색창이 열리면 포커스
+      if ($searchToggle.hasClass('active')) {
+        setTimeout(function() {
+          $searchInput.focus();
+        }, 150);
+      }
+    });
+    
+    // 검색 입력창이나 form 클릭 시 이벤트 전파 방지
+    $searchToggle.find('form, input').on('click', function(e) {
+      e.stopPropagation();
+    });
+    
+    // 검색창 닫기 함수
+    function closeSearch() {
+      $searchToggle.removeClass('active');
+      $searchInput.val('').blur();
+    }
+    
+    // ESC 키로 검색창 닫기
+    $(document).on('keydown', function(e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        if ($searchToggle.hasClass('active')) {
+          closeSearch();
+        }
+      }
+    });
+    
+    // 검색창 외부 클릭 시 닫기
+    $(document).on('click', function(e) {
+      if ($searchToggle.hasClass('active')) {
+        if (!$searchToggle.is(e.target) && !$searchToggle.has(e.target).length) {
+          closeSearch();
+        }
+      }
+    });
+    
+    // 검색 결과 클릭 시 해당 게시글로 이동
+    $(document).on('click', '.navbar-search form .search-box ul li', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      var $li = $(this);
+      var text = $li.text().trim();
+      
+      // typeahead의 afterSelect를 트리거하거나 직접 이동
+      if (typeof window.names !== 'undefined' && typeof window.urls !== 'undefined') {
+        var index = window.names.indexOf(text);
+        if (index !== -1 && window.urls[index]) {
+          window.location.href = window.urls[index];
+          closeSearch();
+          return false;
+        }
+      }
+      
+      // typeahead가 생성한 링크인 경우
+      var $link = $li.find('a');
+      if ($link.length && $link.attr('href')) {
+        window.location.href = $link.attr('href');
+        closeSearch();
+        return false;
+      }
+    });
+  });
+  
+  $(function() {
+    setTimeout(function() {
+      $("code").removeClass("hljs");
+      $("code").removeClass("language");
+    }, 90);
+  });
+  (function() {
+    var bp = document.createElement("script");
+    var curProtocol = window.location.protocol.split(":")[0];
+    if (curProtocol === "https") {
+      bp.src = "https://zz.bdstatic.com/linksubmit/push.js";
+    } else {
+      bp.src = "http://push.zhanzhang.baidu.com/push.js";
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+    <!-- Firebase SDK (Firebase를 사용하는 경우에만 필요) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <!-- 조회수 카운터 스크립트 -->
+    <script src="https://jhy156456.github.io/assets/js/view-counter.js"></script>
+    <div id="directory-content" class="directory-content">
+      <div id="directory"></div>
+    </div>
+    <script>
+      var postDirectoryBuild = function() {
+        var postChildren = function children(childNodes, reg) {
+            var result = [],
+              isReg = typeof reg === "object",
+              isStr = typeof reg === "string",
+              node,
+              i,
+              len;
+            for (i = 0, len = childNodes.length; i < len; i++) {
+              node = childNodes[i];
+              if ((node.nodeType === 1 || node.nodeType === 9) && (! reg || (isReg && reg.test(node.tagName.toLowerCase())) || (isStr && node.tagName.toLowerCase() === reg))) {
+                result.push(node);
+              }
+            }
+            return result;
+          },
+          createPostDirectory = function(article, directory, isDirNum) {
+            var contentArr = [],
+              titleId = [],
+              levelArr,
+              root,
+              level,
+              currentList,
+              list,
+              li,
+              link,
+              i,
+              len;
+            levelArr = (function(article, contentArr, titleId) {
+              var titleElem = postChildren(article.childNodes, /^h\d$/),
+                levelArr = [],
+                lastNum = 1,
+                lastRevNum = 1,
+                count = 0,
+                guid = 1,
+                id = "directory" + (
+                  Math.random() + ""
+                ).replace(/\D/, ""),
+                lastRevNum,
+                num,
+                elem;
+              while (titleElem.length) {
+                elem = titleElem.shift();
+                contentArr.push(elem.innerHTML);
+                num = + elem.tagName.match(/\d/)[0];
+                if (num > lastNum) {
+                  levelArr.push(1);
+                  lastRevNum += 1;
+                } else if (num === lastRevNum || (num > lastRevNum && num <= lastNum)) {
+                  levelArr.push(0);
+                  lastRevNum = lastRevNum;
+                } else if (num < lastRevNum) {
+                  levelArr.push(num - lastRevNum);
+                  lastRevNum = num;
+                }
+                count += levelArr[levelArr.length - 1];
+                lastNum = num;
+                elem.id = elem.id || id + guid++;
+                titleId.push(elem.id);
+              }
+              if (count !== 0 && levelArr[0] === 1) 
+                levelArr[0] = 0;
+              
+
+
+              return levelArr;
+            })(article, contentArr, titleId);
+            currentList = root = document.createElement("ul");
+            dirNum = [0];
+            for (i = 0, len = levelArr.length; i < len; i++) {
+              level = levelArr[i];
+              if (level === 1) {
+                list = document.createElement("ul");
+                if (! currentList.lastElementChild) {
+                  currentList.appendChild(document.createElement("li"));
+                }
+                currentList.lastElementChild.appendChild(list);
+                currentList = list;
+                dirNum.push(0);
+              } else if (level < 0) {
+                level *= 2;
+                while (level++) {
+                  if (level % 2) 
+                    dirNum.pop();
+                  
+
+
+                  currentList = currentList.parentNode;
+                }
+              }
+              dirNum[dirNum.length - 1]++;
+              li = document.createElement("li");
+              link = document.createElement("a");
+              link.href = "#" + titleId[i];
+              link.title = titleId[i];
+              link.title = titleId[i];
+              link.innerHTML = ! isDirNum
+                ? contentArr[i]
+                : dirNum.join(".") + " " + contentArr[i];
+              li.appendChild(link);
+              currentList.appendChild(li);
+            }
+            directory.appendChild(root);
+          };
+        createPostDirectory(document.getElementById("post-content"), document.getElementById("directory"), true);
+      };
+      postDirectoryBuild();
+    </script>
+    <script>//           window.addEventListener(
+//     "scroll",
+//     function () {
+//       console.log("??????????");
+//     },
+//     true
+// );
+  </script>
+  <!-- <script>
+  $(document).ready(function () {
+  var currentPosition = parseInt($("#directory").css("top"));
+  $(window).scroll(function () {
+  var position = $(window).scrollTop()-500;
+  $("#directory")
+  .stop()
+  .animate({ top: position + currentPosition + "px" }, 0);
+  });
+  });
+  </script> --><!-- <script>
+    $(function () {
+    var $win = $(window);
+    var top = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환
+
+    /*사용자 설정 값 시작*/
+    var speed = 500; // 따라다닐 속도 : "slow", "normal", or "fast" or        numeric(단위:msec)
+    var easing = "linear"; // 따라다니는 방법 기본 두가지 linear, swing
+    var $layer = $("#directory"); // 레이어 셀렉팅
+    // var layerTopOffset = 650; // 레이어 높이 상한선, 단위:px
+    var layerTopOffset = 0; // 레이어 높이 상한선, 단위:px
+    // $layer.css("position", "absolute");
+    $layer.css("top", "0px"); //첫 시작 위치
+    /*사용자 설정 값 끝*/
+
+    // 스크롤 바를 내린 상태에서 리프레시 했을 경우를 위해
+    if (top > 0) $win.scrollTop(layerTopOffset + top);
+    else $win.scrollTop(0);
+
+    //스크롤이벤트가 발생하면
+    $(window).scroll(function () {
+    yPosition = $win.scrollTop() + layerTopOffset;
+    //   console.log($win.scrollTop())
+    console.log($layer.css("top"))
+    if (yPosition < 0) {
+    yPosition = 0;
+    }
+    $layer.animate(
+    { top: yPosition},
+    { duration: speed, easing: easing, queue: false }
+    );
+    });
+    });
+    </script> --><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    lang = hljs.initHighlightingOnLoad();
+  </script>
+</body></html>

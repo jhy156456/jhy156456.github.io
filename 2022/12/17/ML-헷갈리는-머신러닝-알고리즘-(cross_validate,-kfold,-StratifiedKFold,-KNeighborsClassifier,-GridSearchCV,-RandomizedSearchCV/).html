@@ -1,0 +1,891 @@
+
+<!DOCTYPE >
+<html lang="zh-cn" data-scribe-reduced-action-queue="true">
+  <head>
+    <meta content="[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans, GridSearchCV, RandomizedSearchCV..) - Hayden J GitHub blog" name="title" />
+    <meta content="[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans, GridSearchCV, RandomizedSearchCV..) - Hayden J GitHub blog" name="og:title" />
+    <title>[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans, GridSearchCV, RandomizedSearchCV..) - Hayden J GitHub blog</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans, GridSearchCV, RandomizedSearchCV..) - Hayden J GitHub blog</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans, GridSearchCV, RandomizedSearchCV..) - Hayden J GitHub blog">
+<meta name="twitter:keywords" content="[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans, GridSearchCV, RandomizedSearchCV..) - Hayden J GitHub blog" property="og:description" />
+<meta property="og:type" content="article">
+<meta property="og:title" content="[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans, GridSearchCV, RandomizedSearchCV..) - Hayden J GitHub blog">
+<meta name="og:keywords"
+      content="[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans, GridSearchCV, RandomizedSearchCV..) - Hayden J GitHub blog|[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans GridSearchCV, RandomizedSea..."
+      property="og:description" />
+<meta name="theme-Jekyll by liberxue" content="#eb5055">
+<link rel="icon" type="image/png" href="https://jhy156456.github.io/style/favicons/favicon.ico" />
+<link href="https://jhy156456.github.io/style/favicons/favicon.ico" rel="shortcut icon" type="image/png">
+<!-- 댓글 이슈 수정 -->
+<!-- <link rel="canonical" href="https://jhy156456.github.io/"> -->
+<link rel="canonical" href="" />
+<link rel="alternate" type="application/rss+xml" title="jhy156456" href="https://jhy156456.github.io/feed.xml">
+<meta charset="UTF-8">
+<!-- <link rel="manifest" href="/manifest.json"> -->
+<link rel="shortcut icon" href="https://jhy156456.github.io/style/favicons/favicon.ico" type="image/x-icon">
+<meta name="keywords" content="[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans GridSearchCV, RandomizedSea..."
+      property="og:description" />
+<meta name="description" content="오늘 무언가를 하지않으면 내일은 저절로 오지않는다" />
+<!--<link href="https://cdn.bootcss.com/highlight.js/9.10.0/styles/xcode.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+
+<!--<link href="https://jhy156456.github.io/assets/css/syntax.css" rel="stylesheet">-->
+<link href="https://jhy156456.github.io/style/style-liberxue.css" rel="stylesheet">
+<!-- <link href="https://jhy156456.github.io/_sass/minimal-mistakes/_navigation.scss" rel="stylesheet"> -->
+
+<meta content="https://jhy156456.github.io/2022/12/17/ML-%ED%97%B7%EA%B0%88%EB%A6%AC%EB%8A%94-%EB%A8%B8%EC%8B%A0%EB%9F%AC%EB%8B%9D-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-(cross_validate,-kfold,-StratifiedKFold,-KNeighborsClassifier,-GridSearchCV,-RandomizedSearchCV/).html" property="og:url" />
+<meta content="https://jhy156456.github.io/2022/12/17/ML-%ED%97%B7%EA%B0%88%EB%A6%AC%EB%8A%94-%EB%A8%B8%EC%8B%A0%EB%9F%AC%EB%8B%9D-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-(cross_validate,-kfold,-StratifiedKFold,-KNeighborsClassifier,-GridSearchCV,-RandomizedSearchCV/).html|[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans GridSearchCV, RandomizedSea..."
+      property="og:description" />
+<meta content="article" property="og:type" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S9G62LP1GS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag("js", new Date());
+  gtag("config", "G-S9G62LP1GS");
+</script>
+<!--  -->
+
+    
+  </head>
+
+  <body class="" gtools_scp_screen_capture_injected="true">
+    <header id="header" class="header bg-white">
+      <div class="navbar-container">
+        <a
+          href="/"
+          title="Hayden J GitHub blog"
+          class="navbar-logo">
+          <img src="https://jhy156456.github.io/style/images/logo-jhy156456.png" alt="Hayden J GitHub blog" />
+        </a>
+        <div class="navbar-menu">
+          
+            <a href="https://jhy156456.github.io/">홈</a>
+          
+            <a href="https://jhy156456.github.io/review">리뷰</a>
+          
+            <a href="https://jhy156456.github.io/study">카테고리</a>
+          
+            <a href="https://jhy156456.github.io/archives">기록</a>
+          
+            <a href="https://jhy156456.github.io/about">About Me</a>
+          
+        </div>
+        <div class="navbar-search" id="navbar-search-toggle">
+          <span class="icon-search"></span>
+          <form id="cb-search-btn" role="search">
+            <span class="search-box">
+              <input
+                type="text"
+                class="input"
+                id="cb-search-content"
+                required="true"
+                placeholder="검색..."
+                maxlength="30"
+                autocomplete="off" />
+            </span>
+          </form>
+        </div>
+        <div class="navbar-mobile-menu" onclick="">
+          <span class="icon-menu cross">
+            <span class="middle"></span>
+          </span>
+          <ul>
+            
+              <li>
+                <a href="https://jhy156456.github.io/">홈</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/review">리뷰</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/study">카테고리</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/archives">기록</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/about">About Me</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div class="post-header-thumb bg-white}">
+      <!-- <div class="post-header-thumb-op"></div> -->
+      <div class="post-header-thumb">
+        <div class="post-header-thumb-container">
+          <h1 class="post-title" itemprop="name headline">[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans, GridSearchCV, RandomizedSearchCV..)</h1>
+          <div class="post-data">
+            <time datetime="2022-12-17 17:28:00" itemprop="datePublished">작성일자：2022-12-17 17:28:00</time>
+            <br/>
+            <span class="view-count-label">조회수: <span class="view-count">0</span></span>
+            <br/>
+            <a
+              href="/tags#study"
+              title="study"
+              data-hover="분류: study">
+              분류: study</a>
+            <!-- <a href="#read">
+            댓글: comments</a> -->
+          </div>
+          <div class="post-tags">
+            
+              
+              
+                
+                  <a
+                    href="/tags#ai"
+                    title="ai"
+                    data-hover="ai">
+                    ai
+                    <span>(8)</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#ml"
+                    title="ml"
+                    data-hover="ml">
+                    ml
+                    <span>(4)</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#cross_validate"
+                    title="cross_validate"
+                    data-hover="cross_validate">
+                    cross_validate
+                    <span>(1)</span>
+                    
+                  </a>
+                
+              
+              
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <article
+      class="main-post post-page"
+      itemscope
+      itemtype="http://schema.org/Article">
+      <div class="post-header">
+        <h1 class="post-title" itemprop="name headline">[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans, GridSearchCV, RandomizedSearchCV..)</h1>
+        <div class="post-data">
+          <time datetime="2022-12-17 17:28:00" itemprop="datePublished">2022-12-17 17:28:00</time>
+          <span class="view-count-label"> | 조회수: <span class="view-count">0</span></span>
+        </div>
+      </div>
+      <div
+        id="post-content"
+        class="post-content"
+        itemprop="articleBody">
+        <p class="post-tags">
+          
+            
+            
+              
+                <a
+                  href="/tags#ai"
+                  title="ai"
+                  data-hover="ai">
+                  ai
+                  <span>(8)</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#ml"
+                  title="ml"
+                  data-hover="ml">
+                  ml
+                  <span>(4)</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#cross_validate"
+                  title="cross_validate"
+                  data-hover="cross_validate">
+                  cross_validate
+                  <span>(1)</span>
+                  
+                </a>
+              
+            
+            
+          
+        </p>
+        <h1 id="ml-헷갈리는-머신러닝-알고리즘-cross_validate-kfold-stratifiedkfold-kneighborsclassifier-kmeans-gridsearchcv-randomizedsearchcv">[ML] 헷갈리는 머신러닝 알고리즘 (cross_validate, kfold, StratifiedKFold, KNeighborsClassifier, KMeans GridSearchCV, RandomizedSearchCV..)</h1>
+
+<h2 id="cross_validate">cross_validate</h2>
+
+<ul>
+  <li>기본적으로 모델과, 모델의 데이터들을 5개로 나눠서 4개로 훈련하고 1개로 평가하는 알고리즘</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">train_input</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">train_target</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">train_input</span><span class="p">))</span>
+
+<span class="p">(</span><span class="mi">5197</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">5197</span><span class="p">,)</span>
+<span class="o">&lt;</span><span class="k">class</span> <span class="err">'</span><span class="nc">numpy</span><span class="p">.</span><span class="n">ndarray</span><span class="s">'&gt;
+</span></code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scores</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">train_input</span><span class="p">,</span> <span class="n">train_target</span><span class="p">)</span>
+<span class="s">"""
+{'fit_time': array([0.00855589, 0.00593686, 0.00772381, 0.00911927, 0.00702643]), 
+'score_time': array([0.00063658, 0.000494  , 0.00085974, 0.00076413, 0.00073743]), 
+'test_score': array([0.86923077, 0.84615385, 0.87680462, 0.84889317, 0.83541867])}
+"""</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s">'test_score'</span><span class="p">]))</span>
+
+<span class="c1"># 0.855300214703487
+</span></code></pre></div></div>
+
+<h2 id="stratifiedkfold">StratifiedKFold</h2>
+
+<ul>
+  <li>옵션 없이 cross_validate할 때 각 fold에 정답class의 비율을 맞춰서 넣어준다.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scores</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">train_input</span><span class="p">,</span> <span class="n">train_target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">StratifiedKFold</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s">'test_score'</span><span class="p">]))</span>
+<span class="mf">0.855300214703487</span>
+</code></pre></div></div>
+
+<ul>
+  <li>결과를 보면 위에 StratifiedKFold값을 주지 않은것과 값이 동일한데 cross_validate에 default값으로 StratifiedKFold가 들어간다.</li>
+</ul>
+
+<h3 id="stratifiedkfold를-5개-말고-10개로-하고싶으면">StratifiedKFold를 5개 말고 10개로 하고싶으면</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">splitter</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">train_input</span><span class="p">,</span> <span class="n">train_target</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">splitter</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="s">'test_score'</span><span class="p">]))</span>
+<span class="mf">0.8574181117533719</span>
+</code></pre></div></div>
+
+<h2 id="kfold">Kfold</h2>
+
+<p>학습셋을 K번마다 K개의 셋으로 나눠서 train 및 validation과정을 거치는 것을 KFold 교차검증이다.<br />
+하지만, 이 때 훈련, 검증 셋을 나누는 과정이 랜덤하게 나눠지므로<br />
+데이터가 imbalance한 경우에는 train, validation셋의 label의 비율이 어긋나게된다.
+참고로 일반적으로 회귀에는 기본 k-겹 교차검증을 사용하고, 분류에는 StratifiedKFold를 사용한다.</p>
+
+<h2 id="kneighborsclassifier">KNeighborsClassifier</h2>
+
+<ul>
+  <li>주변 k개의 데이터를 보고 과반수 넘어가는 나의 class가 어디인지 확인후 해당 class로 분류하는 방법</li>
+  <li>k를 어떻게 정하느냐가 제일 중요하다</li>
+  <li>default값은 5</li>
+  <li>lazy maethod</li>
+  <li>모든 데이터의 거리를 구하여 분류하면 시간이 오래걸리므로 n차원 공간을 격자로 만들어서 인덱싱시켜놓는다.</li>
+</ul>
+
+<h2 id="kmeans">KMeans</h2>
+
+<ul>
+  <li>클러스터링 알고리즘</li>
+  <li>클러스터링을 몇개로 할 것인지?(k)가 중요하다.</li>
+  <li>Expecation Maxmization 알고리즘
+    <ul>
+      <li>랜덤하게 k개(centroid)를 선택한 후, 나머지 선택되지 않은 점들에 대해 가장 가까운 k에 클러스터링(membership)을 시도한다.</li>
+      <li>k를 membership의 무게중심 쪽으로 움직인 후 다시 가까운것들끼리 클러스터링(membership)을 시도한다</li>
+      <li>클러스터링, centroid좌표가 변하지않으면 종료한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="gridsearchcv">GridSearchCV</h2>
+
+<ul>
+  <li>하이퍼 파라미터 튜닝을 위해 사용</li>
+  <li>내가 바꿀 수 있는 하이퍼 파라미터를 여러가지 경우의수를 가지고 모두 실험하는것(optuna같은것)</li>
+  <li>fit 메서드에서 전달한 훈련 데이터를 사용해 k-fold 교차 검증을 수행한다.</li>
+  <li>grid search하면서 cross_validate도 같이 하는것</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">'min_impurity_decrease'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.0002</span><span class="p">,</span> <span class="mf">0.0003</span><span class="p">,</span> <span class="mf">0.0004</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">]}</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gs</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_input</span><span class="p">,</span> <span class="n">train_target</span><span class="p">)</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">gs</span><span class="p">.</span><span class="n">best_estimator_</span>
+<span class="k">print</span><span class="p">(</span><span class="n">dt</span><span class="p">.</span><span class="n">score</span><span class="p">(</span><span class="n">train_input</span><span class="p">,</span> <span class="n">train_target</span><span class="p">))</span>
+</code></pre></div></div>
+
+<ul>
+  <li>옵션을 주지 않았기 떄문에 각 5번 검사, parameter 수 만큼 5개 만듦 = 총 25개의 트리를 만든다</li>
+</ul>
+
+<h3 id="추가-파라미터">추가 파라미터</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">'min_impurity_decrease'</span><span class="p">:</span> <span class="n">uniform</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">),</span>
+          <span class="s">'max_depth'</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+          <span class="s">'min_samples_split'</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+          <span class="s">'min_samples_leaf'</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+          <span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="randomizedsearchcv">RandomizedSearchCV</h2>
+
+<ul>
+  <li>랜덤 한 값으로 하이퍼 파라미터 튜닝을 위해 사용</li>
+  <li>랜덤하게 파라미터 선택하여 n번 반복</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">randint</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">RandomizedSearchCV</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">'min_impurity_decrease'</span><span class="p">:</span> <span class="n">uniform</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">),</span>
+          <span class="s">'max_depth'</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+          <span class="s">'min_samples_split'</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+          <span class="s">'min_samples_leaf'</span><span class="p">:</span> <span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span>
+          <span class="p">}</span>
+
+
+<span class="n">gs</span> <span class="o">=</span> <span class="n">RandomizedSearchCV</span><span class="p">(</span><span class="n">DecisionTreeClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> 
+                        <span class="n">n_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">gs</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_input</span><span class="p">,</span> <span class="n">train_target</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">gs</span><span class="p">.</span><span class="n">best_params_</span><span class="p">)</span>
+
+<span class="s">"""
+print(np.max(gs.cv_results_['mean_test_score']))
+"""</span>
+</code></pre></div></div>
+
+<p>파라미터값을 고정시키면?</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">'min_impurity_decrease'</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
+          <span class="s">'max_depth'</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+          <span class="s">'min_samples_split'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+          <span class="s">'min_samples_leaf'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+          <span class="p">}</span>
+
+<span class="nb">TypeError</span><span class="p">:</span> <span class="n">Parameter</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">iterable</span> <span class="ow">or</span> <span class="n">distribution</span> <span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s">'min_impurity_decrease'</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>          
+</code></pre></div></div>
+
+<p>에러 발생</p>
+
+<p>참고<br />
+[1] 대학원 수업<br />
+[2] https://towardsdatascience.com/the-5-clustering-algorithms-data-scientists-need-to-know-a36d136ef68<br />
+[3] https://www.youtube.com/watch?v=dxOldlIBx0Q&amp;ab_channel=%EA%B3%A0%EB%A0%A4%EB%8C%80%ED%95%99%EA%B5%90%EC%82%B0%EC%97%85%EA%B2%BD%EC%98%81%EA%B3%B5%ED%95%99%EB%B6%80DSBA%EC%97%B0%EA%B5%AC%EC%8B%A4</p>
+
+        <div>
+          <p class="post-info">
+            <!-- <link rel="canonical" href="http://jhy156456.github.io/"/> -->
+            <script
+              src="https://utteranc.es/client.js"
+              repo="jhy156456/github.io-comments"
+              issue-term="pathname"
+              label="Comment"
+              theme="github-light"
+              crossorigin="anonymous"
+              rel="canonical"
+              async></script>
+          </p>
+        </div>
+
+        <p class="post-info">
+          이 문서는<a href="/">
+            jhy156456</a>에 의해 작성되었습니다.<br/>
+          <!-- <a
+          href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank"
+          rel="external nofollow">creative commons 4.0</a>
+          라이센스에 대한 국제 라이센스 계약<br/> -->
+          마지막 수정 날짜:2022-12-17 17:28:00
+        </p>
+      </div>
+    </article>
+
+    <!-- <div class="related-post-lists">
+    <div class="post-lists">
+    <div class="post-lists-body">
+    <div class="post-list-item">
+    <div class="post-list-item-container">
+    <div class="item-label">
+    <div class="item-title"><a href="induction.html">归纳的随想</a></div>
+    <div class="item-meta clearfix">
+    <div class="item-meta-ico bg-ico-image" style="background: url('../usr/themes/pinghsu/images/bg-ico.png') no-repeat;background-size: 40px auto;"></div>
+    <div class="item-meta-cat"><a href="../category/thoughts/index.html">Thoughts</a></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div> -->
+
+    <footer class="footer bg-white">
+  
+
+  <div class="footer-social">
+    <div class="footer-container clearfix">
+      <div class="social-list">
+        <a
+          class="social github"
+          target="blank"
+          href="https://github.com/jhy156456"
+          title="github"
+          data-hover="GitHub">GitHub</a>
+        <a
+          class="social tistory"
+          target="blank"
+          href="http://jhy156456.tistory.com"
+          title="tistory"
+          data-hover="Tistory">Tistory</a>
+        <a
+          class="social linkedin"
+          target="blank"
+          href="https://www.linkedin.com/in/%ED%98%84%EC%98%81-%EC%A0%95-6b2660252/"
+          title="linkedin"
+          data-hover="LinkedIn">LinkedIn</a>
+        <a
+          class="social rss"
+          target="blank"
+          href="mailto:jcypher1024@outlook.com"
+          title="E-mail"
+          data-hover="E-mail">E-mail</a>
+
+      </div>
+    </div>
+  </div>
+  <div class="footer-meta">
+    <div class="footer-container">
+      <div class="meta-item meta-copyright">
+        <div class="meta-copyright-info">
+          <a href="/" class="info-logo">
+            <img
+              src="https://jhy156456.github.io/style/images/logo-jhy156456.png"
+              title="jhy156456_blog"
+              data-hover="jhy156456_blog"
+              alt="jhy156456_blog" />
+          </a>
+          <div class="info-text">
+            <p>
+              Theme is
+              <a
+                href="http://www.liberxue.com/2017/08/03/Jekyllthemes.html"
+                title="访问 Jekyll liberxue主题"
+                data-hover="Jekyll liberxue"
+                target="_blank">Jekyll liberxue</a>
+              by
+              <a href="http://www.liberxue.com/about" target="_blank">liberxue</a>
+            </p>
+            <p>
+              Powered by
+              <a
+                href="https://jhy156456.github.io/tags/#Jekyll"
+                title="Jekyll"
+                data-hover="Jekyll"
+                target="_blank"
+                rel="nofollow">Jekyll</a>
+            </p>
+            <!-- <p>&copy; 2017 <a href="/feed.xml" title="访问 liberxue blog RSS" -->
+            <!-- data-hover="liberxue blog RSS">liberxue blog RSS</a></p> -->
+            <!-- <p>게시글：개</p> --><p>총 게시글：102개
+          </p>
+            <!-- <p>이blog는 Fork되었습니다.</p><iframe
+            src="http://ghbtns.com/github-btn.html?user=liberxue&repo=liberxue.github.io&type=fork&count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe> -->
+          </div>
+        </div>
+      </div>
+      <div class="meta-item meta-posts">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">다른 게시글</h3>
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+      <div class="meta-item meta-comments">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">최신글</h3>
+
+        
+          
+            <li>
+              <a
+                href="/2026/01/02/os-zip-shell-script.html"
+                title="[de] test"
+                data-hover="[de] test">
+                [de] test</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/12/10/os-local-dns-issue.html"
+                title="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)"
+                data-hover="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)">
+                [infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/11/22/DE-hdfs-cli-not-working.html"
+                title="[DE] hdfs cli 명령어 수행 안될 때"
+                data-hover="[DE] hdfs cli 명령어 수행 안될 때">
+                [DE] hdfs cli 명령어 수행 안될 때</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/11/12/oracle-delete-from-table.html"
+                title="[oracle] delete from table 했을 때 복구방법"
+                data-hover="[oracle] delete from table 했을 때 복구방법">
+                [oracle] delete from table 했을 때 복구방법</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/04/15/spring-Missing-IN-or-OUT-parameter.html"
+                title="[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 "
+                data-hover="[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 ">
+                [spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 </a>
+            </li>
+          
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.js"></script>
+<script src="/search/js/cb-search.js"></script>
+<script>
+  // 검색창 클릭 토글 기능
+  $(document).ready(function() {
+    // ID가 없으면 클래스로 찾기
+    var $searchToggle = $('#navbar-search-toggle');
+    if ($searchToggle.length === 0) {
+      $searchToggle = $('.navbar-search');
+    }
+    
+    var $searchInput = $('#cb-search-content');
+    var $iconSearch = $searchToggle.find('.icon-search');
+    
+    if ($searchToggle.length === 0) {
+      console.log('검색 토글 요소를 찾을 수 없습니다.');
+      return;
+    }
+    
+    // 검색 아이콘 클릭 시 토글
+    $iconSearch.on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      $searchToggle.toggleClass('active');
+      
+      // 검색창이 열리면 포커스
+      if ($searchToggle.hasClass('active')) {
+        setTimeout(function() {
+          $searchInput.focus();
+        }, 150);
+      }
+    });
+    
+    // 검색 입력창이나 form 클릭 시 이벤트 전파 방지
+    $searchToggle.find('form, input').on('click', function(e) {
+      e.stopPropagation();
+    });
+    
+    // 검색창 닫기 함수
+    function closeSearch() {
+      $searchToggle.removeClass('active');
+      $searchInput.val('').blur();
+    }
+    
+    // ESC 키로 검색창 닫기
+    $(document).on('keydown', function(e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        if ($searchToggle.hasClass('active')) {
+          closeSearch();
+        }
+      }
+    });
+    
+    // 검색창 외부 클릭 시 닫기
+    $(document).on('click', function(e) {
+      if ($searchToggle.hasClass('active')) {
+        if (!$searchToggle.is(e.target) && !$searchToggle.has(e.target).length) {
+          closeSearch();
+        }
+      }
+    });
+    
+    // 검색 결과 클릭 시 해당 게시글로 이동
+    $(document).on('click', '.navbar-search form .search-box ul li', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      var $li = $(this);
+      var text = $li.text().trim();
+      
+      // typeahead의 afterSelect를 트리거하거나 직접 이동
+      if (typeof window.names !== 'undefined' && typeof window.urls !== 'undefined') {
+        var index = window.names.indexOf(text);
+        if (index !== -1 && window.urls[index]) {
+          window.location.href = window.urls[index];
+          closeSearch();
+          return false;
+        }
+      }
+      
+      // typeahead가 생성한 링크인 경우
+      var $link = $li.find('a');
+      if ($link.length && $link.attr('href')) {
+        window.location.href = $link.attr('href');
+        closeSearch();
+        return false;
+      }
+    });
+  });
+  
+  $(function() {
+    setTimeout(function() {
+      $("code").removeClass("hljs");
+      $("code").removeClass("language");
+    }, 90);
+  });
+  (function() {
+    var bp = document.createElement("script");
+    var curProtocol = window.location.protocol.split(":")[0];
+    if (curProtocol === "https") {
+      bp.src = "https://zz.bdstatic.com/linksubmit/push.js";
+    } else {
+      bp.src = "http://push.zhanzhang.baidu.com/push.js";
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+    <!-- Firebase SDK (Firebase를 사용하는 경우에만 필요) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <!-- 조회수 카운터 스크립트 -->
+    <script src="https://jhy156456.github.io/assets/js/view-counter.js"></script>
+    <div id="directory-content" class="directory-content">
+      <div id="directory"></div>
+    </div>
+    <script>
+      var postDirectoryBuild = function() {
+        var postChildren = function children(childNodes, reg) {
+            var result = [],
+              isReg = typeof reg === "object",
+              isStr = typeof reg === "string",
+              node,
+              i,
+              len;
+            for (i = 0, len = childNodes.length; i < len; i++) {
+              node = childNodes[i];
+              if ((node.nodeType === 1 || node.nodeType === 9) && (! reg || (isReg && reg.test(node.tagName.toLowerCase())) || (isStr && node.tagName.toLowerCase() === reg))) {
+                result.push(node);
+              }
+            }
+            return result;
+          },
+          createPostDirectory = function(article, directory, isDirNum) {
+            var contentArr = [],
+              titleId = [],
+              levelArr,
+              root,
+              level,
+              currentList,
+              list,
+              li,
+              link,
+              i,
+              len;
+            levelArr = (function(article, contentArr, titleId) {
+              var titleElem = postChildren(article.childNodes, /^h\d$/),
+                levelArr = [],
+                lastNum = 1,
+                lastRevNum = 1,
+                count = 0,
+                guid = 1,
+                id = "directory" + (
+                  Math.random() + ""
+                ).replace(/\D/, ""),
+                lastRevNum,
+                num,
+                elem;
+              while (titleElem.length) {
+                elem = titleElem.shift();
+                contentArr.push(elem.innerHTML);
+                num = + elem.tagName.match(/\d/)[0];
+                if (num > lastNum) {
+                  levelArr.push(1);
+                  lastRevNum += 1;
+                } else if (num === lastRevNum || (num > lastRevNum && num <= lastNum)) {
+                  levelArr.push(0);
+                  lastRevNum = lastRevNum;
+                } else if (num < lastRevNum) {
+                  levelArr.push(num - lastRevNum);
+                  lastRevNum = num;
+                }
+                count += levelArr[levelArr.length - 1];
+                lastNum = num;
+                elem.id = elem.id || id + guid++;
+                titleId.push(elem.id);
+              }
+              if (count !== 0 && levelArr[0] === 1) 
+                levelArr[0] = 0;
+              
+
+
+              return levelArr;
+            })(article, contentArr, titleId);
+            currentList = root = document.createElement("ul");
+            dirNum = [0];
+            for (i = 0, len = levelArr.length; i < len; i++) {
+              level = levelArr[i];
+              if (level === 1) {
+                list = document.createElement("ul");
+                if (! currentList.lastElementChild) {
+                  currentList.appendChild(document.createElement("li"));
+                }
+                currentList.lastElementChild.appendChild(list);
+                currentList = list;
+                dirNum.push(0);
+              } else if (level < 0) {
+                level *= 2;
+                while (level++) {
+                  if (level % 2) 
+                    dirNum.pop();
+                  
+
+
+                  currentList = currentList.parentNode;
+                }
+              }
+              dirNum[dirNum.length - 1]++;
+              li = document.createElement("li");
+              link = document.createElement("a");
+              link.href = "#" + titleId[i];
+              link.title = titleId[i];
+              link.title = titleId[i];
+              link.innerHTML = ! isDirNum
+                ? contentArr[i]
+                : dirNum.join(".") + " " + contentArr[i];
+              li.appendChild(link);
+              currentList.appendChild(li);
+            }
+            directory.appendChild(root);
+          };
+        createPostDirectory(document.getElementById("post-content"), document.getElementById("directory"), true);
+      };
+      postDirectoryBuild();
+    </script>
+    <script>//           window.addEventListener(
+//     "scroll",
+//     function () {
+//       console.log("??????????");
+//     },
+//     true
+// );
+  </script>
+  <!-- <script>
+  $(document).ready(function () {
+  var currentPosition = parseInt($("#directory").css("top"));
+  $(window).scroll(function () {
+  var position = $(window).scrollTop()-500;
+  $("#directory")
+  .stop()
+  .animate({ top: position + currentPosition + "px" }, 0);
+  });
+  });
+  </script> --><!-- <script>
+    $(function () {
+    var $win = $(window);
+    var top = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환
+
+    /*사용자 설정 값 시작*/
+    var speed = 500; // 따라다닐 속도 : "slow", "normal", or "fast" or        numeric(단위:msec)
+    var easing = "linear"; // 따라다니는 방법 기본 두가지 linear, swing
+    var $layer = $("#directory"); // 레이어 셀렉팅
+    // var layerTopOffset = 650; // 레이어 높이 상한선, 단위:px
+    var layerTopOffset = 0; // 레이어 높이 상한선, 단위:px
+    // $layer.css("position", "absolute");
+    $layer.css("top", "0px"); //첫 시작 위치
+    /*사용자 설정 값 끝*/
+
+    // 스크롤 바를 내린 상태에서 리프레시 했을 경우를 위해
+    if (top > 0) $win.scrollTop(layerTopOffset + top);
+    else $win.scrollTop(0);
+
+    //스크롤이벤트가 발생하면
+    $(window).scroll(function () {
+    yPosition = $win.scrollTop() + layerTopOffset;
+    //   console.log($win.scrollTop())
+    console.log($layer.css("top"))
+    if (yPosition < 0) {
+    yPosition = 0;
+    }
+    $layer.animate(
+    { top: yPosition},
+    { duration: speed, easing: easing, queue: false }
+    );
+    });
+    });
+    </script> --><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    lang = hljs.initHighlightingOnLoad();
+  </script>
+</body></html>

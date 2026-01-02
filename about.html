@@ -1,0 +1,1143 @@
+
+<!DOCTYPE >
+<html lang="zh-cn" data-scribe-reduced-action-queue="true">
+  <head>
+    <meta content="About Me - Hayden J GitHub blog" name="title" />
+    <meta content="About Me - Hayden J GitHub blog" name="og:title" />
+    <title>About Me - Hayden J GitHub blog</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>About Me - Hayden J GitHub blog</title>
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="About Me - Hayden J GitHub blog">
+<meta name="twitter:keywords" content="About Me - Hayden J GitHub blog" property="og:description" />
+<meta property="og:type" content="article">
+<meta property="og:title" content="About Me - Hayden J GitHub blog">
+<meta name="og:keywords"
+      content="About Me - Hayden J GitHub blog|IT 전문가를 꿈꾸는 Data Scientist 입니다.# 수행## 리눅스 서버 구축 (2024.12)- Red Hat Linux 기반 개발·운영 서버 구축- 도커 드라이버로 쿠버네티스 클러스터 설치 및 IP‑..."
+      property="og:description" />
+<meta name="theme-Jekyll by liberxue" content="#eb5055">
+<link rel="icon" type="image/png" href="https://jhy156456.github.io/style/favicons/favicon.ico" />
+<link href="https://jhy156456.github.io/style/favicons/favicon.ico" rel="shortcut icon" type="image/png">
+<!-- 댓글 이슈 수정 -->
+<!-- <link rel="canonical" href="https://jhy156456.github.io/"> -->
+<link rel="canonical" href="" />
+<link rel="alternate" type="application/rss+xml" title="jhy156456" href="https://jhy156456.github.io/feed.xml">
+<meta charset="UTF-8">
+<!-- <link rel="manifest" href="/manifest.json"> -->
+<link rel="shortcut icon" href="https://jhy156456.github.io/style/favicons/favicon.ico" type="image/x-icon">
+<meta name="keywords" content="IT 전문가를 꿈꾸는 Data Scientist 입니다.# 수행## 리눅스 서버 구축 (2024.12)- Red Hat Linux 기반 개발·운영 서버 구축- 도커 드라이버로 쿠버네티스 클러스터 설치 및 IP‑..."
+      property="og:description" />
+<meta name="description" content="오늘 무언가를 하지않으면 내일은 저절로 오지않는다" />
+<!--<link href="https://cdn.bootcss.com/highlight.js/9.10.0/styles/xcode.min.css" rel="stylesheet">-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
+
+<!--<link href="https://jhy156456.github.io/assets/css/syntax.css" rel="stylesheet">-->
+<link href="https://jhy156456.github.io/style/style-liberxue.css" rel="stylesheet">
+<!-- <link href="https://jhy156456.github.io/_sass/minimal-mistakes/_navigation.scss" rel="stylesheet"> -->
+
+<meta content="https://jhy156456.github.io/about" property="og:url" />
+<meta content="https://jhy156456.github.io/about|IT 전문가를 꿈꾸는 Data Scientist 입니다.# 수행## 리눅스 서버 구축 (2024.12)- Red Hat Linux 기반 개발·운영 서버 구축- 도커 드라이버로 쿠버네티스 클러스터 설치 및 IP‑..."
+      property="og:description" />
+<meta content="article" property="og:type" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S9G62LP1GS"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+
+  gtag("js", new Date());
+  gtag("config", "G-S9G62LP1GS");
+</script>
+<!--  -->
+
+    
+  </head>
+
+  <body class="" gtools_scp_screen_capture_injected="true">
+    <header id="header" class="header bg-white">
+      <div class="navbar-container">
+        <a
+          href="/"
+          title="Hayden J GitHub blog"
+          class="navbar-logo">
+          <img src="https://jhy156456.github.io/style/images/logo-jhy156456.png" alt="Hayden J GitHub blog" />
+        </a>
+        <div class="navbar-menu">
+          
+            <a href="https://jhy156456.github.io/">홈</a>
+          
+            <a href="https://jhy156456.github.io/review">리뷰</a>
+          
+            <a href="https://jhy156456.github.io/study">카테고리</a>
+          
+            <a href="https://jhy156456.github.io/archives">기록</a>
+          
+            <a href="https://jhy156456.github.io/about">About Me</a>
+          
+        </div>
+        <div class="navbar-search" id="navbar-search-toggle">
+          <span class="icon-search"></span>
+          <form id="cb-search-btn" role="search">
+            <span class="search-box">
+              <input
+                type="text"
+                class="input"
+                id="cb-search-content"
+                required="true"
+                placeholder="검색..."
+                maxlength="30"
+                autocomplete="off" />
+            </span>
+          </form>
+        </div>
+        <div class="navbar-mobile-menu" onclick="">
+          <span class="icon-menu cross">
+            <span class="middle"></span>
+          </span>
+          <ul>
+            
+              <li>
+                <a href="https://jhy156456.github.io/">홈</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/review">리뷰</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/study">카테고리</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/archives">기록</a>
+              </li>
+            
+              <li>
+                <a href="https://jhy156456.github.io/about">About Me</a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </header>
+    <div class="post-header-thumb bg-white}">
+      <!-- <div class="post-header-thumb-op"></div> -->
+      <div class="post-header-thumb">
+        <div class="post-header-thumb-container">
+          <h1 class="post-title" itemprop="name headline">About Me</h1>
+          <div class="post-data">
+            <time datetime="2022-12-02 09:19:11" itemprop="datePublished">작성일자：2022-12-02 09:19:11</time>
+            <br/>
+            <span class="view-count-label">조회수: <span class="view-count">0</span></span>
+            <br/>
+            <a
+              href="/tags#about-me"
+              title="about-me"
+              data-hover="분류: about-me">
+              분류: about-me</a>
+            <!-- <a href="#read">
+            댓글: comments</a> -->
+          </div>
+          <div class="post-tags">
+            
+              
+              
+                
+                  <a
+                    href="/tags#Data Scientist"
+                    title="Data Scientist"
+                    data-hover="Data Scientist">
+                    Data Scientist
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#tensorflow"
+                    title="tensorflow"
+                    data-hover="tensorflow">
+                    tensorflow
+                    <span>(1)</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#pytorch"
+                    title="pytorch"
+                    data-hover="pytorch">
+                    pytorch
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#Deep Learning"
+                    title="Deep Learning"
+                    data-hover="Deep Learning">
+                    Deep Learning
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#Machine Learning"
+                    title="Machine Learning"
+                    data-hover="Machine Learning">
+                    Machine Learning
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#Android"
+                    title="Android"
+                    data-hover="Android">
+                    Android
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#Javascript"
+                    title="Javascript"
+                    data-hover="Javascript">
+                    Javascript
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#React"
+                    title="React"
+                    data-hover="React">
+                    React
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#Node.js"
+                    title="Node.js"
+                    data-hover="Node.js">
+                    Node.js
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#MongoDB"
+                    title="MongoDB"
+                    data-hover="MongoDB">
+                    MongoDB
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#Data Engineer"
+                    title="Data Engineer"
+                    data-hover="Data Engineer">
+                    Data Engineer
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#Sqoop"
+                    title="Sqoop"
+                    data-hover="Sqoop">
+                    Sqoop
+                    <span>()</span>
+                    
+                  </a>
+                
+                  <a
+                    href="/tags#Spark"
+                    title="Spark"
+                    data-hover="Spark">
+                    Spark
+                    <span>()</span>
+                    
+                  </a>
+                
+              
+              
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <article
+      class="main-post post-page"
+      itemscope
+      itemtype="http://schema.org/Article">
+      <div class="post-header">
+        <h1 class="post-title" itemprop="name headline">About Me</h1>
+        <div class="post-data">
+          <time datetime="2022-12-02 09:19:11" itemprop="datePublished">2022-12-02 09:19:11</time>
+          <span class="view-count-label"> | 조회수: <span class="view-count">0</span></span>
+        </div>
+      </div>
+      <div
+        id="post-content"
+        class="post-content"
+        itemprop="articleBody">
+        <p class="post-tags">
+          
+            
+            
+              
+                <a
+                  href="/tags#Data Scientist"
+                  title="Data Scientist"
+                  data-hover="Data Scientist">
+                  Data Scientist
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#tensorflow"
+                  title="tensorflow"
+                  data-hover="tensorflow">
+                  tensorflow
+                  <span>(1)</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#pytorch"
+                  title="pytorch"
+                  data-hover="pytorch">
+                  pytorch
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#Deep Learning"
+                  title="Deep Learning"
+                  data-hover="Deep Learning">
+                  Deep Learning
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#Machine Learning"
+                  title="Machine Learning"
+                  data-hover="Machine Learning">
+                  Machine Learning
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#Android"
+                  title="Android"
+                  data-hover="Android">
+                  Android
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#Javascript"
+                  title="Javascript"
+                  data-hover="Javascript">
+                  Javascript
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#React"
+                  title="React"
+                  data-hover="React">
+                  React
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#Node.js"
+                  title="Node.js"
+                  data-hover="Node.js">
+                  Node.js
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#MongoDB"
+                  title="MongoDB"
+                  data-hover="MongoDB">
+                  MongoDB
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#Data Engineer"
+                  title="Data Engineer"
+                  data-hover="Data Engineer">
+                  Data Engineer
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#Sqoop"
+                  title="Sqoop"
+                  data-hover="Sqoop">
+                  Sqoop
+                  <span>()</span>
+                  
+                </a>
+              
+                <a
+                  href="/tags#Spark"
+                  title="Spark"
+                  data-hover="Spark">
+                  Spark
+                  <span>()</span>
+                  
+                </a>
+              
+            
+            
+          
+        </p>
+        <p>IT 전문가를 꿈꾸는 Data Scientist 입니다.</p>
+
+<h1 id="수행">수행</h1>
+
+<h2 id="리눅스-서버-구축-202412">리눅스 서버 구축 (2024.12)</h2>
+
+<ul>
+  <li>Red Hat Linux 기반 개발·운영 서버 구축</li>
+  <li>도커 드라이버로 쿠버네티스 클러스터 설치 및 IP‑Route 테이블 최적화</li>
+  <li>프로그램별 유저 권한 분리로 보안 정책 수립</li>
+  <li>jira 컨테이너 배포 및 운영</li>
+</ul>
+
+<h3 id="기술스택">기술스택</h3>
+
+<ul>
+  <li>redhat linux</li>
+  <li>nginx</li>
+  <li>docker</li>
+  <li>kubernetes</li>
+  <li>jenkins</li>
+  <li>jira</li>
+</ul>
+
+<h2 id="수요예측-모델-서빙-및-모델-개발-202402">수요예측 모델 서빙 및 모델 개발 (2024.02~)</h2>
+
+<p>수요예측 모델이 담겨있는 파이썬 서버를 도커라이징하여 배포</p>
+
+<ul>
+  <li>Python 예측 모델을 Docker 이미지로 컨테이너라이징 및 K8s 배포</li>
+  <li>Airflow DAG로 학습·재학습 파이프라인 자동화</li>
+  <li>FastAPI + Gunicorn API 서버 성능 튜닝</li>
+  <li>Iceberg 기반 데이터 버저닝·스키마 관리</li>
+</ul>
+
+<h3 id="기술스택-1">기술스택</h3>
+
+<ul>
+  <li>kubernetes</li>
+  <li>Docker</li>
+  <li>Airflow</li>
+  <li>Python</li>
+  <li>Fastapi</li>
+  <li>Gunicorn</li>
+  <li>Iceberg</li>
+</ul>
+
+<h2 id="무기-체계-운영-프로그램-앱-개발-202310202402">무기 체계 운영 프로그램 앱 개발 (2023.10~2024.02)</h2>
+
+<ul>
+  <li>웹/앱 하이브리드 개발</li>
+  <li>Pure JS·HTML 하이브리드 프론트엔드 및 Kotlin Android 네이티브 모듈 개발</li>
+  <li>Spring(Java) 백엔드 REST API 설계·구현</li>
+</ul>
+
+<h3 id="기술스택-2">기술스택</h3>
+
+<ul>
+  <li>Pure Javascript , html</li>
+  <li>Android(Kotlin)</li>
+  <li>Spring(java)</li>
+</ul>
+
+<h2 id="무기-체계-운영-프로그램-웹-개발-202304202309">무기 체계 운영 프로그램 웹 개발 (2023.04~2023.09)</h2>
+
+<ul>
+  <li>MRO분석, 수요예측, 단종관리 3개의 모듈 총 30개 화면 개발</li>
+  <li>각 화면에 맞는 스프링 서버 개발</li>
+  <li>화면에 필요한 데이터 추출을 위한 Oracle 쿼리 작성</li>
+  <li>자재의 고장을 예측하고 필요한 수량을 예측하는 수요예측 모델 개발</li>
+</ul>
+
+<h3 id="기술스택-3">기술스택</h3>
+
+<ul>
+  <li>Nexacro</li>
+  <li>Spring(java)</li>
+  <li>Javascript , html</li>
+  <li>Oracle</li>
+</ul>
+
+<h2 id="자재-재고-예측-프로젝트-202210--202301">자재 재고 예측 프로젝트 (2022.10 ~ 2023.01)</h2>
+
+<ul>
+  <li>예측을 위한 시계열 모델링</li>
+  <li>SARIMA 모델 및 선형회귀</li>
+  <li>RNN, LSTM, GRU 등의 딥러닝 시계열 예측 모델 적용</li>
+  <li>데이터 시각화를 위한 Superset BI</li>
+  <li>객체 지향 프로그래밍 중심의 파이썬 프로젝트로 수행</li>
+</ul>
+
+<h3 id="기술스택-4">기술스택</h3>
+
+<ul>
+  <li>Fast API</li>
+  <li>Vue.js</li>
+  <li>Postgres</li>
+  <li>SARIMA 모델</li>
+  <li>선형회귀</li>
+</ul>
+
+<h2 id="사내-msa-교육-강의-202207">사내 MSA 교육 강의 (2022.07)</h2>
+
+<ul>
+  <li>클라우드 환경에서의 MSA를 적용한 애플리케이션 구축 및 개발 강의</li>
+  <li>Kafka·Kubernetes·Docker·AWS 기반 MSA 실습 시나리오 제작</li>
+</ul>
+
+<h3 id="기술스택-5">기술스택</h3>
+
+<ul>
+  <li>Kafka, Kubernetes, Docker, AWS</li>
+</ul>
+
+<h2 id="태양광-발전량-예측-프로젝트-202204202210">태양광 발전량 예측 프로젝트 (2022.04~2022.10)</h2>
+
+<ul>
+  <li>태양광 발전량 데이터를 이용한 익일의 발전량 예측</li>
+  <li>객체 지향 프로그래밍 중심의 파이썬 프로젝트로 수행</li>
+</ul>
+
+<h3 id="기술스택-6">기술스택</h3>
+
+<ul>
+  <li>LSTM, LGBM, XGBoost, GradientBoost</li>
+</ul>
+
+<h2 id="데이팅-모바일-앱-202101--202112">데이팅 모바일 앱 (2021.01 ~ 2021.12)</h2>
+
+<h3 id="기술스택-7">기술스택</h3>
+
+<ul>
+  <li>React Native
+    <ul>
+      <li>Redux</li>
+    </ul>
+  </li>
+  <li>Spring Boot</li>
+  <li>MySQL</li>
+</ul>
+
+<h2 id="쇼핑몰-공장-관리자-페이지-개발-202001--202012">쇼핑몰-공장 관리자 페이지 개발 (2020.01 ~ 2020.12)</h2>
+
+<p>쇼핑몰 사장님과 공장 사장님을 연결시켜 주는 플랫폼 창구를 개발 하였습니다. <br />
+개발자 한명과 함께 프론트와 백앤드 풀스택 개발을 수행, AWS를 통해 애플리케이션을 배포하였습니다.<br />
+엑셀과 메일을 통해 제품과 가격을 주고받는 번거로움을 해소하고 고객 편의를 제공하였습니다.</p>
+
+<h3 id="기술스택-8">기술스택</h3>
+
+<ul>
+  <li>React
+    <ul>
+      <li>Redux</li>
+      <li>Material-UI</li>
+    </ul>
+  </li>
+  <li>Node.js</li>
+  <li>GraphQL</li>
+  <li>MySQL</li>
+  <li>AWS</li>
+</ul>
+
+<h2 id="증권-모바일-앱-개발">증권 모바일 앱 개발</h2>
+
+<ul>
+  <li>증권 모바일 앱 개발 및 운영</li>
+  <li>계좌개설 프로젝트 참여</li>
+  <li>안면인식 서비스 도입</li>
+</ul>
+
+<h3 id="기술스택-9">기술스택</h3>
+
+<ul>
+  <li>Android</li>
+  <li>Java</li>
+  <li>
+    <h2 id="kotlin">Kotlin</h2>
+  </li>
+</ul>
+
+<h1 id="경력">경력</h1>
+
+<p>2019.07 ~ 한화시스템</p>
+
+<h1 id="교육-및-자격증">교육 및 자격증</h1>
+
+<p>2024.03 모두의연구소 - 인공지능 시대의 사용자 경험 이해하기(AI-UX) 수료<br />
+2023.11 Adsp 데이터분석 준전문가(한국데이터산업진흥원) 자격증 취득<br />
+2023.04 모두의연구소 - Data Engineering 고급 수료  <br />
+2023.01 모두의연구소 - Data Engineering 중급 수료  <br />
+2020.07 인프런 - 파이썬 머신러닝 완벽 가이드 수료<br />
+2020.07 인프런 - 딥러닝 컴퓨터 비전 완벽 가이드 수료<br />
+2019.08 정보처리기사 자격증 취득(한국산업인력공단)<br />
+2018.09 빅데이터 전문가 양성과정 수료 및 프로젝트 최우수상</p>
+
+<h1 id="논문저서">논문,저서</h1>
+
+<h2 id="a-comparative-study-of-machine-learning-and-ensemble-models-for-photovoltaic-power-prediction-태양광-발전량-예측을-위한-머신러닝-및-앙상블-모델-비교-연구">A Comparative Study of Machine Learning and Ensemble Models for Photovoltaic Power Prediction (태양광 발전량 예측을 위한 머신러닝 및 앙상블 모델 비교 연구)</h2>
+
+<h3 id="발표출판일--20240822">발표,출판일 : 2024.08.22</h3>
+
+<p>Globally, photovoltaic power is selected as an effort to minimize greenhouse gas emissions and produce alternative
+energy that does not depend on fossil fuels. However, the variability of photovoltaic power due to weather conditions
+complicates power supply management. Continuous research is underway to predict photovoltaic power accurately. Key
+factors for accurate prediction include tracking the sun’s position using solar altitude and azimuth, weather forecasts,
+and the location of solar panels. Additionally, new technologies and approaches are developed annually worldwide to
+reduce prediction variability and improve model accuracy. In this paper, to enhance the accuracy of photovoltaic power
+predictions we proposes an ensemble model combining LGBM ,one of the Gradient Boosting Machines, with Informer, a deep
+learning time series prediction model. Photovoltaic power prediction has no choice but to depend on weather forecast
+data. However, in this study, we integrates the latest observational data and considers weather characteristics to
+predict stable power generation without overly depending on forecast data. To evaluate the proposed model’s performance,
+its predictions were compared with those of previously studied models LGBM, LSTM, Informer, and LTSF-linear. For
+comparison, power generation data from three photovoltaic power plants in South Korea over one year, observed weather
+data from four providers, and two months of weather forecast data were used. Experiments demonstrated that the proposed
+model has higher prediction performance and can be applied across various regions.</p>
+
+<p>세계적으로 온실 가스 배출을 최소화하고 화석 연료에 의존하지 않는 대체 에너지를 생산하기 위한 노력으로 태양광 발전을 선택하고 있다. 하지만, 태양광 발전량은 날씨 상황에 따라 에너지 변동성이 크게 변하기 때문에
+전력 수급 관리가 어려운 상황이다. 이를 해결하기 위해 발전량을 예측하는 연구가 지속적으로 이루어 지고 있다. 발전량 예측을 위한 가장 중요한 요소는 태양 고도와 방위각을 활용한 태양 위치 추적, 기상 날씨 예보,
+태양광 패널의 위치 등의 여러 정보들을 고려해야 한다. 또한 예측의 변동성을 줄이고 모델의 정확성을 향상시키기 위해 새로운 기술과 접근 방식이 매년 전 세계적으로 발생하고 있다. 본 논문에서는 태양광 발전량 예측의
+정확성을 향상하기 위해, Gradient Boosting Machine중 하나인 LGBM과 딥러닝 시계열 예측 모델인 Informer를 결합한 앙상블 모델을 제안했다. 태양광 발전량 예측은 날씨 예보 데이터에 의존할
+수 밖에 없다. 하지만, 본 연구에서는 예보 데이터에 지나치게 의존하지 않으면서 안정적인 발전량을 예측 하기 위해 최신의 관측 데이터를 모델에 통합하고 날씨의 특성을 고려했다. 제안 모델의 성능을 평가하기 위해,
+기존에 연구된 LGBM, LSTM, Informer 및 LTSF-linear 모델과의 예측 결과를 비교했다. 비교를 위해 한국 내 세 개 지역의 태양광 발전소에서 1 년 동안 생산된 발전량과, 네 곳의 기상 정보
+업체에서 제공하는 관측된 날씨 데이터, 그리고 두 달 간의 날씨 예보 데이터를 사용했다. 실험을 통해 제안 모델이 기존 모델들 보다 높은 예측 성능과 다양한 지역에 적용 가능함을 입증했다.</p>
+
+<h1 id="학력">학력</h1>
+
+<p>2024, Master’s Degree in Artificial Intelligence Systems, Hangyang University, Seoul, South Korea     <br />
+2019, Bachelor’s Degree in Computer Engineering, Hongik University, Seoul, South Korea<br />
+2012, 배명고등학교 졸업</p>
+
+        <div>
+          <p class="post-info">
+            <!-- <link rel="canonical" href="http://jhy156456.github.io/"/> -->
+            <script
+              src="https://utteranc.es/client.js"
+              repo="jhy156456/github.io-comments"
+              issue-term="pathname"
+              label="Comment"
+              theme="github-light"
+              crossorigin="anonymous"
+              rel="canonical"
+              async></script>
+          </p>
+        </div>
+
+        <p class="post-info">
+          이 문서는<a href="/">
+            jhy156456</a>에 의해 작성되었습니다.<br/>
+          <!-- <a
+          href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank"
+          rel="external nofollow">creative commons 4.0</a>
+          라이센스에 대한 국제 라이센스 계약<br/> -->
+          마지막 수정 날짜:2022-12-02 09:19:11
+        </p>
+      </div>
+    </article>
+
+    <!-- <div class="related-post-lists">
+    <div class="post-lists">
+    <div class="post-lists-body">
+    <div class="post-list-item">
+    <div class="post-list-item-container">
+    <div class="item-label">
+    <div class="item-title"><a href="induction.html">归纳的随想</a></div>
+    <div class="item-meta clearfix">
+    <div class="item-meta-ico bg-ico-image" style="background: url('../usr/themes/pinghsu/images/bg-ico.png') no-repeat;background-size: 40px auto;"></div>
+    <div class="item-meta-cat"><a href="../category/thoughts/index.html">Thoughts</a></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div> -->
+
+    <footer class="footer bg-white">
+  
+
+  <div class="footer-social">
+    <div class="footer-container clearfix">
+      <div class="social-list">
+        <a
+          class="social github"
+          target="blank"
+          href="https://github.com/jhy156456"
+          title="github"
+          data-hover="GitHub">GitHub</a>
+        <a
+          class="social tistory"
+          target="blank"
+          href="http://jhy156456.tistory.com"
+          title="tistory"
+          data-hover="Tistory">Tistory</a>
+        <a
+          class="social linkedin"
+          target="blank"
+          href="https://www.linkedin.com/in/%ED%98%84%EC%98%81-%EC%A0%95-6b2660252/"
+          title="linkedin"
+          data-hover="LinkedIn">LinkedIn</a>
+        <a
+          class="social rss"
+          target="blank"
+          href="mailto:jcypher1024@outlook.com"
+          title="E-mail"
+          data-hover="E-mail">E-mail</a>
+
+      </div>
+    </div>
+  </div>
+  <div class="footer-meta">
+    <div class="footer-container">
+      <div class="meta-item meta-copyright">
+        <div class="meta-copyright-info">
+          <a href="/" class="info-logo">
+            <img
+              src="https://jhy156456.github.io/style/images/logo-jhy156456.png"
+              title="jhy156456_blog"
+              data-hover="jhy156456_blog"
+              alt="jhy156456_blog" />
+          </a>
+          <div class="info-text">
+            <p>
+              Theme is
+              <a
+                href="http://www.liberxue.com/2017/08/03/Jekyllthemes.html"
+                title="访问 Jekyll liberxue主题"
+                data-hover="Jekyll liberxue"
+                target="_blank">Jekyll liberxue</a>
+              by
+              <a href="http://www.liberxue.com/about" target="_blank">liberxue</a>
+            </p>
+            <p>
+              Powered by
+              <a
+                href="https://jhy156456.github.io/tags/#Jekyll"
+                title="Jekyll"
+                data-hover="Jekyll"
+                target="_blank"
+                rel="nofollow">Jekyll</a>
+            </p>
+            <!-- <p>&copy; 2017 <a href="/feed.xml" title="访问 liberxue blog RSS" -->
+            <!-- data-hover="liberxue blog RSS">liberxue blog RSS</a></p> -->
+            <!-- <p>게시글：개</p> --><p>총 게시글：102개
+          </p>
+            <!-- <p>이blog는 Fork되었습니다.</p><iframe
+            src="http://ghbtns.com/github-btn.html?user=liberxue&repo=liberxue.github.io&type=fork&count=true"
+            allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe> -->
+          </div>
+        </div>
+      </div>
+      <div class="meta-item meta-posts">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">다른 게시글</h3>
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+      <div class="meta-item meta-comments">
+        <h3 class="meta-title" style="-webkit-margin-after: 0">최신글</h3>
+
+        
+          
+            <li>
+              <a
+                href="/2026/01/02/os-zip-shell-script.html"
+                title="[de] test"
+                data-hover="[de] test">
+                [de] test</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/12/10/os-local-dns-issue.html"
+                title="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)"
+                data-hover="[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)">
+                [infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/11/22/DE-hdfs-cli-not-working.html"
+                title="[DE] hdfs cli 명령어 수행 안될 때"
+                data-hover="[DE] hdfs cli 명령어 수행 안될 때">
+                [DE] hdfs cli 명령어 수행 안될 때</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/11/12/oracle-delete-from-table.html"
+                title="[oracle] delete from table 했을 때 복구방법"
+                data-hover="[oracle] delete from table 했을 때 복구방법">
+                [oracle] delete from table 했을 때 복구방법</a>
+            </li>
+          
+        
+          
+            <li>
+              <a
+                href="/2025/04/15/spring-Missing-IN-or-OUT-parameter.html"
+                title="[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 "
+                data-hover="[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 ">
+                [spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 </a>
+            </li>
+          
+        
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="//cdn.bootcss.com/jquery/2.2.2/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.js"></script>
+<script src="/search/js/cb-search.js"></script>
+<script>
+  // 검색창 클릭 토글 기능
+  $(document).ready(function() {
+    // ID가 없으면 클래스로 찾기
+    var $searchToggle = $('#navbar-search-toggle');
+    if ($searchToggle.length === 0) {
+      $searchToggle = $('.navbar-search');
+    }
+    
+    var $searchInput = $('#cb-search-content');
+    var $iconSearch = $searchToggle.find('.icon-search');
+    
+    if ($searchToggle.length === 0) {
+      console.log('검색 토글 요소를 찾을 수 없습니다.');
+      return;
+    }
+    
+    // 검색 아이콘 클릭 시 토글
+    $iconSearch.on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      $searchToggle.toggleClass('active');
+      
+      // 검색창이 열리면 포커스
+      if ($searchToggle.hasClass('active')) {
+        setTimeout(function() {
+          $searchInput.focus();
+        }, 150);
+      }
+    });
+    
+    // 검색 입력창이나 form 클릭 시 이벤트 전파 방지
+    $searchToggle.find('form, input').on('click', function(e) {
+      e.stopPropagation();
+    });
+    
+    // 검색창 닫기 함수
+    function closeSearch() {
+      $searchToggle.removeClass('active');
+      $searchInput.val('').blur();
+    }
+    
+    // ESC 키로 검색창 닫기
+    $(document).on('keydown', function(e) {
+      if (e.key === 'Escape' || e.keyCode === 27) {
+        if ($searchToggle.hasClass('active')) {
+          closeSearch();
+        }
+      }
+    });
+    
+    // 검색창 외부 클릭 시 닫기
+    $(document).on('click', function(e) {
+      if ($searchToggle.hasClass('active')) {
+        if (!$searchToggle.is(e.target) && !$searchToggle.has(e.target).length) {
+          closeSearch();
+        }
+      }
+    });
+    
+    // 검색 결과 클릭 시 해당 게시글로 이동
+    $(document).on('click', '.navbar-search form .search-box ul li', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      var $li = $(this);
+      var text = $li.text().trim();
+      
+      // typeahead의 afterSelect를 트리거하거나 직접 이동
+      if (typeof window.names !== 'undefined' && typeof window.urls !== 'undefined') {
+        var index = window.names.indexOf(text);
+        if (index !== -1 && window.urls[index]) {
+          window.location.href = window.urls[index];
+          closeSearch();
+          return false;
+        }
+      }
+      
+      // typeahead가 생성한 링크인 경우
+      var $link = $li.find('a');
+      if ($link.length && $link.attr('href')) {
+        window.location.href = $link.attr('href');
+        closeSearch();
+        return false;
+      }
+    });
+  });
+  
+  $(function() {
+    setTimeout(function() {
+      $("code").removeClass("hljs");
+      $("code").removeClass("language");
+    }, 90);
+  });
+  (function() {
+    var bp = document.createElement("script");
+    var curProtocol = window.location.protocol.split(":")[0];
+    if (curProtocol === "https") {
+      bp.src = "https://zz.bdstatic.com/linksubmit/push.js";
+    } else {
+      bp.src = "http://push.zhanzhang.baidu.com/push.js";
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+  })();
+</script>
+
+    <!-- Firebase SDK (Firebase를 사용하는 경우에만 필요) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <!-- 조회수 카운터 스크립트 -->
+    <script src="https://jhy156456.github.io/assets/js/view-counter.js"></script>
+    <div id="directory-content" class="directory-content">
+      <div id="directory"></div>
+    </div>
+    <script>
+      var postDirectoryBuild = function() {
+        var postChildren = function children(childNodes, reg) {
+            var result = [],
+              isReg = typeof reg === "object",
+              isStr = typeof reg === "string",
+              node,
+              i,
+              len;
+            for (i = 0, len = childNodes.length; i < len; i++) {
+              node = childNodes[i];
+              if ((node.nodeType === 1 || node.nodeType === 9) && (! reg || (isReg && reg.test(node.tagName.toLowerCase())) || (isStr && node.tagName.toLowerCase() === reg))) {
+                result.push(node);
+              }
+            }
+            return result;
+          },
+          createPostDirectory = function(article, directory, isDirNum) {
+            var contentArr = [],
+              titleId = [],
+              levelArr,
+              root,
+              level,
+              currentList,
+              list,
+              li,
+              link,
+              i,
+              len;
+            levelArr = (function(article, contentArr, titleId) {
+              var titleElem = postChildren(article.childNodes, /^h\d$/),
+                levelArr = [],
+                lastNum = 1,
+                lastRevNum = 1,
+                count = 0,
+                guid = 1,
+                id = "directory" + (
+                  Math.random() + ""
+                ).replace(/\D/, ""),
+                lastRevNum,
+                num,
+                elem;
+              while (titleElem.length) {
+                elem = titleElem.shift();
+                contentArr.push(elem.innerHTML);
+                num = + elem.tagName.match(/\d/)[0];
+                if (num > lastNum) {
+                  levelArr.push(1);
+                  lastRevNum += 1;
+                } else if (num === lastRevNum || (num > lastRevNum && num <= lastNum)) {
+                  levelArr.push(0);
+                  lastRevNum = lastRevNum;
+                } else if (num < lastRevNum) {
+                  levelArr.push(num - lastRevNum);
+                  lastRevNum = num;
+                }
+                count += levelArr[levelArr.length - 1];
+                lastNum = num;
+                elem.id = elem.id || id + guid++;
+                titleId.push(elem.id);
+              }
+              if (count !== 0 && levelArr[0] === 1) 
+                levelArr[0] = 0;
+              
+
+
+              return levelArr;
+            })(article, contentArr, titleId);
+            currentList = root = document.createElement("ul");
+            dirNum = [0];
+            for (i = 0, len = levelArr.length; i < len; i++) {
+              level = levelArr[i];
+              if (level === 1) {
+                list = document.createElement("ul");
+                if (! currentList.lastElementChild) {
+                  currentList.appendChild(document.createElement("li"));
+                }
+                currentList.lastElementChild.appendChild(list);
+                currentList = list;
+                dirNum.push(0);
+              } else if (level < 0) {
+                level *= 2;
+                while (level++) {
+                  if (level % 2) 
+                    dirNum.pop();
+                  
+
+
+                  currentList = currentList.parentNode;
+                }
+              }
+              dirNum[dirNum.length - 1]++;
+              li = document.createElement("li");
+              link = document.createElement("a");
+              link.href = "#" + titleId[i];
+              link.title = titleId[i];
+              link.title = titleId[i];
+              link.innerHTML = ! isDirNum
+                ? contentArr[i]
+                : dirNum.join(".") + " " + contentArr[i];
+              li.appendChild(link);
+              currentList.appendChild(li);
+            }
+            directory.appendChild(root);
+          };
+        createPostDirectory(document.getElementById("post-content"), document.getElementById("directory"), true);
+      };
+      postDirectoryBuild();
+    </script>
+    <script>//           window.addEventListener(
+//     "scroll",
+//     function () {
+//       console.log("??????????");
+//     },
+//     true
+// );
+  </script>
+  <!-- <script>
+  $(document).ready(function () {
+  var currentPosition = parseInt($("#directory").css("top"));
+  $(window).scroll(function () {
+  var position = $(window).scrollTop()-500;
+  $("#directory")
+  .stop()
+  .animate({ top: position + currentPosition + "px" }, 0);
+  });
+  });
+  </script> --><!-- <script>
+    $(function () {
+    var $win = $(window);
+    var top = $(window).scrollTop(); // 현재 스크롤바의 위치값을 반환
+
+    /*사용자 설정 값 시작*/
+    var speed = 500; // 따라다닐 속도 : "slow", "normal", or "fast" or        numeric(단위:msec)
+    var easing = "linear"; // 따라다니는 방법 기본 두가지 linear, swing
+    var $layer = $("#directory"); // 레이어 셀렉팅
+    // var layerTopOffset = 650; // 레이어 높이 상한선, 단위:px
+    var layerTopOffset = 0; // 레이어 높이 상한선, 단위:px
+    // $layer.css("position", "absolute");
+    $layer.css("top", "0px"); //첫 시작 위치
+    /*사용자 설정 값 끝*/
+
+    // 스크롤 바를 내린 상태에서 리프레시 했을 경우를 위해
+    if (top > 0) $win.scrollTop(layerTopOffset + top);
+    else $win.scrollTop(0);
+
+    //스크롤이벤트가 발생하면
+    $(window).scroll(function () {
+    yPosition = $win.scrollTop() + layerTopOffset;
+    //   console.log($win.scrollTop())
+    console.log($layer.css("top"))
+    if (yPosition < 0) {
+    yPosition = 0;
+    }
+    $layer.animate(
+    { top: yPosition},
+    { duration: speed, easing: easing, queue: false }
+    );
+    });
+    });
+    </script> --><script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>
+    lang = hljs.initHighlightingOnLoad();
+  </script>
+</body></html>
