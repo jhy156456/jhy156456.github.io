@@ -1,0 +1,989 @@
+---
+layout: null
+title: Wedding Invitation
+permalink: /wedding/
+---
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>김현진 ❤ 정현영 결혼식에 초대합니다</title>
+    <meta name="description" content="2026년 9월 5일 토요일 오후 3시, 노블발렌티 삼성 5층 샤플홀 모바일 청첩장" />
+    <style>
+      :root {
+        --bg: #fff9fc;
+        --ink: #1f1f1f;
+        --muted: #656b77;
+        --line: #f2dbe6;
+        --card: #ffffff;
+        --accent: #ff3f8f;
+        --accent-soft: #ffe3ef;
+        --hero-dark: #161620;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+        color: var(--ink);
+        background: radial-gradient(circle at top, #fff 0%, #fff6fb 46%, var(--bg) 100%);
+      }
+
+      .intro {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100dvh;
+        z-index: 50;
+        display: grid;
+        place-items: center;
+        background: #111;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
+      }
+
+      .intro.hide {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .intro-inner {
+        width: 100%;
+        max-width: 460px;
+        text-align: center;
+        padding: 0 24px;
+        transform: translateY(-2vh);
+      }
+
+      .intro-label {
+        margin: 0 0 10px;
+        color: #d4d7e7;
+        font-size: 13px;
+        letter-spacing: 1.8px;
+      }
+
+      .intro-title {
+        margin: 0;
+        min-height: 40px;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+
+      .intro-caret {
+        display: inline-block;
+        width: 2px;
+        height: 26px;
+        margin-left: 3px;
+        background: #ff95c2;
+        vertical-align: -4px;
+        animation: blink 0.9s infinite;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .wrap {
+        max-width: 460px;
+        margin: 0 auto;
+        padding: 12px 14px 48px;
+      }
+
+      .hero-wrap {
+        border-radius: 24px;
+        overflow: hidden;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      .section.hero-wrap {
+        padding: 0;
+      }
+
+      .hero-body {
+        padding: 19px 16px;
+      }
+
+      .hero {
+        padding: 0;
+      }
+
+      .hero img {
+        width: 100%;
+        display: block;
+        object-fit: contain;
+        transform: translateY(28px) scale(0.96);
+        opacity: 0;
+        transition: transform 1s ease, opacity 1s ease;
+        cursor: zoom-in;
+        touch-action: manipulation;
+      }
+
+      body.ready .hero img {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+
+      .section {
+        margin-top: 18px;
+        background: var(--card);
+        border-radius: 20px;
+        padding: 19px 16px;
+        border: 1px solid #fbe5ee;
+        box-shadow: 0 16px 24px rgba(27, 20, 30, 0.06);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .title {
+        margin: 0 0 12px;
+        font-size: 23px;
+        font-weight: 800;
+        letter-spacing: -0.4px;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .date-box {
+        margin-top: 12px;
+        border: 1px solid #f6d9e7;
+        border-radius: 14px;
+        padding: 14px;
+        background: linear-gradient(180deg, #fff, #fff9fc);
+      }
+
+      .date-main {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: -0.3px;
+      }
+
+      .date-sub {
+        margin: 6px 0 0;
+        color: #444;
+      }
+
+      .place {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px dashed var(--line);
+      }
+
+      .map img {
+        margin-top: 10px;
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid #efd7e5;
+      }
+
+      .traffic p {
+        margin: 8px 0;
+        line-height: 1.6;
+      }
+
+      .traffic b {
+        color: #000;
+      }
+
+      .contact-box {
+        margin-top: 12px;
+        border-radius: 14px;
+        background: #f9fbff;
+        padding: 12px;
+      }
+
+      .contact-box p {
+        margin: 6px 0;
+      }
+
+      .account-list {
+        margin: 12px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .account-list li {
+        margin: 8px 0;
+        padding: 11px 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+      }
+
+      .guest-form {
+        margin-top: 8px;
+      }
+
+      .guest-form input,
+      .guest-form textarea {
+        width: 100%;
+        border: 1px solid #e3e3e3;
+        border-radius: 10px;
+        font-size: 15px;
+        padding: 11px 12px;
+        margin-top: 8px;
+        background: #fff;
+      }
+
+      .guest-form textarea {
+        min-height: 86px;
+        resize: vertical;
+      }
+
+      .radio-row {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+      }
+
+      .radio-card {
+        flex: 1;
+      }
+
+      .radio-card input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .radio-label {
+        display: block;
+        border: 1px solid #e6dce2;
+        border-radius: 12px;
+        padding: 12px 10px;
+        text-align: center;
+        font-weight: 700;
+        cursor: pointer;
+        background: #fff;
+        color: #525a66;
+        transition: all 0.2s ease;
+      }
+
+      .radio-card input[type="radio"]:checked + .radio-label {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+        color: #b41f62;
+      }
+
+      .btn-row {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn {
+        border: 0;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: linear-gradient(90deg, #ff3f8f 0%, #ff78b1 100%);
+        color: #fff;
+        flex: 1;
+      }
+
+      .btn-light {
+        background: var(--primary-soft);
+        color: #b21657;
+      }
+
+      .guest-list {
+        margin-top: 14px;
+        padding: 0;
+        list-style: none;
+      }
+
+      .guest-item {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 11px 12px;
+        margin-top: 8px;
+        background: linear-gradient(180deg, #fff, #fffafd);
+      }
+
+      .guest-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .guest-name {
+        font-weight: 800;
+      }
+
+      .guest-time {
+        color: #8d8d8d;
+        font-size: 12px;
+      }
+
+      .guest-message {
+        margin: 8px 0 0;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+
+      .badge {
+        display: inline-block;
+        margin-right: 6px;
+        border-radius: 999px;
+        padding: 3px 9px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .badge-attend {
+        background: #ecf9f0;
+        color: #157447;
+      }
+
+      .badge-decline {
+        background: #fff3f3;
+        color: #b73131;
+      }
+
+      .status-line {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #f8fafd;
+        color: #4d4d55;
+        font-size: 13px;
+      }
+
+      .empty {
+        color: #8d8d8d;
+        font-size: 14px;
+      }
+
+      .footer {
+        margin-top: 20px;
+        text-align: center;
+        color: #8b8b8b;
+        font-size: 12px;
+      }
+
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(6, 6, 10, 0.92);
+        padding: 14px;
+      }
+
+      .lightbox.show {
+        display: flex;
+      }
+
+      .lightbox-stage {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .lightbox-img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transform-origin: center center;
+        transition: transform 0.08s linear;
+        touch-action: none;
+        user-select: none;
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+        border: 0;
+        border-radius: 999px;
+        width: 38px;
+        height: 38px;
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="intro" id="intro">
+      <div class="intro-inner">
+        <p class="intro-label">WEDDING INVITATION</p>
+        <h2 class="intro-title"><span id="introTyped"></span><span class="intro-caret"></span></h2>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <section class="section hero-wrap reveal">
+        <div class="hero">
+          <img src="/assets/images/wedding/invitation-hero.png" alt="김현진 정현영 결혼식 캐릭터 메인" />
+        </div>
+        <div class="hero-body">
+          <h1 class="title">김현진 ❤ 정현영 결혼합니다</h1>
+          <p class="subtitle">
+            서로를 믿고 호흡을 맞추는 투수와 포수처럼<br />
+            저희 두 사람도 하나의 팀이 되어 인생의 새로운 이닝을 시작하려 합니다.
+          </p>
+          <div class="date-box">
+            <p class="date-main">2026년 9월 5일 (토) 오후 3시</p>
+            <p class="date-sub">노블발렌티 삼성 5층 샤플홀</p>
+            <p class="date-sub place">서울 강남구 봉은사로 637</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section map reveal">
+        <h2 class="title">오시는 길</h2>
+        <p class="subtitle">지도를 눌러 확대해서 확인해 주세요.</p>
+        <img src="/assets/images/wedding/invitation-map.png" alt="노블발렌티 삼성 오시는 길 안내 지도" />
+        <div class="traffic">
+          <p><b>지하철</b> 9호선 봉은사역 4번 출구 도보 약 4분</p>
+          <p><b>버스</b> 봉은사역 정류장 하차 후 도보 이동</p>
+          <p><b>자가용</b> 내비게이션: 노블발렌티 삼성 검색</p>
+          <p><b>주차</b> 제2주차장: 봉은사로 610 우드림</p>
+        </div>
+        <div class="contact-box">
+          <p><b>마음 전하실 곳</b></p>
+          <p>신랑측: 1002-833-665297 우리은행 정현영</p>
+          <p>신부측: 847-910214-2507 하나은행 김현진</p>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <h2 class="title">참석 여부 전달</h2>
+        <p class="subtitle">참석/불참 여부를 남겨 주시면 더 정성껏 준비하겠습니다.</p>
+        <form class="guest-form" id="rsvpForm">
+          <input id="rsvpName" type="text" maxlength="20" placeholder="이름" required />
+          <div class="radio-row">
+            <label class="radio-card">
+              <input id="rsvpAttend" type="radio" name="rsvpStatus" value="attend" checked />
+              <span class="radio-label">참석</span>
+            </label>
+            <label class="radio-card">
+              <input id="rsvpDecline" type="radio" name="rsvpStatus" value="decline" />
+              <span class="radio-label">불참</span>
+            </label>
+          </div>
+          <textarea id="rsvpMessage" maxlength="200" placeholder="전달하실 말씀 (선택)"></textarea>
+          <div class="btn-row">
+            <button class="btn btn-primary" type="submit">참석 여부 등록</button>
+          </div>
+        </form>
+        <ul class="guest-list" id="rsvpList"></ul>
+      </section>
+
+      <section class="section reveal">
+        <h2 class="title">방명록</h2>
+        <p class="subtitle">축하 메시지를 남겨 주세요. (실시간 반영)</p>
+
+        <form class="guest-form" id="guestForm">
+          <input id="guestName" type="text" maxlength="20" placeholder="이름" required />
+          <textarea id="guestMessage" maxlength="300" placeholder="축하 메시지" required></textarea>
+          <div class="btn-row">
+            <button class="btn btn-primary" type="submit">메시지 남기기</button>
+          </div>
+        </form>
+
+        <ul class="guest-list" id="guestList"></ul>
+        <p class="status-line" id="syncStatus">데이터 서버 연결을 확인하는 중입니다.</p>
+      </section>
+
+      <p class="footer">Wedding Invitation © 2026</p>
+    </div>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <div class="lightbox-stage" id="lightboxStage">
+        <button class="lightbox-close" id="lightboxClose" type="button" aria-label="닫기">×</button>
+        <img class="lightbox-img" id="lightboxImg" src="" alt="확대된 이미지" />
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script>
+      (function () {
+        var GUESTBOOK_KEY = "wedding_guestbook_entries_v2";
+        var RSVP_KEY = "wedding_rsvp_entries_v1";
+
+        var firebaseConfig = {
+          apiKey: "AIzaSyBOFhnIw3DNLkHzBHGtno1t5bWs992GQ58",
+          authDomain: "jhy156456-blog-views.firebaseapp.com",
+          databaseURL: "https://jhy156456-blog-views-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "jhy156456-blog-views",
+          storageBucket: "jhy156456-blog-views.firebasestorage.app",
+          messagingSenderId: "552788902808",
+          appId: "1:552788902808:web:73ad1b70867b60e515a1ed"
+        };
+
+        var form = document.getElementById("guestForm");
+        var guestNameInput = document.getElementById("guestName");
+        var guestMessageInput = document.getElementById("guestMessage");
+        var guestList = document.getElementById("guestList");
+        var syncStatus = document.getElementById("syncStatus");
+
+        var rsvpForm = document.getElementById("rsvpForm");
+        var rsvpNameInput = document.getElementById("rsvpName");
+        var rsvpMessageInput = document.getElementById("rsvpMessage");
+        var rsvpList = document.getElementById("rsvpList");
+        var intro = document.getElementById("intro");
+        var introTyped = document.getElementById("introTyped");
+        var lightbox = document.getElementById("lightbox");
+        var lightboxImg = document.getElementById("lightboxImg");
+        var lightboxClose = document.getElementById("lightboxClose");
+
+        var firebaseReady = false;
+        var db = null;
+        var zoomScale = 1;
+        var startDistance = 0;
+        var startScale = 1;
+
+        function readLocal(key) {
+          try {
+            var raw = localStorage.getItem(key);
+            return raw ? JSON.parse(raw) : [];
+          } catch (error) {
+            return [];
+          }
+        }
+
+        function writeLocal(key, entries) {
+          localStorage.setItem(key, JSON.stringify(entries));
+        }
+
+        function formatTime(value) {
+          var date = new Date(typeof value === "number" ? value : Date.parse(value));
+          if (isNaN(date.getTime())) {
+            return "";
+          }
+          var y = date.getFullYear();
+          var m = String(date.getMonth() + 1).padStart(2, "0");
+          var d = String(date.getDate()).padStart(2, "0");
+          var h = String(date.getHours()).padStart(2, "0");
+          var min = String(date.getMinutes()).padStart(2, "0");
+          return y + "." + m + "." + d + " " + h + ":" + min;
+        }
+
+        function setStatus(text, isWarning) {
+          syncStatus.textContent = text;
+          syncStatus.style.color = isWarning ? "#b05a00" : "#365a9e";
+          syncStatus.style.background = isWarning ? "#fff5e9" : "#eef4ff";
+        }
+
+        function renderGuestbook(entries) {
+          guestList.innerHTML = "";
+
+          if (!entries.length) {
+            var emptyItem = document.createElement("li");
+            emptyItem.className = "empty";
+            emptyItem.textContent = "첫 번째 축하 메시지를 남겨 주세요.";
+            guestList.appendChild(emptyItem);
+            return;
+          }
+
+          entries.forEach(function (entry) {
+            var li = document.createElement("li");
+            li.className = "guest-item";
+
+            var header = document.createElement("div");
+            header.className = "guest-head";
+
+            var left = document.createElement("div");
+            var name = document.createElement("div");
+            name.className = "guest-name";
+            name.textContent = entry.name;
+            var time = document.createElement("div");
+            time.className = "guest-time";
+            time.textContent = formatTime(entry.createdAt);
+
+            left.appendChild(name);
+            left.appendChild(time);
+            header.appendChild(left);
+
+            var message = document.createElement("p");
+            message.className = "guest-message";
+            message.textContent = entry.message;
+
+            li.appendChild(header);
+            li.appendChild(message);
+            guestList.appendChild(li);
+          });
+        }
+
+        function renderRsvp(entries) {
+          rsvpList.innerHTML = "";
+
+          entries.forEach(function (entry) {
+            var li = document.createElement("li");
+            li.className = "guest-item";
+
+            var header = document.createElement("div");
+            header.className = "guest-head";
+            var left = document.createElement("div");
+
+            var name = document.createElement("div");
+            name.className = "guest-name";
+
+            var badge = document.createElement("span");
+            badge.className = "badge " + (entry.status === "attend" ? "badge-attend" : "badge-decline");
+            badge.textContent = entry.status === "attend" ? "참석" : "불참";
+
+            name.appendChild(badge);
+            name.appendChild(document.createTextNode(entry.name));
+
+            var time = document.createElement("div");
+            time.className = "guest-time";
+            time.textContent = formatTime(entry.createdAt);
+            left.appendChild(name);
+            left.appendChild(time);
+
+            header.appendChild(left);
+            li.appendChild(header);
+
+            if (entry.message) {
+              var message = document.createElement("p");
+              message.className = "guest-message";
+              message.textContent = entry.message;
+              li.appendChild(message);
+            }
+
+            rsvpList.appendChild(li);
+          });
+
+          if (!entries.length) {
+            var empty = document.createElement("li");
+            empty.className = "empty";
+            empty.textContent = "아직 등록된 참석 정보가 없습니다.";
+            rsvpList.appendChild(empty);
+          }
+        }
+
+        function normalizeFromSnapshot(snapshotValue) {
+          if (!snapshotValue) {
+            return [];
+          }
+
+          var list = Object.keys(snapshotValue).map(function (key) {
+            var item = snapshotValue[key] || {};
+            return {
+              id: key,
+              name: item.name || "익명",
+              message: item.message || "",
+              status: item.status || "attend",
+              createdAt: item.createdAt || Date.now()
+            };
+          });
+
+          list.sort(function (a, b) {
+            return Number(b.createdAt || 0) - Number(a.createdAt || 0);
+          });
+
+          return list;
+        }
+
+        function loadAndWatchFirebase() {
+          var guestbookRef = db.ref("wedding/guestbook").limitToLast(100);
+          guestbookRef.on("value", function (snapshot) {
+            renderGuestbook(normalizeFromSnapshot(snapshot.val()));
+          });
+
+          var rsvpRef = db.ref("wedding/rsvp").limitToLast(100);
+          rsvpRef.on("value", function (snapshot) {
+            renderRsvp(normalizeFromSnapshot(snapshot.val()));
+          });
+        }
+
+        function loadFromLocal() {
+          renderGuestbook(readLocal(GUESTBOOK_KEY));
+          renderRsvp(readLocal(RSVP_KEY));
+        }
+
+        function initFirebase() {
+          var hasConfig = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY";
+          if (!hasConfig || typeof firebase === "undefined") {
+            setStatus("Firebase 설정이 없어서 로컬 저장 모드로 동작합니다.", true);
+            loadFromLocal();
+            return;
+          }
+
+          try {
+            if (!firebase.apps.length) {
+              firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.database();
+            firebaseReady = true;
+            setStatus("Firebase 실시간 연동 중입니다.", false);
+            loadAndWatchFirebase();
+          } catch (error) {
+            firebaseReady = false;
+            setStatus("Firebase 연결 실패로 로컬 저장 모드로 전환되었습니다.", true);
+            loadFromLocal();
+          }
+        }
+
+        function initScrollReveal() {
+          var targets = document.querySelectorAll(".reveal");
+          if (!targets.length) {
+            return;
+          }
+
+          var observer = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add("show");
+                  observer.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+          );
+
+          targets.forEach(function (target) {
+            observer.observe(target);
+          });
+        }
+
+        function initIntro() {
+          var text = "김현진 ❤ 정현영";
+          var i = 0;
+          var interval = setInterval(function () {
+            i += 1;
+            introTyped.textContent = text.slice(0, i);
+            if (i >= text.length) {
+              clearInterval(interval);
+              setTimeout(function () {
+                intro.classList.add("hide");
+                document.body.classList.add("ready");
+              }, 700);
+            }
+          }, 130);
+        }
+
+        function clamp(value, min, max) {
+          return Math.max(min, Math.min(max, value));
+        }
+
+        function getDistance(touchA, touchB) {
+          var dx = touchA.clientX - touchB.clientX;
+          var dy = touchA.clientY - touchB.clientY;
+          return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        function applyZoom() {
+          lightboxImg.style.transform = "scale(" + zoomScale + ")";
+        }
+
+        function openLightbox(src, alt) {
+          lightboxImg.src = src;
+          lightboxImg.alt = alt || "확대 이미지";
+          zoomScale = 1;
+          applyZoom();
+          lightbox.classList.add("show");
+          lightbox.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeLightbox() {
+          lightbox.classList.remove("show");
+          lightbox.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+          lightboxImg.src = "";
+        }
+
+        function initImageZoom() {
+          var clickableImages = document.querySelectorAll(".hero img, .map img");
+          clickableImages.forEach(function (img) {
+            img.addEventListener("click", function () {
+              openLightbox(img.src, img.alt);
+            });
+          });
+
+          lightboxClose.addEventListener("click", closeLightbox);
+          lightbox.addEventListener("click", function (event) {
+            if (event.target === lightbox || event.target.id === "lightboxStage") {
+              closeLightbox();
+            }
+          });
+
+          document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && lightbox.classList.contains("show")) {
+              closeLightbox();
+            }
+          });
+
+          lightboxImg.addEventListener("dblclick", function () {
+            zoomScale = zoomScale > 1 ? 1 : 2;
+            applyZoom();
+          });
+
+          lightboxImg.addEventListener(
+            "wheel",
+            function (event) {
+              event.preventDefault();
+              var delta = event.deltaY > 0 ? -0.15 : 0.15;
+              zoomScale = clamp(zoomScale + delta, 1, 4);
+              applyZoom();
+            },
+            { passive: false }
+          );
+
+          lightboxImg.addEventListener(
+            "touchstart",
+            function (event) {
+              if (event.touches.length === 2) {
+                startDistance = getDistance(event.touches[0], event.touches[1]);
+                startScale = zoomScale;
+              }
+            },
+            { passive: true }
+          );
+
+          lightboxImg.addEventListener(
+            "touchmove",
+            function (event) {
+              if (event.touches.length === 2) {
+                event.preventDefault();
+                var currentDistance = getDistance(event.touches[0], event.touches[1]);
+                if (startDistance > 0) {
+                  zoomScale = clamp(startScale * (currentDistance / startDistance), 1, 4);
+                  applyZoom();
+                }
+              }
+            },
+            { passive: false }
+          );
+
+          lightboxImg.addEventListener(
+            "touchend",
+            function () {
+              if (zoomScale < 1) {
+                zoomScale = 1;
+                applyZoom();
+              }
+            },
+            { passive: true }
+          );
+        }
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          var name = guestNameInput.value.trim();
+          var message = guestMessageInput.value.trim();
+
+          if (!name || !message) {
+            return;
+          }
+
+          var newEntry = {
+            name: name,
+            message: message,
+            createdAt: Date.now()
+          };
+
+          if (firebaseReady) {
+            db.ref("wedding/guestbook").push({
+              name: newEntry.name,
+              message: newEntry.message,
+              createdAt: firebase.database.ServerValue.TIMESTAMP
+            });
+          } else {
+            var entries = readLocal(GUESTBOOK_KEY);
+            entries.unshift({
+              id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+              name: newEntry.name,
+              message: newEntry.message,
+              createdAt: newEntry.createdAt
+            });
+            writeLocal(GUESTBOOK_KEY, entries);
+            renderGuestbook(entries);
+          }
+
+          form.reset();
+          guestNameInput.focus();
+        });
+
+        rsvpForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          var name = rsvpNameInput.value.trim();
+          var statusNode = document.querySelector('input[name="rsvpStatus"]:checked');
+          var status = statusNode ? statusNode.value : "";
+          var message = rsvpMessageInput.value.trim();
+          if (!name || !status) {
+            return;
+          }
+
+          if (firebaseReady) {
+            db.ref("wedding/rsvp").push({
+              name: name,
+              status: status,
+              message: message,
+              createdAt: firebase.database.ServerValue.TIMESTAMP
+            });
+          } else {
+            var entries = readLocal(RSVP_KEY);
+            entries.unshift({
+              id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+              name: name,
+              status: status,
+              message: message,
+              createdAt: Date.now()
+            });
+            writeLocal(RSVP_KEY, entries);
+            renderRsvp(entries);
+          }
+
+          rsvpForm.reset();
+          document.getElementById("rsvpAttend").checked = true;
+          rsvpNameInput.focus();
+        });
+
+        initScrollReveal();
+        initIntro();
+        initImageZoom();
+        initFirebase();
+      })();
+    </script>
+  </body>
+</html>

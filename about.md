@@ -197,6 +197,7 @@ IT 전문가를 꿈꾸는 Data Scientist 입니다.
 
 # 교육 및 자격증
 
+2026.02 ~ 2028.03 Cloudera Administrator on Premises 자격증 취득  
 2025.11 Administering Cloudera on premises 수료
 2024.03 모두의연구소 - 인공지능 시대의 사용자 경험 이해하기(AI-UX) 수료  
 2023.11 Adsp 데이터분석 준전문가(한국데이터산업진흥원) 자격증 취득  
