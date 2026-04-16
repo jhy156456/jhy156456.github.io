@@ -5,7 +5,7 @@ use_math: true
 background: transparent
 background-image: ../../../assets/images/study/os/shell_image.jpg
 category: study
-categories: os
+categories: os/mac
 title: '[os] shell script로 특정 폴더, 파일을 제외하고 zip파일 만들기'
 date: 2024-01-23 08:00:00
 tags:

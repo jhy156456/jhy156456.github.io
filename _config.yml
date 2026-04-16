@@ -41,6 +41,9 @@ links:
   - name: About Me
     url: /about
     external: false
+  - name: 청첩장
+    url: /wedding
+    external: false
 # ------------ CONFIGURABLE END ------------
 pagination:
   enabled: true

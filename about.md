@@ -26,6 +26,39 @@ IT 전문가를 꿈꾸는 Data Scientist 입니다.
 
 # 수행
 
+## 데이터 분석 플랫폼 전환 및 운영 (2025.07 ~ )
+
+### 기술스택
+
+- Cloudera
+- CDP, CAI
+- Hadoop
+    - HDFS
+    - YARN
+    - HIVE
+    - Oozie
+    - Spark
+
+## 한화에어로스페이스 수요예측 시스템 구축 (2025.08 ~ 2025.11)
+
+## 대한항공 수요예측 시스템 구축 (2025.01 ~ 2025.04)
+
+## AI Agent 구축 (2025.05 ~ 2025.08)
+
+- MRO 웹 플랫폼에서 사용자가 정비 절차를 질의
+- LLM이 인덱싱한 RAG 데이터로 유사 문서와 위치를 찾아 응답
+- 현장에서 음성으로 질의/응답받을 수 있는 STT/TTS 기능 통합
+
+### 기술스택
+
+- Ollama
+- Docker
+- Vue3.js
+- Node.js
+- MongoDB
+- LLM
+- RAG
+
 ## 리눅스 서버 구축 (2024.12)
 
 - Red Hat Linux 기반 개발·운영 서버 구축
@@ -157,7 +190,6 @@ IT 전문가를 꿈꾸는 Data Scientist 입니다.
 - Android
 - Java
 - Kotlin
--
 
 # 경력
 
@@ -165,6 +197,8 @@ IT 전문가를 꿈꾸는 Data Scientist 입니다.
 
 # 교육 및 자격증
 
+2026.02 ~ 2028.03 Cloudera Administrator on Premises 자격증 취득  
+2025.11 Administering Cloudera on premises 수료
 2024.03 모두의연구소 - 인공지능 시대의 사용자 경험 이해하기(AI-UX) 수료  
 2023.11 Adsp 데이터분석 준전문가(한국데이터산업진흥원) 자격증 취득  
 2023.04 모두의연구소 - Data Engineering 고급 수료    
