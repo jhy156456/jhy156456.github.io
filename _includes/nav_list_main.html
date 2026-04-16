@@ -232,7 +232,12 @@ posts_sum = site.posts | size %}
       <!-- OS End -->
 
       <!-- DE start-->
-      <span class="nav__sub-title">Data-Engineer</span>
+      {% for category in site.categories %}
+      {% if category[0] == "data-engineer" %}
+      <a href="/study/categories/data-engineer" class=""> <span class="nav__sub-title">ai ({{ category[1].size }})</span>
+      </a>
+      {% endif %}
+      {% endfor %}
       <ul class="nav_ul">
         {% for category in site.categories %}
         {% if category[0] ==
