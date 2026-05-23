@@ -8,8 +8,21 @@ permalink: /wedding/
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <title>김현진 ❤ 정현영 결혼식에 초대합니다</title>
+    <title>정현영 ❤ 김현진 결혼식에 초대합니다</title>
     <meta name="description" content="2026년 9월 5일 토요일 오후 3시, 노블발렌티 삼성 5층 샤플홀 모바일 청첩장" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jhy156456.github.io/wedding/" />
+    <meta property="og:title" content="정현영 ❤ 김현진 결혼식에 초대합니다" />
+    <meta property="og:description" content="2026년 9월 5일 토요일 오후 3시, 노블발렌티 삼성 5층 샤플홀" />
+    <meta property="og:image" content="https://jhy156456.github.io/assets/images/wedding/invitation-main.png" />
+    <meta property="og:image:secure_url" content="https://jhy156456.github.io/assets/images/wedding/invitation-main.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="897" />
+    <meta property="og:image:height" content="1920" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="정현영 ❤ 김현진 결혼식에 초대합니다" />
+    <meta name="twitter:description" content="2026년 9월 5일 토요일 오후 3시, 노블발렌티 삼성 5층 샤플홀" />
+    <meta name="twitter:image" content="https://jhy156456.github.io/assets/images/wedding/invitation-main.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -644,6 +657,66 @@ permalink: /wedding/
         letter-spacing: 0.06em;
       }
 
+      .music-credit {
+        margin: 8px 0 0;
+        text-align: center;
+        color: #b3aea7;
+        font-size: 10px;
+      }
+
+      .music-credit a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .music-toggle {
+        position: fixed;
+        top: 12px;
+        left: max(12px, calc(50% - 215px + 12px));
+        z-index: 70;
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border: 1px solid rgba(228, 224, 218, 0.92);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.86);
+        color: var(--ink);
+        box-shadow: 0 8px 22px rgba(28, 24, 20, 0.12);
+        cursor: pointer;
+        backdrop-filter: blur(8px);
+      }
+
+      .music-toggle svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+      }
+
+      .music-toggle .music-off-icon {
+        display: none;
+      }
+
+      .music-toggle.is-muted .music-on-icon {
+        display: none;
+      }
+
+      .music-toggle.is-muted .music-off-icon {
+        display: block;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
       .lightbox {
         position: fixed;
         inset: 0;
@@ -726,6 +799,22 @@ permalink: /wedding/
     </style>
   </head>
   <body>
+    <button class="music-toggle is-muted" id="musicToggle" type="button" aria-label="배경음악 재생">
+      <svg class="music-on-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 18V5l10-2v13" />
+        <circle cx="7" cy="18" r="3" />
+        <circle cx="17" cy="16" r="3" />
+      </svg>
+      <svg class="music-off-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 18V5l10-2v8" />
+        <circle cx="7" cy="18" r="3" />
+        <path d="m16 16 5 5" />
+        <path d="m21 16-5 5" />
+      </svg>
+      <span class="sr-only" id="musicToggleText">배경음악 재생</span>
+    </button>
+    <audio id="weddingBgm" src="{{ '/assets/audio/wedding-bgm.mp3' | relative_url }}" loop preload="auto"></audio>
+
     <div class="intro" id="intro">
       <div class="intro-inner">
         <p class="intro-label">모바일 청첩장</p>
@@ -736,7 +825,7 @@ permalink: /wedding/
     <div class="wrap">
       <section class="section hero-wrap reveal">
         <div class="hero">
-          <img src="{{ '/assets/images/wedding/invitation-main.png' | relative_url }}" alt="김현진 · 정현영 모바일 청첩장" />
+          <img src="{{ '/assets/images/wedding/invitation-main.png' | relative_url }}" alt="정현영 · 김현진 모바일 청첩장" />
         </div>
       </section>
 
@@ -924,7 +1013,14 @@ permalink: /wedding/
         <ul class="guest-list" id="guestList"></ul>
       </section>
 
-      <p class="footer">김현진 · 정현영 의 결혼식에 초대합니다</p>
+      <p class="footer">정현영 · 김현진 의 결혼식에 초대합니다</p>
+      <p class="music-credit">
+        Music:
+        <a href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100022" target="_blank" rel="noopener">
+          Wagner Bridal Chorus - piano
+        </a>
+        by Kevin MacLeod, CC BY 3.0
+      </p>
     </div>
 
     <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -969,6 +1065,9 @@ permalink: /wedding/
         var lightboxClose = document.getElementById("lightboxClose");
         var lightboxPrev = document.getElementById("lightboxPrev");
         var lightboxNext = document.getElementById("lightboxNext");
+        var musicToggle = document.getElementById("musicToggle");
+        var musicToggleText = document.getElementById("musicToggleText");
+        var weddingBgm = document.getElementById("weddingBgm");
 
         var firebaseReady = false;
         var db = null;
@@ -980,6 +1079,8 @@ permalink: /wedding/
         var lightboxHistoryActive = false;
         var touchStartX = 0;
         var touchStartY = 0;
+        var musicIsPlaying = false;
+        var musicUserPaused = false;
 
         function readLocal(key) {
           try {
@@ -1158,7 +1259,7 @@ permalink: /wedding/
         }
 
         function initIntro() {
-          var text = "김현진 ❤ 정현영";
+          var text = "정현영 ❤ 김현진";
           var i = 0;
           var interval = setInterval(function () {
             i += 1;
@@ -1171,6 +1272,94 @@ permalink: /wedding/
               }, 700);
             }
           }, 130);
+        }
+
+        function updateMusicButton() {
+          if (!musicToggle || !musicToggleText) {
+            return;
+          }
+          var label = musicIsPlaying ? "배경음악 끄기" : "배경음악 재생";
+          musicToggle.classList.toggle("is-muted", !musicIsPlaying);
+          musicToggle.setAttribute("aria-label", label);
+          musicToggleText.textContent = label;
+        }
+
+        function startMusic() {
+          musicUserPaused = false;
+          if (!weddingBgm) {
+            return;
+          }
+
+          weddingBgm.volume = 0.45;
+          var playPromise = weddingBgm.play();
+          if (!playPromise || typeof playPromise.then !== "function") {
+            musicIsPlaying = true;
+            updateMusicButton();
+            return;
+          }
+
+          playPromise.then(function () {
+            musicIsPlaying = true;
+            updateMusicButton();
+          }).catch(function () {
+            musicIsPlaying = false;
+            updateMusicButton();
+          });
+        }
+
+        function stopMusic() {
+          musicUserPaused = true;
+          musicIsPlaying = false;
+          if (weddingBgm) {
+            weddingBgm.pause();
+          }
+          updateMusicButton();
+        }
+
+        function initMusic() {
+          if (!musicToggle || !weddingBgm) {
+            return;
+          }
+
+          weddingBgm.volume = 0.45;
+
+          weddingBgm.addEventListener("play", function () {
+            musicIsPlaying = true;
+            updateMusicButton();
+          });
+
+          weddingBgm.addEventListener("pause", function () {
+            musicIsPlaying = false;
+            updateMusicButton();
+          });
+
+          musicToggle.addEventListener("click", function () {
+            if (musicIsPlaying) {
+              stopMusic();
+            } else {
+              startMusic();
+            }
+          });
+
+          function handleFirstGesture(event) {
+            if (event && event.target && musicToggle.contains(event.target)) {
+              return;
+            }
+            if (!musicUserPaused && !musicIsPlaying) {
+              startMusic();
+            }
+          }
+
+          document.addEventListener("pointerdown", handleFirstGesture, { capture: true, passive: true });
+          document.addEventListener("click", handleFirstGesture, { capture: true, passive: true });
+          document.addEventListener("touchend", handleFirstGesture, { capture: true, passive: true });
+          document.addEventListener("wheel", handleFirstGesture, { capture: true, passive: true });
+          window.addEventListener("keydown", handleFirstGesture);
+          window.addEventListener("wheel", handleFirstGesture, { passive: true });
+          window.addEventListener("scroll", handleFirstGesture, { passive: true });
+
+          updateMusicButton();
+          startMusic();
         }
 
         function clamp(value, min, max) {
@@ -1510,6 +1699,7 @@ permalink: /wedding/
 
         initScrollReveal();
         initIntro();
+        initMusic();
         initImageZoom();
         initAccounts();
         initFirebase();
