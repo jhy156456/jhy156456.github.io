@@ -10,16 +10,24 @@ permalink: /wedding/
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <title>김현진 ❤ 정현영 결혼식에 초대합니다</title>
     <meta name="description" content="2026년 9월 5일 토요일 오후 3시, 노블발렌티 삼성 5층 샤플홀 모바일 청첩장" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --bg: #fff9fc;
-        --ink: #1f1f1f;
-        --muted: #656b77;
-        --line: #f2dbe6;
+        --bg-page: #e8e6e1;
+        --paper: #fdfcfa;
+        --paper-muted: #f5f3ef;
+        --ink: #1c1b1a;
+        --muted: #5a5652;
+        --line: #dcd7d0;
+        --accent: #5c4a3d;
+        --accent-soft: #ebe6e0;
+        --btn: #3a322c;
         --card: #ffffff;
-        --accent: #ff3f8f;
-        --accent-soft: #ffe3ef;
-        --hero-dark: #161620;
       }
 
       * {
@@ -34,9 +42,11 @@ permalink: /wedding/
 
       body {
         margin: 0;
-        font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+        font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+        font-weight: 400;
         color: var(--ink);
-        background: radial-gradient(circle at top, #fff 0%, #fff6fb 46%, var(--bg) 100%);
+        background: var(--bg-page);
+        -webkit-font-smoothing: antialiased;
       }
 
       .intro {
@@ -48,8 +58,8 @@ permalink: /wedding/
         z-index: 50;
         display: grid;
         place-items: center;
-        background: #111;
-        color: #fff;
+        background: linear-gradient(165deg, #2a2624 0%, #1a1816 100%);
+        color: #f7f4ef;
         margin: 0;
         padding: 0;
         transition: opacity 0.8s ease, visibility 0.8s ease;
@@ -69,27 +79,30 @@ permalink: /wedding/
       }
 
       .intro-label {
-        margin: 0 0 10px;
-        color: #d4d7e7;
-        font-size: 13px;
-        letter-spacing: 1.8px;
+        margin: 0 0 14px;
+        color: rgba(247, 244, 239, 0.55);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.28em;
       }
 
       .intro-title {
         margin: 0;
-        min-height: 40px;
-        font-size: 28px;
-        font-weight: 800;
-        letter-spacing: -0.5px;
+        min-height: 44px;
+        font-family: "Nanum Myeongjo", serif;
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        line-height: 1.45;
       }
 
       .intro-caret {
         display: inline-block;
         width: 2px;
-        height: 26px;
-        margin-left: 3px;
-        background: #ff95c2;
-        vertical-align: -4px;
+        height: 24px;
+        margin-left: 4px;
+        background: rgba(201, 169, 98, 0.85);
+        vertical-align: -3px;
         animation: blink 0.9s infinite;
       }
 
@@ -105,16 +118,16 @@ permalink: /wedding/
 
       .wrap {
         width: 100%;
-        max-width: 460px;
+        max-width: 440px;
         margin: 0 auto;
-        padding: 12px 14px 48px;
+        padding: 10px 16px 56px;
       }
 
       .hero-wrap {
-        border-radius: 24px;
+        border-radius: 2px;
         overflow: hidden;
-        background: transparent;
-        box-shadow: none;
+        background: var(--paper);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
       }
 
       .section.hero-wrap {
@@ -122,7 +135,7 @@ permalink: /wedding/
       }
 
       .hero-body {
-        padding: 19px 16px;
+        padding: 22px 18px 24px;
       }
 
       .hero {
@@ -147,12 +160,50 @@ permalink: /wedding/
 
       
       .section {
-        margin-top: 18px;
-        background: var(--card);
-        border-radius: 20px;
-        padding: 19px 16px;
-        border: 1px solid #fbe5ee;
-        box-shadow: 0 16px 24px rgba(27, 20, 30, 0.06);
+        margin-top: 14px;
+        background: var(--paper);
+        border-radius: 2px;
+        padding: 22px 18px 24px;
+        border: 1px solid var(--line);
+        box-shadow: 0 12px 28px rgba(28, 24, 20, 0.04);
+      }
+
+      .section--muted {
+        background: var(--paper-muted);
+      }
+
+      .section-head {
+        margin-bottom: 14px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .section-kicker {
+        margin: 0 0 6px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        color: #8a847c;
+        text-transform: uppercase;
+      }
+
+      .hero-names {
+        margin: 0 0 8px;
+        font-family: "Nanum Myeongjo", serif;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        text-align: center;
+        color: var(--ink);
+      }
+
+      .hero-tagline {
+        margin: 0 0 16px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--muted);
+        line-height: 1.65;
       }
 
       .reveal {
@@ -167,57 +218,115 @@ permalink: /wedding/
       }
 
       .title {
-        margin: 0 0 12px;
-        font-size: 23px;
-        font-weight: 800;
-        letter-spacing: -0.4px;
+        margin: 0;
+        font-family: "Nanum Myeongjo", serif;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.35;
+        color: var(--ink);
+      }
+
+      .section-head .title {
+        font-size: 19px;
       }
 
       .subtitle {
         margin: 0;
         color: var(--muted);
-        line-height: 1.7;
+        line-height: 1.85;
+        font-size: 14px;
+        font-weight: 400;
       }
 
       .rsvp-submit-hint {
         margin: 14px 0 0;
         min-height: 1.4em;
-        font-size: 15px;
-        font-weight: 600;
-        color: #365a9e;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--accent);
       }
 
       .date-box {
-        margin-top: 12px;
-        border: 1px solid #f6d9e7;
-        border-radius: 14px;
-        padding: 14px;
-        background: linear-gradient(180deg, #fff, #fff9fc);
+        margin-top: 0;
+        border: 1px solid var(--line);
+        border-radius: 2px;
+        padding: 16px 14px;
+        background: #faf8f5;
       }
 
       .date-main {
         margin: 0;
-        font-size: 22px;
-        font-weight: 900;
-        letter-spacing: -0.3px;
+        font-family: "Nanum Myeongjo", serif;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        text-align: center;
       }
 
       .date-sub {
-        margin: 6px 0 0;
-        color: #444;
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        text-align: center;
       }
 
       .place {
-        margin-top: 8px;
-        padding-top: 8px;
+        margin-top: 10px;
+        padding-top: 10px;
         border-top: 1px dashed var(--line);
       }
 
       .map img {
-        margin-top: 10px;
+        margin-top: 12px;
         width: 100%;
-        border-radius: 12px;
-        border: 1px solid #efd7e5;
+        border-radius: 2px;
+        border: 1px solid var(--line);
+      }
+
+      .gallery-shelf {
+        display: flex;
+        justify-content: center;
+        margin-top: 16px;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 76px);
+        gap: 5px;
+      }
+
+      @media (min-width: 360px) {
+        .gallery-grid {
+          grid-template-columns: repeat(3, 82px);
+          gap: 6px;
+        }
+      }
+
+      .gallery-tile {
+        margin: 0;
+        padding: 0;
+        border-radius: 2px;
+        overflow: hidden;
+        width: 76px;
+        height: 76px;
+        background: #e5e2dd;
+      }
+
+      @media (min-width: 360px) {
+        .gallery-tile {
+          width: 82px;
+          height: 82px;
+        }
+      }
+
+      .gallery-tile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        cursor: zoom-in;
+        transform: scale(1.02);
       }
 
       .traffic p {
@@ -230,10 +339,11 @@ permalink: /wedding/
       }
 
       .contact-box {
-        margin-top: 12px;
-        border-radius: 14px;
-        background: #f9fbff;
-        padding: 12px;
+        margin-top: 14px;
+        border-radius: 2px;
+        background: #f3f1ed;
+        padding: 14px 12px;
+        border: 1px solid var(--line);
       }
 
       .contact-box p {
@@ -260,10 +370,10 @@ permalink: /wedding/
       .guest-form input,
       .guest-form textarea {
         width: 100%;
-        border: 1px solid #e3e3e3;
-        border-radius: 10px;
+        border: 1px solid var(--line);
+        border-radius: 2px;
         font-size: 15px;
-        padding: 11px 12px;
+        padding: 12px 12px;
         margin-top: 8px;
         background: #fff;
       }
@@ -291,21 +401,21 @@ permalink: /wedding/
 
       .radio-label {
         display: block;
-        border: 1px solid #e6dce2;
-        border-radius: 12px;
+        border: 1px solid var(--line);
+        border-radius: 2px;
         padding: 12px 10px;
         text-align: center;
-        font-weight: 700;
+        font-weight: 600;
         cursor: pointer;
         background: #fff;
-        color: #525a66;
-        transition: all 0.2s ease;
+        color: var(--muted);
+        transition: border-color 0.2s ease, background 0.2s ease;
       }
 
       .radio-card input[type="radio"]:checked + .radio-label {
         border-color: var(--accent);
         background: var(--accent-soft);
-        color: #b41f62;
+        color: var(--ink);
       }
 
       .btn-row {
@@ -316,21 +426,26 @@ permalink: /wedding/
 
       .btn {
         border: 0;
-        border-radius: 12px;
-        padding: 12px 14px;
-        font-weight: 700;
+        border-radius: 2px;
+        padding: 13px 14px;
+        font-weight: 600;
         cursor: pointer;
+        letter-spacing: 0.02em;
       }
 
       .btn-primary {
-        background: linear-gradient(90deg, #ff3f8f 0%, #ff78b1 100%);
-        color: #fff;
+        background: var(--btn);
+        color: #faf8f5;
         flex: 1;
       }
 
+      .btn-primary:active {
+        opacity: 0.92;
+      }
+
       .btn-light {
-        background: var(--primary-soft);
-        color: #b21657;
+        background: var(--accent-soft);
+        color: var(--accent);
       }
 
       .guest-list {
@@ -341,10 +456,10 @@ permalink: /wedding/
 
       .guest-item {
         border: 1px solid var(--line);
-        border-radius: 12px;
-        padding: 11px 12px;
+        border-radius: 2px;
+        padding: 12px 12px;
         margin-top: 8px;
-        background: linear-gradient(180deg, #fff, #fffafd);
+        background: #fff;
       }
 
       .guest-head {
@@ -389,12 +504,13 @@ permalink: /wedding/
       }
 
       .status-line {
-        margin-top: 10px;
-        padding: 10px 12px;
-        border-radius: 10px;
-        background: #f8fafd;
-        color: #4d4d55;
-        font-size: 13px;
+        margin-top: 12px;
+        padding: 11px 12px;
+        border-radius: 2px;
+        background: #f0eeea;
+        color: var(--muted);
+        font-size: 12px;
+        border: 1px solid var(--line);
       }
 
       .empty {
@@ -403,10 +519,11 @@ permalink: /wedding/
       }
 
       .footer {
-        margin-top: 20px;
+        margin-top: 28px;
         text-align: center;
-        color: #8b8b8b;
-        font-size: 12px;
+        color: #9a958e;
+        font-size: 11px;
+        letter-spacing: 0.06em;
       }
 
       .lightbox {
@@ -442,6 +559,7 @@ permalink: /wedding/
         transition: transform 0.08s linear;
         touch-action: none;
         user-select: none;
+        image-orientation: from-image;
       }
 
       .lightbox-close {
@@ -464,7 +582,7 @@ permalink: /wedding/
   <body>
     <div class="intro" id="intro">
       <div class="intro-inner">
-        <p class="intro-label">WEDDING INVITATION</p>
+        <p class="intro-label">모바일 청첩장</p>
         <h2 class="intro-title"><span id="introTyped"></span><span class="intro-caret"></span></h2>
       </div>
     </div>
@@ -472,14 +590,11 @@ permalink: /wedding/
     <div class="wrap">
       <section class="section hero-wrap reveal">
         <div class="hero">
-          <img src="/assets/images/wedding/invitation-hero.png" alt="김현진 정현영 결혼식 캐릭터 메인" />
+          <img src="{{ '/assets/images/wedding/invitation-hero.png' | relative_url }}" alt="김현진 · 정현영" />
         </div>
         <div class="hero-body">
-          <h1 class="title">김현진 ❤ 정현영 결혼합니다</h1>
-          <p class="subtitle">
-            서로를 믿고 호흡을 맞추는 투수와 포수처럼<br />
-            저희 두 사람도 하나의 팀이 되어 인생의 새로운 이닝을 시작하려 합니다.
-          </p>
+          <p class="hero-names">김현진 · 정현영</p>
+          <p class="hero-tagline">저희 두 사람의 새로운 시작에 함께해 주세요.</p>
           <div class="date-box">
             <p class="date-main">2026년 9월 5일 (토) 오후 3시</p>
             <p class="date-sub">노블발렌티 삼성 5층 샤플홀</p>
@@ -488,10 +603,52 @@ permalink: /wedding/
         </div>
       </section>
 
-      <section class="section map reveal">
-        <h2 class="title">오시는 길</h2>
+      <section class="section section--muted reveal">
+        <header class="section-head">
+          <p class="section-kicker">인사말</p>
+          <h2 class="title">저희에게 찾아와 주셔서 감사합니다</h2>
+        </header>
+        <p class="subtitle">
+          서로를 믿고 호흡을 맞추는 투수와 포수처럼, 저희 두 사람도 하나의 팀이 되어 인생의 새로운 이닝을 시작하려 합니다. 바쁘시더라도 참석해 주시면 큰 기쁨이겠습니다.
+        </p>
+      </section>
+
+      <section class="section reveal">
+        <header class="section-head">
+          <p class="section-kicker">갤러리</p>
+          <h2 class="title">우리의 순간들</h2>
+        </header>
+        <p class="subtitle">썸네일을 누르면 원본(고해상도) 사진으로 크게 보실 수 있습니다.</p>
+        <div class="gallery-shelf">
+        <div class="gallery-grid" id="weddingGallery">
+          {% assign gallery_ids = "01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18" | split: "," %}
+          {% for gid in gallery_ids %}
+          {% assign thumb_src = '/assets/images/wedding/gallery/thumbs/gallery-' | append: gid | append: '.jpg' | relative_url %}
+          {% assign full_src = '/assets/images/wedding/gallery/gallery-' | append: gid | append: '.jpg' | relative_url %}
+          <figure class="gallery-tile">
+            <img
+              src="{{ thumb_src }}"
+              data-full="{{ full_src }}"
+              alt="웨딩 사진 {{ forloop.index }}"
+              width="82"
+              height="82"
+              loading="lazy"
+              decoding="async"
+              fetchpriority="low"
+            />
+          </figure>
+          {% endfor %}
+        </div>
+        </div>
+      </section>
+
+      <section class="section reveal">
+        <header class="section-head">
+          <p class="section-kicker">오시는 길</p>
+          <h2 class="title">노블발렌티 삼성</h2>
+        </header>
         <p class="subtitle">지도를 눌러 확대해서 확인해 주세요.</p>
-        <img src="/assets/images/wedding/invitation-map.png" alt="노블발렌티 삼성 오시는 길 안내 지도" />
+        <img src="{{ '/assets/images/wedding/invitation-map.png' | relative_url }}" alt="노블발렌티 삼성 오시는 길 안내 지도" />
         <div class="traffic">
           <p><b>지하철</b> 9호선 봉은사역 4번 출구 도보 약 4분</p>
           <p><b>버스</b> 봉은사역 정류장 하차 후 도보 이동</p>
@@ -506,7 +663,10 @@ permalink: /wedding/
       </section>
 
       <section class="section reveal">
-        <h2 class="title">참석 여부 전달</h2>
+        <header class="section-head">
+          <p class="section-kicker">참석 여부</p>
+          <h2 class="title">참석 여부를 알려 주세요</h2>
+        </header>
         <p class="subtitle">
           참석/불참 여부를 남겨 주시면 더 정성껏 준비하겠습니다. 등록 내용은 화면에 공개되지 않으며, 주최 측에서만 확인합니다.
         </p>
@@ -531,8 +691,11 @@ permalink: /wedding/
       </section>
 
       <section class="section reveal">
-        <h2 class="title">방명록</h2>
-        <p class="subtitle">축하 메시지를 남겨 주세요. (실시간 반영)</p>
+        <header class="section-head">
+          <p class="section-kicker">방명록</p>
+          <h2 class="title">축하의 한 마디</h2>
+        </header>
+        <p class="subtitle">축하 메시지를 남겨 주세요. 실시간으로 함께 보입니다.</p>
 
         <form class="guest-form" id="guestForm">
           <input id="guestName" type="text" maxlength="20" placeholder="이름" required />
@@ -546,7 +709,7 @@ permalink: /wedding/
         <p class="status-line" id="syncStatus">데이터 서버 연결을 확인하는 중입니다.</p>
       </section>
 
-      <p class="footer">Wedding Invitation © 2026</p>
+      <p class="footer">김현진 · 정현영 의 결혼식에 초대합니다</p>
     </div>
 
     <div class="lightbox" id="lightbox" aria-hidden="true">
@@ -623,8 +786,8 @@ permalink: /wedding/
 
         function setStatus(text, isWarning) {
           syncStatus.textContent = text;
-          syncStatus.style.color = isWarning ? "#b05a00" : "#365a9e";
-          syncStatus.style.background = isWarning ? "#fff5e9" : "#eef4ff";
+          syncStatus.style.color = isWarning ? "#5c4033" : "#3a3632";
+          syncStatus.style.background = isWarning ? "#f3ebe3" : "#ebe8e3";
         }
 
         function renderGuestbook(entries) {
@@ -823,10 +986,11 @@ permalink: /wedding/
         }
 
         function initImageZoom() {
-          var clickableImages = document.querySelectorAll(".hero img, .map img");
+          var clickableImages = document.querySelectorAll(".hero img, .map img, .gallery-tile img");
           clickableImages.forEach(function (img) {
             img.addEventListener("click", function () {
-              openLightbox(img.src, img.alt);
+              var full = img.getAttribute("data-full");
+              openLightbox(full && full.length ? full : img.src, img.alt);
             });
           });
 
