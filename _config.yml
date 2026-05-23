@@ -35,14 +35,11 @@ links:
   - name: 기록
     url: /archives
   #   external:     false
-  # - name:         标签
+  # - name:         태그
   #   url:          /tags
   #   external:     false
   - name: About Me
     url: /about
-    external: false
-  - name: 청첩장
-    url: /wedding
     external: false
 # ------------ CONFIGURABLE END ------------
 pagination:

@@ -18,15 +18,15 @@ permalink: /wedding/
     />
     <style>
       :root {
-        --bg-page: #e8e6e1;
-        --paper: #fdfcfa;
-        --paper-muted: #f5f3ef;
+        --bg-page: #eeeeec;
+        --paper: #ffffff;
+        --paper-muted: #fbfaf8;
         --ink: #1c1b1a;
-        --muted: #5a5652;
-        --line: #dcd7d0;
-        --accent: #5c4a3d;
-        --accent-soft: #ebe6e0;
-        --btn: #3a322c;
+        --muted: #595550;
+        --line: #e4e0da;
+        --accent: #22201e;
+        --accent-soft: #f2efeb;
+        --btn: #22201e;
         --card: #ffffff;
       }
 
@@ -38,6 +38,10 @@ permalink: /wedding/
       body {
         width: 100%;
         overflow-x: hidden;
+      }
+
+      html {
+        overflow-wrap: anywhere;
       }
 
       body {
@@ -58,7 +62,7 @@ permalink: /wedding/
         z-index: 50;
         display: grid;
         place-items: center;
-        background: linear-gradient(165deg, #2a2624 0%, #1a1816 100%);
+        background: #171514;
         color: #f7f4ef;
         margin: 0;
         padding: 0;
@@ -118,16 +122,14 @@ permalink: /wedding/
 
       .wrap {
         width: 100%;
-        max-width: 440px;
+        max-width: 430px;
         margin: 0 auto;
-        padding: 10px 16px 56px;
+        padding: 0 0 56px;
       }
 
       .hero-wrap {
-        border-radius: 2px;
         overflow: hidden;
         background: var(--paper);
-        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
       }
 
       .section.hero-wrap {
@@ -135,7 +137,7 @@ permalink: /wedding/
       }
 
       .hero-body {
-        padding: 22px 18px 24px;
+        padding: 0 18px 24px;
       }
 
       .hero {
@@ -143,7 +145,9 @@ permalink: /wedding/
       }
 
       .hero img {
-        width: 100%;
+        width: auto;
+        max-width: 100%;
+        margin: 0 auto;
         display: block;
         object-fit: contain;
         transform: translateY(28px) scale(0.96);
@@ -160,12 +164,14 @@ permalink: /wedding/
 
       
       .section {
-        margin-top: 14px;
+        margin-top: 10px;
+        margin-right: auto;
+        margin-left: auto;
+        max-width: 352px;
         background: var(--paper);
-        border-radius: 2px;
-        padding: 22px 18px 24px;
-        border: 1px solid var(--line);
-        box-shadow: 0 12px 28px rgba(28, 24, 20, 0.04);
+        padding: 34px 18px 36px;
+        border: 0;
+        border-top: 1px solid var(--line);
       }
 
       .section--muted {
@@ -173,22 +179,21 @@ permalink: /wedding/
       }
 
       .section-head {
-        margin-bottom: 14px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid var(--line);
+        margin-bottom: 18px;
+        padding-bottom: 0;
+        text-align: center;
       }
 
       .section-kicker {
-        margin: 0 0 6px;
+        margin: 0 0 8px;
         font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.22em;
-        color: #8a847c;
-        text-transform: uppercase;
+        font-weight: 400;
+        letter-spacing: 0.18em;
+        color: #9a938b;
       }
 
       .hero-names {
-        margin: 0 0 8px;
+        margin: 16px 0 8px;
         font-family: "Nanum Myeongjo", serif;
         font-size: 22px;
         font-weight: 700;
@@ -220,9 +225,9 @@ permalink: /wedding/
       .title {
         margin: 0;
         font-family: "Nanum Myeongjo", serif;
-        font-size: 20px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
+        font-size: 21px;
+        font-weight: 600;
+        letter-spacing: 0;
         line-height: 1.35;
         color: var(--ink);
       }
@@ -234,9 +239,12 @@ permalink: /wedding/
       .subtitle {
         margin: 0;
         color: var(--muted);
-        line-height: 1.85;
+        line-height: 2;
         font-size: 14px;
         font-weight: 400;
+        text-align: center;
+        overflow-wrap: anywhere;
+        word-break: break-all;
       }
 
       .rsvp-submit-hint {
@@ -278,10 +286,46 @@ permalink: /wedding/
       }
 
       .map img {
-        margin-top: 12px;
+        margin-top: 16px;
         width: 100%;
+        display: block;
         border-radius: 2px;
         border: 1px solid var(--line);
+      }
+
+      .map-card {
+        overflow: hidden;
+      }
+
+      .map-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .map-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        border: 1px solid var(--line);
+        border-radius: 2px;
+        padding: 12px 8px;
+        background: #fff;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .map-link svg,
+      .copy-account svg {
+        width: 16px;
+        height: 16px;
+        flex: 0 0 auto;
+        stroke: currentColor;
       }
 
       .gallery-shelf {
@@ -292,14 +336,16 @@ permalink: /wedding/
 
       .gallery-grid {
         display: grid;
-        grid-template-columns: repeat(3, 76px);
-        gap: 5px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+        width: min(100%, 270px);
       }
 
       @media (min-width: 360px) {
         .gallery-grid {
-          grid-template-columns: repeat(3, 82px);
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 6px;
+          width: min(100%, 288px);
         }
       }
 
@@ -308,15 +354,16 @@ permalink: /wedding/
         padding: 0;
         border-radius: 2px;
         overflow: hidden;
-        width: 76px;
-        height: 76px;
+        width: 100%;
+        aspect-ratio: 1;
+        height: auto;
         background: #e5e2dd;
       }
 
       @media (min-width: 360px) {
         .gallery-tile {
-          width: 82px;
-          height: 82px;
+          width: 100%;
+          height: auto;
         }
       }
 
@@ -330,37 +377,118 @@ permalink: /wedding/
       }
 
       .traffic p {
-        margin: 8px 0;
-        line-height: 1.6;
+        margin: 10px 0;
+        line-height: 1.75;
       }
 
       .traffic b {
         color: #000;
       }
 
-      .contact-box {
-        margin-top: 14px;
+      .account-box {
+        margin-top: 4px;
         border-radius: 2px;
-        background: #f3f1ed;
-        padding: 14px 12px;
-        border: 1px solid var(--line);
+        background: transparent;
+        padding: 0;
+        border: 0;
       }
 
-      .contact-box p {
+      .account-box p {
         margin: 6px 0;
       }
 
       .account-list {
-        margin: 12px 0 0;
+        margin: 14px 0 0;
         padding: 0;
         list-style: none;
       }
 
       .account-list li {
         margin: 8px 0;
-        padding: 11px 12px;
+        padding: 0;
+        border: 0;
+        border-radius: 2px;
+      }
+
+      .account-group {
+        margin-top: 12px;
         border: 1px solid var(--line);
-        border-radius: 10px;
+        background: #fff;
+      }
+
+      .account-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        width: 100%;
+        border: 0;
+        padding: 14px 14px;
+        background: transparent;
+        color: var(--ink);
+        font-size: 15px;
+        font-weight: 700;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .account-summary::after {
+        content: "+";
+        color: #8a847c;
+        font-weight: 400;
+      }
+
+      .account-group.open .account-summary::after {
+        content: "-";
+      }
+
+      .account-panel {
+        display: none;
+        padding: 0 14px 14px;
+      }
+
+      .account-group.open .account-panel {
+        display: block;
+      }
+
+      .account-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        align-items: center;
+        padding: 10px 0;
+        border-top: 1px solid #efede9;
+        text-align: left;
+      }
+
+      .account-owner {
+        margin: 0 0 4px;
+        font-weight: 700;
+      }
+
+      .account-number {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .account-empty {
+        color: #9a958e;
+      }
+
+      .copy-account {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border: 1px solid var(--line);
+        border-radius: 2px;
+        padding: 8px 9px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
       }
 
       .guest-form {
@@ -503,16 +631,6 @@ permalink: /wedding/
         color: #b73131;
       }
 
-      .status-line {
-        margin-top: 12px;
-        padding: 11px 12px;
-        border-radius: 2px;
-        background: #f0eeea;
-        color: var(--muted);
-        font-size: 12px;
-        border: 1px solid var(--line);
-      }
-
       .empty {
         color: #8d8d8d;
         font-size: 14px;
@@ -577,6 +695,34 @@ permalink: /wedding/
         line-height: 1;
         cursor: pointer;
       }
+
+      .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        font-size: 30px;
+        line-height: 1;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+
+      .lightbox-prev {
+        left: 10px;
+      }
+
+      .lightbox-next {
+        right: 10px;
+      }
+
+      .lightbox-nav[hidden] {
+        display: none;
+      }
     </style>
   </head>
   <body>
@@ -590,22 +736,13 @@ permalink: /wedding/
     <div class="wrap">
       <section class="section hero-wrap reveal">
         <div class="hero">
-          <img src="{{ '/assets/images/wedding/invitation-hero.png' | relative_url }}" alt="김현진 · 정현영" />
-        </div>
-        <div class="hero-body">
-          <p class="hero-names">김현진 · 정현영</p>
-          <p class="hero-tagline">저희 두 사람의 새로운 시작에 함께해 주세요.</p>
-          <div class="date-box">
-            <p class="date-main">2026년 9월 5일 (토) 오후 3시</p>
-            <p class="date-sub">노블발렌티 삼성 5층 샤플홀</p>
-            <p class="date-sub place">서울 강남구 봉은사로 637</p>
-          </div>
+          <img src="{{ '/assets/images/wedding/invitation-main.png' | relative_url }}" alt="김현진 · 정현영 모바일 청첩장" />
         </div>
       </section>
 
       <section class="section section--muted reveal">
         <header class="section-head">
-          <p class="section-kicker">인사말</p>
+          <p class="section-kicker">Invitation</p>
           <h2 class="title">저희에게 찾아와 주셔서 감사합니다</h2>
         </header>
         <p class="subtitle">
@@ -615,10 +752,9 @@ permalink: /wedding/
 
       <section class="section reveal">
         <header class="section-head">
-          <p class="section-kicker">갤러리</p>
+          <p class="section-kicker">Gallery</p>
           <h2 class="title">우리의 순간들</h2>
         </header>
-        <p class="subtitle">썸네일을 누르면 원본(고해상도) 사진으로 크게 보실 수 있습니다.</p>
         <div class="gallery-shelf">
         <div class="gallery-grid" id="weddingGallery">
           {% assign gallery_ids = "01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18" | split: "," %}
@@ -642,29 +778,109 @@ permalink: /wedding/
         </div>
       </section>
 
-      <section class="section reveal">
+      <section class="section map-card reveal">
         <header class="section-head">
-          <p class="section-kicker">오시는 길</p>
+          <p class="section-kicker">Location</p>
           <h2 class="title">노블발렌티 삼성</h2>
         </header>
-        <p class="subtitle">지도를 눌러 확대해서 확인해 주세요.</p>
-        <img src="{{ '/assets/images/wedding/invitation-map.png' | relative_url }}" alt="노블발렌티 삼성 오시는 길 안내 지도" />
+        <div class="map">
+          <img src="{{ '/assets/images/wedding/invitation-map.png' | relative_url }}" alt="노블발렌티 삼성 오시는 길 안내 지도" />
+        </div>
+        <div class="map-actions" aria-label="지도 앱으로 보기">
+          <a class="map-link" href="https://map.naver.com/p/search/%EB%85%B8%EB%B8%94%EB%B0%9C%EB%A0%8C%ED%8B%B0%20%EC%82%BC%EC%84%B1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 21s6-5.1 6-11a6 6 0 0 0-12 0c0 5.9 6 11 6 11Z" />
+              <circle cx="12" cy="10" r="2.3" />
+            </svg>
+            네이버지도
+          </a>
+          <a class="map-link" href="https://map.kakao.com/link/search/%EB%85%B8%EB%B8%94%EB%B0%9C%EB%A0%8C%ED%8B%B0%20%EC%82%BC%EC%84%B1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m5 12 14-7-7 14-2-7-5-0Z" />
+            </svg>
+            카카오맵
+          </a>
+        </div>
         <div class="traffic">
           <p><b>지하철</b> 9호선 봉은사역 4번 출구 도보 약 4분</p>
           <p><b>버스</b> 봉은사역 정류장 하차 후 도보 이동</p>
           <p><b>자가용</b> 내비게이션: 노블발렌티 삼성 검색</p>
           <p><b>주차</b> 제2주차장: 봉은사로 610 우드림</p>
         </div>
-        <div class="contact-box">
-          <p><b>마음 전하실 곳</b></p>
-          <p>신랑측: 1002-833-665297 우리은행 정현영</p>
-          <p>신부측: 847-910214-2507 하나은행 김현진</p>
+      </section>
+
+      <section class="section reveal">
+        <header class="section-head">
+          <p class="section-kicker">Remittance</p>
+          <h2 class="title">마음 전하실 곳</h2>
+        </header>
+        <div class="account-box">
+          <div class="account-group open">
+            <button class="account-summary" type="button" aria-expanded="true">신랑측 계좌번호</button>
+            <div class="account-panel">
+              <div class="account-row">
+                <div>
+                  <p class="account-owner">신랑 정현영</p>
+                  <p class="account-number">우리은행 1002-833-665297</p>
+                </div>
+                <button class="copy-account" type="button" data-copy="1002833665297">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="8" y="8" width="10" height="10" rx="1.5" />
+                    <path d="M6 14H5a1 1 0 0 1-1-1V6a2 2 0 0 1 2-2h7a1 1 0 0 1 1 1v1" />
+                  </svg>
+                  복사
+                </button>
+              </div>
+              <div class="account-row">
+                <div>
+                  <p class="account-owner">아버지 정해종</p>
+                  <p class="account-number account-empty">계좌번호 확인 중</p>
+                </div>
+              </div>
+              <div class="account-row">
+                <div>
+                  <p class="account-owner">어머니 이희숙</p>
+                  <p class="account-number account-empty">계좌번호 확인 중</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="account-group open">
+            <button class="account-summary" type="button" aria-expanded="true">신부측 계좌번호</button>
+            <div class="account-panel">
+              <div class="account-row">
+                <div>
+                  <p class="account-owner">신부 김현진</p>
+                  <p class="account-number">하나은행 847-910214-2507</p>
+                </div>
+                <button class="copy-account" type="button" data-copy="8479102142507">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="8" y="8" width="10" height="10" rx="1.5" />
+                    <path d="M6 14H5a1 1 0 0 1-1-1V6a2 2 0 0 1 2-2h7a1 1 0 0 1 1 1v1" />
+                  </svg>
+                  복사
+                </button>
+              </div>
+              <div class="account-row">
+                <div>
+                  <p class="account-owner">아버지 김상수</p>
+                  <p class="account-number account-empty">계좌번호 확인 중</p>
+                </div>
+              </div>
+              <div class="account-row">
+                <div>
+                  <p class="account-owner">어머니 김정숙</p>
+                  <p class="account-number account-empty">계좌번호 확인 중</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       <section class="section reveal">
         <header class="section-head">
-          <p class="section-kicker">참석 여부</p>
+          <p class="section-kicker">RSVP</p>
           <h2 class="title">참석 여부를 알려 주세요</h2>
         </header>
         <p class="subtitle">
@@ -692,10 +908,10 @@ permalink: /wedding/
 
       <section class="section reveal">
         <header class="section-head">
-          <p class="section-kicker">방명록</p>
+          <p class="section-kicker">Guestbook</p>
           <h2 class="title">축하의 한 마디</h2>
         </header>
-        <p class="subtitle">축하 메시지를 남겨 주세요. 실시간으로 함께 보입니다.</p>
+        <p class="subtitle">축하 메시지를 남겨 주세요.</p>
 
         <form class="guest-form" id="guestForm">
           <input id="guestName" type="text" maxlength="20" placeholder="이름" required />
@@ -706,7 +922,6 @@ permalink: /wedding/
         </form>
 
         <ul class="guest-list" id="guestList"></ul>
-        <p class="status-line" id="syncStatus">데이터 서버 연결을 확인하는 중입니다.</p>
       </section>
 
       <p class="footer">김현진 · 정현영 의 결혼식에 초대합니다</p>
@@ -715,7 +930,9 @@ permalink: /wedding/
     <div class="lightbox" id="lightbox" aria-hidden="true">
       <div class="lightbox-stage" id="lightboxStage">
         <button class="lightbox-close" id="lightboxClose" type="button" aria-label="닫기">×</button>
+        <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="이전 사진" hidden>‹</button>
         <img class="lightbox-img" id="lightboxImg" src="" alt="확대된 이미지" />
+        <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="다음 사진" hidden>›</button>
       </div>
     </div>
 
@@ -740,7 +957,6 @@ permalink: /wedding/
         var guestNameInput = document.getElementById("guestName");
         var guestMessageInput = document.getElementById("guestMessage");
         var guestList = document.getElementById("guestList");
-        var syncStatus = document.getElementById("syncStatus");
 
         var rsvpForm = document.getElementById("rsvpForm");
         var rsvpNameInput = document.getElementById("rsvpName");
@@ -751,12 +967,19 @@ permalink: /wedding/
         var lightbox = document.getElementById("lightbox");
         var lightboxImg = document.getElementById("lightboxImg");
         var lightboxClose = document.getElementById("lightboxClose");
+        var lightboxPrev = document.getElementById("lightboxPrev");
+        var lightboxNext = document.getElementById("lightboxNext");
 
         var firebaseReady = false;
         var db = null;
         var zoomScale = 1;
         var startDistance = 0;
         var startScale = 1;
+        var galleryItems = [];
+        var currentGalleryIndex = -1;
+        var lightboxHistoryActive = false;
+        var touchStartX = 0;
+        var touchStartY = 0;
 
         function readLocal(key) {
           try {
@@ -784,11 +1007,7 @@ permalink: /wedding/
           return y + "." + m + "." + d + " " + h + ":" + min;
         }
 
-        function setStatus(text, isWarning) {
-          syncStatus.textContent = text;
-          syncStatus.style.color = isWarning ? "#5c4033" : "#3a3632";
-          syncStatus.style.background = isWarning ? "#f3ebe3" : "#ebe8e3";
-        }
+        function setStatus() {}
 
         function renderGuestbook(entries) {
           guestList.innerHTML = "";
@@ -906,7 +1125,7 @@ permalink: /wedding/
             }
             db = firebase.database();
             firebaseReady = true;
-            setStatus("Firebase 실시간 연동 중입니다.", false);
+            setStatus();
             loadAndWatchFirebase();
           } catch (error) {
             firebaseReady = false;
@@ -968,33 +1187,88 @@ permalink: /wedding/
           lightboxImg.style.transform = "scale(" + zoomScale + ")";
         }
 
-        function openLightbox(src, alt) {
+        function updateLightboxNav() {
+          var hasGallery = currentGalleryIndex > -1 && galleryItems.length > 1;
+          lightboxPrev.hidden = !hasGallery;
+          lightboxNext.hidden = !hasGallery;
+        }
+
+        function showGalleryImage(index) {
+          if (!galleryItems.length) {
+            return;
+          }
+          currentGalleryIndex = (index + galleryItems.length) % galleryItems.length;
+          lightboxImg.src = galleryItems[currentGalleryIndex].src;
+          lightboxImg.alt = galleryItems[currentGalleryIndex].alt || "확대 이미지";
+          zoomScale = 1;
+          applyZoom();
+          updateLightboxNav();
+        }
+
+        function openLightbox(src, alt, galleryIndex, skipHistory) {
+          currentGalleryIndex = typeof galleryIndex === "number" ? galleryIndex : -1;
           lightboxImg.src = src;
           lightboxImg.alt = alt || "확대 이미지";
           zoomScale = 1;
           applyZoom();
+          updateLightboxNav();
           lightbox.classList.add("show");
           lightbox.setAttribute("aria-hidden", "false");
           document.body.style.overflow = "hidden";
+          if (!skipHistory && !lightboxHistoryActive && window.history && window.history.pushState) {
+            window.history.pushState({ weddingLightbox: true }, "", "#photo");
+            lightboxHistoryActive = true;
+          }
         }
 
-        function closeLightbox() {
+        function closeLightbox(skipHistory) {
+          if (!skipHistory && lightboxHistoryActive && window.history) {
+            window.history.back();
+            return;
+          }
           lightbox.classList.remove("show");
           lightbox.setAttribute("aria-hidden", "true");
           document.body.style.overflow = "";
           lightboxImg.src = "";
+          currentGalleryIndex = -1;
+          updateLightboxNav();
+          lightboxHistoryActive = false;
         }
 
         function initImageZoom() {
-          var clickableImages = document.querySelectorAll(".hero img, .map img, .gallery-tile img");
-          clickableImages.forEach(function (img) {
+          var galleryImages = document.querySelectorAll(".gallery-tile img");
+          galleryItems = Array.prototype.map.call(galleryImages, function (img) {
+            return {
+              src: img.getAttribute("data-full") || img.src,
+              alt: img.alt
+            };
+          });
+
+          galleryImages.forEach(function (img, index) {
+            img.addEventListener("click", function () {
+              openLightbox(galleryItems[index].src, galleryItems[index].alt, index);
+            });
+          });
+
+          document.querySelectorAll(".hero img, .map img").forEach(function (img) {
             img.addEventListener("click", function () {
               var full = img.getAttribute("data-full");
               openLightbox(full && full.length ? full : img.src, img.alt);
             });
           });
 
-          lightboxClose.addEventListener("click", closeLightbox);
+          lightboxPrev.addEventListener("click", function () {
+            showGalleryImage(currentGalleryIndex - 1);
+          });
+
+          lightboxNext.addEventListener("click", function () {
+            showGalleryImage(currentGalleryIndex + 1);
+          });
+
+          lightboxClose.addEventListener("click", function () {
+            closeLightbox();
+          });
+
           lightbox.addEventListener("click", function (event) {
             if (event.target === lightbox || event.target.id === "lightboxStage") {
               closeLightbox();
@@ -1002,8 +1276,21 @@ permalink: /wedding/
           });
 
           document.addEventListener("keydown", function (event) {
-            if (event.key === "Escape" && lightbox.classList.contains("show")) {
+            if (!lightbox.classList.contains("show")) {
+              return;
+            }
+            if (event.key === "Escape") {
               closeLightbox();
+            } else if (event.key === "ArrowLeft" && currentGalleryIndex > -1) {
+              showGalleryImage(currentGalleryIndex - 1);
+            } else if (event.key === "ArrowRight" && currentGalleryIndex > -1) {
+              showGalleryImage(currentGalleryIndex + 1);
+            }
+          });
+
+          window.addEventListener("popstate", function () {
+            if (lightbox.classList.contains("show")) {
+              closeLightbox(true);
             }
           });
 
@@ -1029,6 +1316,9 @@ permalink: /wedding/
               if (event.touches.length === 2) {
                 startDistance = getDistance(event.touches[0], event.touches[1]);
                 startScale = zoomScale;
+              } else if (event.touches.length === 1) {
+                touchStartX = event.touches[0].clientX;
+                touchStartY = event.touches[0].clientY;
               }
             },
             { passive: true }
@@ -1051,7 +1341,20 @@ permalink: /wedding/
 
           lightboxImg.addEventListener(
             "touchend",
-            function () {
+            function (event) {
+              if (
+                currentGalleryIndex > -1 &&
+                event.changedTouches.length === 1 &&
+                zoomScale === 1 &&
+                Math.abs(event.changedTouches[0].clientX - touchStartX) > 50 &&
+                Math.abs(event.changedTouches[0].clientY - touchStartY) < 60
+              ) {
+                if (event.changedTouches[0].clientX < touchStartX) {
+                  showGalleryImage(currentGalleryIndex + 1);
+                } else {
+                  showGalleryImage(currentGalleryIndex - 1);
+                }
+              }
               if (zoomScale < 1) {
                 zoomScale = 1;
                 applyZoom();
@@ -1059,6 +1362,52 @@ permalink: /wedding/
             },
             { passive: true }
           );
+        }
+
+        function copyText(text, button) {
+          function markDone() {
+            var original = button.textContent;
+            button.textContent = "완료";
+            setTimeout(function () {
+              button.textContent = original;
+            }, 1200);
+          }
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(markDone).catch(function () {});
+            return;
+          }
+
+          var temp = document.createElement("textarea");
+          temp.value = text;
+          temp.setAttribute("readonly", "");
+          temp.style.position = "fixed";
+          temp.style.opacity = "0";
+          document.body.appendChild(temp);
+          temp.select();
+          try {
+            document.execCommand("copy");
+            markDone();
+          } catch (error) {
+            console.error(error);
+          }
+          document.body.removeChild(temp);
+        }
+
+        function initAccounts() {
+          document.querySelectorAll(".account-summary").forEach(function (button) {
+            button.addEventListener("click", function () {
+              var group = button.closest(".account-group");
+              var isOpen = group.classList.toggle("open");
+              button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            });
+          });
+
+          document.querySelectorAll(".copy-account").forEach(function (button) {
+            button.addEventListener("click", function () {
+              copyText(button.getAttribute("data-copy"), button);
+            });
+          });
         }
 
         form.addEventListener("submit", function (event) {
@@ -1162,6 +1511,7 @@ permalink: /wedding/
         initScrollReveal();
         initIntro();
         initImageZoom();
+        initAccounts();
         initFirebase();
       })();
     </script>
