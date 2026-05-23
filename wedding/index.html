@@ -323,7 +323,7 @@ permalink: /wedding/
         justify-content: center;
         gap: 7px;
         border: 1px solid var(--line);
-        border-radius: 2px;
+        border-radius: 8px;
         padding: 12px 8px;
         background: #fff;
         color: var(--ink);
@@ -365,7 +365,7 @@ permalink: /wedding/
       .gallery-tile {
         margin: 0;
         padding: 0;
-        border-radius: 2px;
+        border-radius: 6px;
         overflow: hidden;
         width: 100%;
         aspect-ratio: 1;
@@ -426,7 +426,9 @@ permalink: /wedding/
       .account-group {
         margin-top: 12px;
         border: 1px solid var(--line);
+        border-radius: 8px;
         background: #fff;
+        overflow: hidden;
       }
 
       .account-summary {
@@ -495,7 +497,7 @@ permalink: /wedding/
         align-items: center;
         gap: 5px;
         border: 1px solid var(--line);
-        border-radius: 2px;
+        border-radius: 8px;
         padding: 8px 9px;
         background: var(--accent-soft);
         color: var(--accent);
@@ -512,7 +514,7 @@ permalink: /wedding/
       .guest-form textarea {
         width: 100%;
         border: 1px solid var(--line);
-        border-radius: 2px;
+        border-radius: 8px;
         font-size: 15px;
         padding: 12px 12px;
         margin-top: 8px;
@@ -543,7 +545,7 @@ permalink: /wedding/
       .radio-label {
         display: block;
         border: 1px solid var(--line);
-        border-radius: 2px;
+        border-radius: 8px;
         padding: 12px 10px;
         text-align: center;
         font-weight: 600;
@@ -567,7 +569,7 @@ permalink: /wedding/
 
       .btn {
         border: 0;
-        border-radius: 2px;
+        border-radius: 8px;
         padding: 13px 14px;
         font-weight: 600;
         cursor: pointer;
@@ -590,17 +592,40 @@ permalink: /wedding/
       }
 
       .guest-list {
-        margin-top: 14px;
+        margin-top: 18px;
         padding: 0;
         list-style: none;
       }
 
-      .guest-item {
+      .guest-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .guest-actions[hidden] {
+        display: none;
+      }
+
+      .guest-more-btn {
         border: 1px solid var(--line);
-        border-radius: 2px;
-        padding: 12px 12px;
-        margin-top: 8px;
+        border-radius: 8px;
+        padding: 13px 10px;
         background: #fff;
+        color: #5f5b56;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .guest-item {
+        border: 0;
+        border-radius: 8px;
+        padding: 16px 16px 17px;
+        margin-top: 10px;
+        background: #fff;
+        box-shadow: 0 1px 0 rgba(28, 24, 20, 0.04);
       }
 
       .guest-head {
@@ -612,16 +637,18 @@ permalink: /wedding/
 
       .guest-name {
         font-weight: 800;
+        font-size: 14px;
       }
 
       .guest-time {
-        color: #8d8d8d;
+        color: #beb9b2;
         font-size: 12px;
       }
 
       .guest-message {
-        margin: 8px 0 0;
-        line-height: 1.5;
+        margin: 9px 0 0;
+        color: #5f5b56;
+        line-height: 1.65;
         white-space: pre-wrap;
       }
 
@@ -685,6 +712,44 @@ permalink: /wedding/
         box-shadow: 0 8px 22px rgba(28, 24, 20, 0.12);
         cursor: pointer;
         backdrop-filter: blur(8px);
+      }
+
+      .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100%;
+        max-width: 352px;
+        margin: 24px auto 0;
+        background: rgba(77, 75, 72, 0.92);
+        color: #fff;
+      }
+
+      .quick-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        min-height: 56px;
+        padding: 0 8px;
+        border: 0;
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        background: transparent;
+        color: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .quick-action:last-child {
+        border-right: 0;
+      }
+
+      .quick-action svg {
+        width: 17px;
+        height: 17px;
+        stroke: currentColor;
+        flex: 0 0 auto;
       }
 
       .music-toggle svg {
@@ -1011,7 +1076,36 @@ permalink: /wedding/
         </form>
 
         <ul class="guest-list" id="guestList"></ul>
+        <div class="guest-actions" id="guestActions" hidden>
+          <button class="guest-more-btn" id="guestMoreButton" type="button">더보기</button>
+          <button class="guest-more-btn" id="guestAllButton" type="button">전체보기</button>
+        </div>
       </section>
+
+      <div class="quick-actions" aria-label="초대장 빠른 동작">
+        <button class="quick-action" id="calendarButton" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="4" y="5" width="16" height="15" rx="2" />
+            <path d="M8 3v4" />
+            <path d="M16 3v4" />
+            <path d="M4 10h16" />
+          </svg>
+          일정 등록
+        </button>
+        <button class="quick-action" id="copyLinkButton" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10 13a5 5 0 0 0 7.1 0l1.4-1.4a5 5 0 0 0-7.1-7.1L10.6 5" />
+            <path d="M14 11a5 5 0 0 0-7.1 0l-1.4 1.4a5 5 0 0 0 7.1 7.1l.8-.8" />
+          </svg>
+          링크 복사
+        </button>
+        <button class="quick-action" id="shareButton" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12c0 3.9-4 7-9 7a10.8 10.8 0 0 1-2.8-.4L5 20l1.3-3.1A7.4 7.4 0 0 1 3 12c0-3.9 4-7 9-7s9 3.1 9 7Z" />
+          </svg>
+          카카오 공유
+        </button>
+      </div>
 
       <p class="footer">정현영 · 김현진 의 결혼식에 초대합니다</p>
       <p class="music-credit">
@@ -1053,6 +1147,9 @@ permalink: /wedding/
         var guestNameInput = document.getElementById("guestName");
         var guestMessageInput = document.getElementById("guestMessage");
         var guestList = document.getElementById("guestList");
+        var guestActions = document.getElementById("guestActions");
+        var guestMoreButton = document.getElementById("guestMoreButton");
+        var guestAllButton = document.getElementById("guestAllButton");
 
         var rsvpForm = document.getElementById("rsvpForm");
         var rsvpNameInput = document.getElementById("rsvpName");
@@ -1068,6 +1165,9 @@ permalink: /wedding/
         var musicToggle = document.getElementById("musicToggle");
         var musicToggleText = document.getElementById("musicToggleText");
         var weddingBgm = document.getElementById("weddingBgm");
+        var calendarButton = document.getElementById("calendarButton");
+        var copyLinkButton = document.getElementById("copyLinkButton");
+        var shareButton = document.getElementById("shareButton");
 
         var firebaseReady = false;
         var db = null;
@@ -1081,6 +1181,9 @@ permalink: /wedding/
         var touchStartY = 0;
         var musicIsPlaying = false;
         var musicUserPaused = false;
+        var musicGestureTried = false;
+        var guestbookEntries = [];
+        var guestbookVisibleCount = 3;
 
         function readLocal(key) {
           try {
@@ -1110,18 +1213,62 @@ permalink: /wedding/
 
         function setStatus() {}
 
+        function copyToClipboard(text, onDone) {
+          function done() {
+            if (typeof onDone === "function") {
+              onDone();
+            }
+          }
+
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(done).catch(function () {});
+            return;
+          }
+
+          var temp = document.createElement("textarea");
+          temp.value = text;
+          temp.setAttribute("readonly", "");
+          temp.style.position = "fixed";
+          temp.style.opacity = "0";
+          document.body.appendChild(temp);
+          temp.select();
+          try {
+            document.execCommand("copy");
+            done();
+          } catch (error) {
+            console.error(error);
+          }
+          document.body.removeChild(temp);
+        }
+
+        function flashButton(button, text) {
+          if (!button) {
+            return;
+          }
+          var original = button.dataset.originalText || button.textContent.trim();
+          button.dataset.originalText = original;
+          button.lastChild.textContent = text;
+          window.setTimeout(function () {
+            button.lastChild.textContent = original;
+          }, 1300);
+        }
+
         function renderGuestbook(entries) {
+          guestbookEntries = entries || [];
           guestList.innerHTML = "";
 
-          if (!entries.length) {
+          if (!guestbookEntries.length) {
             var emptyItem = document.createElement("li");
             emptyItem.className = "empty";
             emptyItem.textContent = "첫 번째 축하 메시지를 남겨 주세요.";
             guestList.appendChild(emptyItem);
+            if (guestActions) {
+              guestActions.hidden = true;
+            }
             return;
           }
 
-          entries.forEach(function (entry) {
+          guestbookEntries.slice(0, guestbookVisibleCount).forEach(function (entry) {
             var li = document.createElement("li");
             li.className = "guest-item";
 
@@ -1148,6 +1295,16 @@ permalink: /wedding/
             li.appendChild(message);
             guestList.appendChild(li);
           });
+
+          if (guestActions) {
+            guestActions.hidden = guestbookEntries.length <= 3;
+          }
+          if (guestMoreButton) {
+            guestMoreButton.hidden = guestbookVisibleCount >= guestbookEntries.length;
+          }
+          if (guestAllButton) {
+            guestAllButton.hidden = guestbookVisibleCount >= guestbookEntries.length;
+          }
         }
 
         var rsvpHintTimer = null;
@@ -1345,7 +1502,8 @@ permalink: /wedding/
             if (event && event.target && musicToggle.contains(event.target)) {
               return;
             }
-            if (!musicUserPaused && !musicIsPlaying) {
+            if (!musicGestureTried && !musicUserPaused && !musicIsPlaying) {
+              musicGestureTried = true;
               startMusic();
             }
           }
@@ -1555,32 +1713,15 @@ permalink: /wedding/
 
         function copyText(text, button) {
           function markDone() {
-            var original = button.textContent;
-            button.textContent = "완료";
+            var original = button.dataset.copyLabel || button.lastChild.textContent.trim();
+            button.dataset.copyLabel = original;
+            button.lastChild.textContent = "완료";
             setTimeout(function () {
-              button.textContent = original;
+              button.lastChild.textContent = original;
             }, 1200);
           }
 
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(markDone).catch(function () {});
-            return;
-          }
-
-          var temp = document.createElement("textarea");
-          temp.value = text;
-          temp.setAttribute("readonly", "");
-          temp.style.position = "fixed";
-          temp.style.opacity = "0";
-          document.body.appendChild(temp);
-          temp.select();
-          try {
-            document.execCommand("copy");
-            markDone();
-          } catch (error) {
-            console.error(error);
-          }
-          document.body.removeChild(temp);
+          copyToClipboard(text, markDone);
         }
 
         function initAccounts() {
@@ -1597,6 +1738,86 @@ permalink: /wedding/
               copyText(button.getAttribute("data-copy"), button);
             });
           });
+        }
+
+        function downloadCalendarFile() {
+          var lines = [
+            "BEGIN:VCALENDAR",
+            "VERSION:2.0",
+            "PRODID:-//jhy156456//Wedding Invitation//KO",
+            "CALSCALE:GREGORIAN",
+            "METHOD:PUBLISH",
+            "BEGIN:VEVENT",
+            "UID:wedding-20260905-jhy156456.github.io",
+            "DTSTAMP:20260523T000000Z",
+            "DTSTART:20260905T060000Z",
+            "DTEND:20260905T080000Z",
+            "SUMMARY:정현영 ❤ 김현진 결혼식",
+            "LOCATION:노블발렌티 삼성 5층 샤플홀, 서울 강남구 봉은사로 637",
+            "DESCRIPTION:정현영 ❤ 김현진 결혼식에 초대합니다.\\nhttps://jhy156456.github.io/wedding/",
+            "URL:https://jhy156456.github.io/wedding/",
+            "END:VEVENT",
+            "END:VCALENDAR"
+          ];
+          var blob = new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.href = url;
+          link.download = "wedding-invitation.ics";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.setTimeout(function () {
+            URL.revokeObjectURL(url);
+          }, 1000);
+        }
+
+        function initQuickActions() {
+          var shareData = {
+            title: "정현영 ❤ 김현진 결혼식에 초대합니다",
+            text: "2026년 9월 5일 토요일 오후 3시, 노블발렌티 삼성 5층 샤플홀",
+            url: "https://jhy156456.github.io/wedding/"
+          };
+
+          if (calendarButton) {
+            calendarButton.addEventListener("click", downloadCalendarFile);
+          }
+
+          if (copyLinkButton) {
+            copyLinkButton.addEventListener("click", function () {
+              copyToClipboard(shareData.url, function () {
+                flashButton(copyLinkButton, "복사 완료");
+              });
+            });
+          }
+
+          if (shareButton) {
+            shareButton.addEventListener("click", function () {
+              if (navigator.share) {
+                navigator.share(shareData).catch(function () {});
+                return;
+              }
+              copyToClipboard(shareData.url, function () {
+                flashButton(shareButton, "링크 복사");
+              });
+            });
+          }
+        }
+
+        function initGuestbookActions() {
+          if (guestMoreButton) {
+            guestMoreButton.addEventListener("click", function () {
+              guestbookVisibleCount += 3;
+              renderGuestbook(guestbookEntries);
+            });
+          }
+
+          if (guestAllButton) {
+            guestAllButton.addEventListener("click", function () {
+              guestbookVisibleCount = guestbookEntries.length;
+              renderGuestbook(guestbookEntries);
+            });
+          }
         }
 
         form.addEventListener("submit", function (event) {
@@ -1641,6 +1862,7 @@ permalink: /wedding/
               createdAt: newEntry.createdAt
             });
             writeLocal(GUESTBOOK_KEY, entries);
+            guestbookVisibleCount = 3;
             renderGuestbook(entries);
           }
 
@@ -1702,6 +1924,8 @@ permalink: /wedding/
         initMusic();
         initImageZoom();
         initAccounts();
+        initQuickActions();
+        initGuestbookActions();
         initFirebase();
       })();
     </script>
