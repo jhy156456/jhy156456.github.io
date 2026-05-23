@@ -26,6 +26,12 @@ permalink: /wedding/
         box-sizing: border-box;
       }
 
+      html,
+      body {
+        width: 100%;
+        overflow-x: hidden;
+      }
+
       body {
         margin: 0;
         font-family: "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
@@ -37,8 +43,8 @@ permalink: /wedding/
         position: fixed;
         top: 0;
         left: 0;
-        width: 100vw;
-        height: 100dvh;
+        right: 0;
+        bottom: 0;
         z-index: 50;
         display: grid;
         place-items: center;
@@ -98,6 +104,7 @@ permalink: /wedding/
       }
 
       .wrap {
+        width: 100%;
         max-width: 460px;
         margin: 0 auto;
         padding: 12px 14px 48px;
@@ -136,8 +143,9 @@ permalink: /wedding/
       body.ready .hero img {
         transform: translateY(0) scale(1);
         opacity: 1;
-      }
+      }    
 
+      
       .section {
         margin-top: 18px;
         background: var(--card);
