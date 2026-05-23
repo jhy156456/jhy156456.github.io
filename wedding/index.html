@@ -179,6 +179,14 @@ permalink: /wedding/
         line-height: 1.7;
       }
 
+      .rsvp-submit-hint {
+        margin: 14px 0 0;
+        min-height: 1.4em;
+        font-size: 15px;
+        font-weight: 600;
+        color: #365a9e;
+      }
+
       .date-box {
         margin-top: 12px;
         border: 1px solid #f6d9e7;
@@ -499,7 +507,9 @@ permalink: /wedding/
 
       <section class="section reveal">
         <h2 class="title">참석 여부 전달</h2>
-        <p class="subtitle">참석/불참 여부를 남겨 주시면 더 정성껏 준비하겠습니다.</p>
+        <p class="subtitle">
+          참석/불참 여부를 남겨 주시면 더 정성껏 준비하겠습니다. 등록 내용은 화면에 공개되지 않으며, 주최 측에서만 확인합니다.
+        </p>
         <form class="guest-form" id="rsvpForm">
           <input id="rsvpName" type="text" maxlength="20" placeholder="이름" required />
           <div class="radio-row">
@@ -517,7 +527,7 @@ permalink: /wedding/
             <button class="btn btn-primary" type="submit">참석 여부 등록</button>
           </div>
         </form>
-        <ul class="guest-list" id="rsvpList"></ul>
+        <p class="rsvp-submit-hint" id="rsvpSubmitHint" aria-live="polite"></p>
       </section>
 
       <section class="section reveal">
@@ -572,7 +582,7 @@ permalink: /wedding/
         var rsvpForm = document.getElementById("rsvpForm");
         var rsvpNameInput = document.getElementById("rsvpName");
         var rsvpMessageInput = document.getElementById("rsvpMessage");
-        var rsvpList = document.getElementById("rsvpList");
+        var rsvpSubmitHint = document.getElementById("rsvpSubmitHint");
         var intro = document.getElementById("intro");
         var introTyped = document.getElementById("introTyped");
         var lightbox = document.getElementById("lightbox");
@@ -657,52 +667,19 @@ permalink: /wedding/
           });
         }
 
-        function renderRsvp(entries) {
-          rsvpList.innerHTML = "";
-
-          entries.forEach(function (entry) {
-            var li = document.createElement("li");
-            li.className = "guest-item";
-
-            var header = document.createElement("div");
-            header.className = "guest-head";
-            var left = document.createElement("div");
-
-            var name = document.createElement("div");
-            name.className = "guest-name";
-
-            var badge = document.createElement("span");
-            badge.className = "badge " + (entry.status === "attend" ? "badge-attend" : "badge-decline");
-            badge.textContent = entry.status === "attend" ? "참석" : "불참";
-
-            name.appendChild(badge);
-            name.appendChild(document.createTextNode(entry.name));
-
-            var time = document.createElement("div");
-            time.className = "guest-time";
-            time.textContent = formatTime(entry.createdAt);
-            left.appendChild(name);
-            left.appendChild(time);
-
-            header.appendChild(left);
-            li.appendChild(header);
-
-            if (entry.message) {
-              var message = document.createElement("p");
-              message.className = "guest-message";
-              message.textContent = entry.message;
-              li.appendChild(message);
-            }
-
-            rsvpList.appendChild(li);
-          });
-
-          if (!entries.length) {
-            var empty = document.createElement("li");
-            empty.className = "empty";
-            empty.textContent = "아직 등록된 참석 정보가 없습니다.";
-            rsvpList.appendChild(empty);
+        var rsvpHintTimer = null;
+        function showRsvpRegisteredHint() {
+          if (!rsvpSubmitHint) {
+            return;
           }
+          if (rsvpHintTimer) {
+            clearTimeout(rsvpHintTimer);
+          }
+          rsvpSubmitHint.textContent = "전달해 주셔서 감사합니다. 등록이 접수되었습니다.";
+          rsvpHintTimer = setTimeout(function () {
+            rsvpSubmitHint.textContent = "";
+            rsvpHintTimer = null;
+          }, 6000);
         }
 
         function normalizeFromSnapshot(snapshotValue) {
@@ -729,20 +706,27 @@ permalink: /wedding/
         }
 
         function loadAndWatchFirebase() {
-          var guestbookRef = db.ref("wedding/guestbook").limitToLast(100);
-          guestbookRef.on("value", function (snapshot) {
-            renderGuestbook(normalizeFromSnapshot(snapshot.val()));
-          });
-
-          var rsvpRef = db.ref("wedding/rsvp").limitToLast(100);
-          rsvpRef.on("value", function (snapshot) {
-            renderRsvp(normalizeFromSnapshot(snapshot.val()));
-          });
+          // limitToLast는 orderBy*와 함께 써야 안정적으로 동작합니다(push id 기준 최근 100건).
+          var guestbookRef = db.ref("wedding/guestbook").orderByKey().limitToLast(100);
+          guestbookRef.on(
+            "value",
+            function (snapshot) {
+              renderGuestbook(normalizeFromSnapshot(snapshot.val()));
+            },
+            function (err) {
+              console.error(err);
+              setStatus(
+                "방명록을 불러오지 못했습니다. Firebase 콘솔 → Realtime Database → 규칙에서 읽기 권한을 확인해 주세요. (" +
+                  (err && err.message ? err.message : "오류") +
+                  ")",
+                true
+              );
+            }
+          );
         }
 
         function loadFromLocal() {
           renderGuestbook(readLocal(GUESTBOOK_KEY));
-          renderRsvp(readLocal(RSVP_KEY));
         }
 
         function initFirebase() {
@@ -930,11 +914,22 @@ permalink: /wedding/
           };
 
           if (firebaseReady) {
-            db.ref("wedding/guestbook").push({
-              name: newEntry.name,
-              message: newEntry.message,
-              createdAt: firebase.database.ServerValue.TIMESTAMP
-            });
+            db.ref("wedding/guestbook").push(
+              {
+                name: newEntry.name,
+                message: newEntry.message,
+                createdAt: firebase.database.ServerValue.TIMESTAMP
+              },
+              function (err) {
+                if (err) {
+                  console.error(err);
+                  setStatus(
+                    "방명록 저장에 실패했습니다. DB 규칙의 쓰기 권한을 확인해 주세요. (" + err.message + ")",
+                    true
+                  );
+                }
+              }
+            );
           } else {
             var entries = readLocal(GUESTBOOK_KEY);
             entries.unshift({
@@ -963,12 +958,25 @@ permalink: /wedding/
           }
 
           if (firebaseReady) {
-            db.ref("wedding/rsvp").push({
-              name: name,
-              status: status,
-              message: message,
-              createdAt: firebase.database.ServerValue.TIMESTAMP
-            });
+            db.ref("wedding/rsvp").push(
+              {
+                name: name,
+                status: status,
+                message: message,
+                createdAt: firebase.database.ServerValue.TIMESTAMP
+              },
+              function (err) {
+                if (err) {
+                  console.error(err);
+                  setStatus(
+                    "참석 여부 저장에 실패했습니다. DB 규칙의 쓰기 권한을 확인해 주세요. (" + err.message + ")",
+                    true
+                  );
+                } else {
+                  showRsvpRegisteredHint();
+                }
+              }
+            );
           } else {
             var entries = readLocal(RSVP_KEY);
             entries.unshift({
@@ -979,7 +987,7 @@ permalink: /wedding/
               createdAt: Date.now()
             });
             writeLocal(RSVP_KEY, entries);
-            renderRsvp(entries);
+            showRsvpRegisteredHint();
           }
 
           rsvpForm.reset();

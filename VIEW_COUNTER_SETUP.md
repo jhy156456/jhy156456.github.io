@@ -37,7 +37,8 @@
 
 4. **보안 규칙 설정**
    - Realtime Database > 규칙 탭
-   - 다음 규칙으로 변경:
+   - 모바일청첩장(방명록·참석 여부)까지 한 번에 쓰려면 **[FIREBASE_REALTIME_DB_SETUP.md](./FIREBASE_REALTIME_DB_SETUP.md)** 의 JSON을 그대로 붙여 넣는 것을 권장합니다.
+   - 조회수(`views`)만 열어두려면 아래만 사용해도 됩니다.
    ```json
    {
      "rules": {
