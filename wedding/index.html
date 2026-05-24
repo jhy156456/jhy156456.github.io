@@ -256,8 +256,12 @@ permalink: /wedding/
         font-size: 14px;
         font-weight: 400;
         text-align: center;
-        overflow-wrap: anywhere;
-        word-break: break-all;
+        overflow-wrap: break-word;
+        word-break: keep-all;
+      }
+
+      .subtitle-line {
+        display: block;
       }
 
       .rsvp-submit-hint {
@@ -271,7 +275,7 @@ permalink: /wedding/
       .date-box {
         margin-top: 0;
         border: 1px solid var(--line);
-        border-radius: 2px;
+        border-radius: 8px;
         padding: 16px 14px;
         background: #faf8f5;
       }
@@ -302,7 +306,7 @@ permalink: /wedding/
         margin-top: 16px;
         width: 100%;
         display: block;
-        border-radius: 2px;
+        border-radius: 8px;
         border: 1px solid var(--line);
       }
 
@@ -400,7 +404,7 @@ permalink: /wedding/
 
       .account-box {
         margin-top: 4px;
-        border-radius: 2px;
+        border-radius: 8px;
         background: transparent;
         padding: 0;
         border: 0;
@@ -420,7 +424,7 @@ permalink: /wedding/
         margin: 8px 0;
         padding: 0;
         border: 0;
-        border-radius: 2px;
+        border-radius: 8px;
       }
 
       .account-group {
@@ -900,7 +904,12 @@ permalink: /wedding/
           <h2 class="title">저희에게 찾아와 주셔서 감사합니다</h2>
         </header>
         <p class="subtitle">
-          서로를 믿고 호흡을 맞추는 투수와 포수처럼, 저희 두 사람도 하나의 팀이 되어 인생의 새로운 이닝을 시작하려 합니다. 바쁘시더라도 참석해 주시면 큰 기쁨이겠습니다.
+          <span class="subtitle-line">서로를 믿고 호흡을 맞추는</span>
+          <span class="subtitle-line">투수와 포수처럼,</span>
+          <span class="subtitle-line">저희 두 사람도 하나의 팀이 되어</span>
+          <span class="subtitle-line">인생의 새로운 이닝을 시작하려 합니다.</span>
+          <span class="subtitle-line">바쁘시더라도 참석해 주시면</span>
+          <span class="subtitle-line">큰 기쁨이겠습니다.</span>
         </p>
       </section>
 
@@ -1018,14 +1027,28 @@ permalink: /wedding/
               <div class="account-row">
                 <div>
                   <p class="account-owner">아버지 김상수</p>
-                  <p class="account-number account-empty">계좌번호 확인 중</p>
+                  <p class="account-number">우리은행 1002-039-473060</p>
                 </div>
+                <button class="copy-account" type="button" data-copy="1002039473060">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="8" y="8" width="10" height="10" rx="1.5" />
+                    <path d="M6 14H5a1 1 0 0 1-1-1V6a2 2 0 0 1 2-2h7a1 1 0 0 1 1 1v1" />
+                  </svg>
+                  복사
+                </button>
               </div>
               <div class="account-row">
                 <div>
                   <p class="account-owner">어머니 김정숙</p>
-                  <p class="account-number account-empty">계좌번호 확인 중</p>
+                  <p class="account-number">농협은행 972-02-073351</p>
                 </div>
+                <button class="copy-account" type="button" data-copy="97202073351">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="8" y="8" width="10" height="10" rx="1.5" />
+                    <path d="M6 14H5a1 1 0 0 1-1-1V6a2 2 0 0 1 2-2h7a1 1 0 0 1 1 1v1" />
+                  </svg>
+                  복사
+                </button>
               </div>
             </div>
           </div>
@@ -1038,7 +1061,10 @@ permalink: /wedding/
           <h2 class="title">참석 여부를 알려 주세요</h2>
         </header>
         <p class="subtitle">
-          참석/불참 여부를 남겨 주시면 더 정성껏 준비하겠습니다. 등록 내용은 화면에 공개되지 않으며, 주최 측에서만 확인합니다.
+          <span class="subtitle-line">참석 여부를 남겨 주시면</span>
+          <span class="subtitle-line">더 정성껏 준비하겠습니다.</span>
+          <span class="subtitle-line">등록 내용은 화면에 공개되지 않으며,</span>
+          <span class="subtitle-line">주최 측에서만 확인합니다.</span>
         </p>
         <form class="guest-form" id="rsvpForm">
           <input id="rsvpName" type="text" maxlength="20" placeholder="이름" required />
@@ -1220,25 +1246,29 @@ permalink: /wedding/
             }
           }
 
+          function fallbackCopy() {
+            var temp = document.createElement("textarea");
+            temp.value = text;
+            temp.setAttribute("readonly", "");
+            temp.style.position = "fixed";
+            temp.style.opacity = "0";
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+              document.execCommand("copy");
+              done();
+            } catch (error) {
+              console.error(error);
+            }
+            document.body.removeChild(temp);
+          }
+
           if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(done).catch(function () {});
+            navigator.clipboard.writeText(text).then(done).catch(fallbackCopy);
             return;
           }
 
-          var temp = document.createElement("textarea");
-          temp.value = text;
-          temp.setAttribute("readonly", "");
-          temp.style.position = "fixed";
-          temp.style.opacity = "0";
-          document.body.appendChild(temp);
-          temp.select();
-          try {
-            document.execCommand("copy");
-            done();
-          } catch (error) {
-            console.error(error);
-          }
-          document.body.removeChild(temp);
+          fallbackCopy();
         }
 
         function flashButton(button, text) {
@@ -1296,14 +1326,15 @@ permalink: /wedding/
             guestList.appendChild(li);
           });
 
+          var hasMoreGuests = guestbookVisibleCount < guestbookEntries.length;
           if (guestActions) {
-            guestActions.hidden = guestbookEntries.length <= 3;
+            guestActions.hidden = guestbookEntries.length <= 3 || !hasMoreGuests;
           }
           if (guestMoreButton) {
-            guestMoreButton.hidden = guestbookVisibleCount >= guestbookEntries.length;
+            guestMoreButton.hidden = !hasMoreGuests;
           }
           if (guestAllButton) {
-            guestAllButton.hidden = guestbookVisibleCount >= guestbookEntries.length;
+            guestAllButton.hidden = !hasMoreGuests;
           }
         }
 
@@ -1511,10 +1542,7 @@ permalink: /wedding/
           document.addEventListener("pointerdown", handleFirstGesture, { capture: true, passive: true });
           document.addEventListener("click", handleFirstGesture, { capture: true, passive: true });
           document.addEventListener("touchend", handleFirstGesture, { capture: true, passive: true });
-          document.addEventListener("wheel", handleFirstGesture, { capture: true, passive: true });
           window.addEventListener("keydown", handleFirstGesture);
-          window.addEventListener("wheel", handleFirstGesture, { passive: true });
-          window.addEventListener("scroll", handleFirstGesture, { passive: true });
 
           updateMusicButton();
           startMusic();
