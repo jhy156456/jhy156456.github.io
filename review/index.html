@@ -7,50 +7,20 @@ pagination:
 ---
 
 <div class="nav_main_parent">
-    <div class="main-content index-page clearfix">
-    <!-- <p style="color: red;">{{paginator.total_pages}}</p>
-    {% for posts in paginator.posts %}
-    <p style="color: red;">{{posts.title}}</p>
-    {% endfor %} -->
+  <div class="main-content index-page clearfix">
+    <section class="listing-hero">
+      <p class="listing-hero__eyebrow">Reviews</p>
+      <h1>사용해보고 읽어본 것들</h1>
+      <p>책, 장비, 개발 도구를 실제 사용 경험 중심으로 정리합니다.</p>
+    </section>
     {% assign sum = site.posts | size %}
     <div class="post-lists">
       <div class="post-lists-body">
-        {% for posts in paginator.posts %}
-          {% if posts.review %}
-            <div class="post-list-item">
-              <div class="post-list-item-container">
-                <div class="item-thumb  bg-{{posts.background }}" style="background-image:url('{{posts.background-image }}');"></div>
-                <a href="{{ posts.url }}">
-                  <div class="item-desc">
-                    <p>
-                      {{ posts.content | strip_html | strip_newlines | truncate: 100 }}
-                    </p>
-                  </div>
-                </a>
-                <div class="item-slant reverse-slant  bg-{{ posts.background }}"></div>
-                <div class="item-slant">
-                  <div class="liberxue-title">&nbsp;</div>
-                </div>
-                <div class="item-label">
-                  <div class="item-title">
-                    <a href="{{ posts.url }}">{{ posts.title }}</a>
-                  </div>
-                  <div class="item-meta clearfix">
-                    <div class="item-meta-ico bg-ico-book" style="
-                                          background: url('{{site.url}}/style/images/bg-ico.png') no-repeat;
-                                          background-size: 40px auto;
-                                        "></div>
-                    <div class="item-meta-cat">
-                      <a href="category/thoughts/index.html">{{ posts.date | date: "%F" }}</a>
-                      <a href="category/thoughts/index.html">{{ posts.category }}</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% endif %}
+        {% for post in paginator.posts %}
+          {% include post-card.html post=post %}
         {% endfor %}
       </div>
     </div>
+    {% include pagination.html %}
   </div>
 </div>

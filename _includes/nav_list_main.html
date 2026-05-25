@@ -4,9 +4,34 @@
 {% assign categories_max = category[1].size %}
 {% endif %}
 {% endfor %}
-{% assign
-posts_sum = site.posts | size %}
+{% assign posts_sum = site.categories.study | size %}
 <div class="nav_parent">
+  <details class="mobile-category-panel">
+    <summary>
+      <span>카테고리</span>
+      <strong>전체 {{ posts_sum }}개</strong>
+    </summary>
+    <ul class="mobile-category-list">
+      <li>
+        <a href="/study">
+          <strong>전체</strong>
+          <span class="taxonomy__count">{{ posts_sum }}</span>
+        </a>
+      </li>
+      {% for i in (1..categories_max) reversed %}
+      {% for category in site.categories %}
+      {% if category[1].size == i and category[0] != "study" %}
+      <li>
+        <a href="/study/categories/{{ category[0] }}">
+          <strong>{{ category[0] }}</strong>
+          <span class="taxonomy__count">{{ i }}</span>
+        </a>
+      </li>
+      {% endif %}
+      {% endfor %}
+      {% endfor %}
+    </ul>
+  </details>
   <ul class="taxonomy__index">
     <li>
       <a href="/study">
@@ -270,10 +295,6 @@ posts_sum = site.posts | size %}
       </ul>
       <!-- DE end-->
 
-      <!-- <p style="color: red;">{{ site.categories }}</p>
-      {% for category in site.categories %}
-      <p style="color: red;">{{ category[0] }}</p>
-      {% endfor %} -->
       <!-- Python start-->
       {% for category in site.categories %}
       {% if category[0] == "python" %}

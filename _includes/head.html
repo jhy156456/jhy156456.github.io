@@ -1,5 +1,5 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{ page.title }} - {{ site.title }}</title>
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="{{ page.title }} - {{ site.title }}">
@@ -10,15 +10,15 @@
       content="{{ page.title }} - {{ site.title }}|{{ page.content | strip_html | strip_newlines | truncate: 120 }}"
       property="og:description" />
 <meta name="theme-Jekyll by liberxue" content="#eb5055">
-<link rel="icon" type="image/png" href="{{ site.url }}/style/favicons/favicon.ico" />
-<link href="{{ site.url }}/style/favicons/favicon.ico" rel="shortcut icon" type="image/png">
+<link rel="icon" type="image/png" href="{{ '/style/favicons/favicon.ico' | relative_url }}" />
+<link href="{{ '/style/favicons/favicon.ico' | relative_url }}" rel="shortcut icon" type="image/png">
 <!-- 댓글 이슈 수정 -->
-<!-- <link rel="canonical" href="{{ site.url }}/"> -->
-<link rel="canonical" href="{{ .Permalink }}" />
-<link rel="alternate" type="application/rss+xml" title="jhy156456" href="{{ site.url }}/feed.xml">
+<!-- <link rel="canonical" href="{{ '/' | absolute_url }}"> -->
+<link rel="canonical" href="{{ page.url | absolute_url }}" />
+<link rel="alternate" type="application/rss+xml" title="jhy156456" href="{{ '/feed.xml' | absolute_url }}">
 <meta charset="UTF-8">
 <!-- <link rel="manifest" href="/manifest.json"> -->
-<link rel="shortcut icon" href="{{ site.url }}/style/favicons/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="{{ '/style/favicons/favicon.ico' | relative_url }}" type="image/x-icon">
 <meta name="keywords" content="{{ page.content | strip_html | strip_newlines | truncate: 120 }}"
       property="og:description" />
 <meta name="description" content="오늘 무언가를 하지않으면 내일은 저절로 오지않는다" />
@@ -26,16 +26,16 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github-dark.min.css" integrity="sha512-rO+olRTkcf304DQBxSWxln8JXCzTHlKnIdnMUwYvQa9/Jd4cQaNkItIUj6Z4nvW1dqK0SKXLbn9h4KwZTNtAyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
 
-<!--<link href="{{ site.url }}/assets/css/syntax.css" rel="stylesheet">-->
-<link href="{{ site.url }}/style/style-liberxue.css" rel="stylesheet">
-<!-- <link href="{{ site.url }}/_sass/minimal-mistakes/_navigation.scss" rel="stylesheet"> -->
+<!--<link href="{{ '/assets/css/syntax.css' | relative_url }}" rel="stylesheet">-->
+<link href="{{ '/style/style-liberxue.css' | relative_url }}" rel="stylesheet">
+<!-- <link href="{{ '/_sass/minimal-mistakes/_navigation.scss' | relative_url }}" rel="stylesheet"> -->
 {% if page.date %}
-<meta content="{{ site.url }}{{ page.url }}" property="og:url" />
-<meta content="{{ site.url }}{{ page.url }}|{{ page.content | strip_html | strip_newlines | truncate: 120 }}"
+<meta content="{{ page.url | absolute_url }}" property="og:url" />
+<meta content="{{ page.url | absolute_url }}|{{ page.content | strip_html | strip_newlines | truncate: 120 }}"
       property="og:description" />
 <meta content="article" property="og:type" />
 {% else %}
-<meta content="{{ site.url }}" property="og:url" />
+<meta content="{{ '/' | absolute_url }}" property="og:url" />
 <meta content="{{ site.description }}" property="og:description" />
 <meta content="blog" property="og:type" />
 {% endif %}

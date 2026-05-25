@@ -29,16 +29,16 @@ links:
   - name: 리뷰
     url: /review
     external: false
-  - name: 카테고리
+  - name: 스터디
     url: /study
     external: false
-  - name: 기록
+  - name: 아카이브
     url: /archives
   #   external:     false
   # - name:         태그
   #   url:          /tags
   #   external:     false
-  - name: About Me
+  - name: 소개
     url: /about
     external: false
 # ------------ CONFIGURABLE END ------------

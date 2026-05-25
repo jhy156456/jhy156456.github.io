@@ -38,7 +38,7 @@
         <div class="meta-copyright-info">
           <a href="/" class="info-logo">
             <img
-              src="{{ site.url }}/style/images/logo-jhy156456.png"
+              src="{{ '/style/images/logo-jhy156456.png' | relative_url }}"
               title="jhy156456_blog"
               data-hover="jhy156456_blog"
               alt="jhy156456_blog" />
@@ -57,7 +57,7 @@
             <p>
               Powered by
               <a
-                href="{{ site.url }}/tags/#Jekyll"
+                href="{{ '/tags/#Jekyll' | relative_url }}"
                 title="Jekyll"
                 data-hover="Jekyll"
                 target="_blank"
@@ -118,6 +118,7 @@
     
     var $searchInput = $('#cb-search-content');
     var $iconSearch = $searchToggle.find('.icon-search');
+    var $mobileMenu = $('.navbar-mobile-menu');
     
     if ($searchToggle.length === 0) {
       console.log('검색 토글 요소를 찾을 수 없습니다.');
@@ -130,6 +131,7 @@
       e.stopPropagation();
       
       $searchToggle.toggleClass('active');
+      $mobileMenu.removeClass('is-open').attr('aria-expanded', 'false');
       
       // 검색창이 열리면 포커스
       if ($searchToggle.hasClass('active')) {
@@ -193,6 +195,19 @@
         closeSearch();
         return false;
       }
+    });
+
+    $('.navbar-mobile-menu').on('click', function(e) {
+      e.stopPropagation();
+      closeSearch();
+      var $menu = $(this);
+      var isOpen = !$menu.hasClass('is-open');
+      $menu.toggleClass('is-open', isOpen);
+      $menu.attr('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    $(document).on('click', function() {
+      $('.navbar-mobile-menu').removeClass('is-open').attr('aria-expanded', 'false');
     });
   });
   

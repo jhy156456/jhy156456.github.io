@@ -6,67 +6,31 @@ pagination:
 ---
 
 <div class="main-content index-home-page clearfix">
+  <section class="home-hero">
+    <p class="home-hero__eyebrow">Hayden J Blog</p>
+    <h1>AI, 데이터, 백엔드 개발을 기록합니다.</h1>
+    <p>
+      현장에서 마주친 문제와 해결 과정을 정리합니다. Python, Java, Data Engineering,
+      AI Agent, 인프라 운영까지 직접 겪은 내용을 중심으로 남깁니다.
+    </p>
+    <div class="home-hero__actions">
+      <a href="/study">스터디 글 보기</a>
+      <a href="/about">소개 보기</a>
+    </div>
+  </section>
+
+  <section class="home-section-head">
+    <div>
+      <p class="home-section-head__eyebrow">Latest Posts</p>
+      <h2>최근 기록</h2>
+    </div>
+    <a href="/archives">전체 기록</a>
+  </section>
+
   <div class="post-lists">
     <div class="post-lists-body">
-      {% for posts in paginator.posts %}
-      <div class="post-list-item">
-        <div class="post-list-item-container">
-          <div
-            class="item-thumb  bg-{{posts.background }}"
-            style="background-image:url('{{posts.background-image }}');"
-          ></div>
-          <a href="{{ posts.url }}">
-            <div class="item-desc">
-              <p>
-                {{ posts.content | strip_html | strip_newlines | truncate: 100
-                }}
-              </p>
-            </div>
-          </a>
-          <div
-            class="item-slant reverse-slant  bg-{{ posts.background }}"
-          ></div>
-          <div class="item-slant">
-            <div class="liberxue-title">&nbsp;</div>
-          </div>
-          <div class="item-label">
-            <div class="item-title">
-              <a href="{{ posts.url }}" title="{{ posts.title }}"
-                >{{ posts.title }}</a
-              >
-            </div>
-            <div class="item-meta clearfix">
-              <div
-                class="item-meta-ico bg-ico-book"
-                style="
-                  background: url('{{site.url}}/style/images/bg-ico.png') no-repeat;
-                  background-size: 40px auto;
-                "
-              ></div>
-              <div class="item-meta-cat">
-                <!-- <a
-                  href="/tags#{{ posts.category }}"
-                  title="{{ posts.category }}"
-                  data-hover="{{ posts.category }}"
-                  >{{ posts.category }}</a
-                > -->
-                <a href="" title="" data-hover=""
-                  >{{ posts.date | date: "%F"}}</a
-                >
-                <!-- <a href="" title="" data-hover=""
-                  >{{ posts.date | date: "%F %H:%M"}}</a
-                > -->
-              </div>
-              <!-- <div class="item-meta-cat">
-								<a href="/tags#{{ posts.category }}" title="{{ posts.category }}"
-									data-hover="{{ posts.category }}">{{ posts.category }}</a>
-								<a href="/archives#{{ posts.date | date: "%Y"}}" title="{{ posts.date | date: "%Y"}}"
-									data-hover="{{ posts.date | date: "%F %H:%M"}}">{{ posts.date | date: "%F %H:%M"}}</a>
-							</div> -->
-            </div>
-          </div>
-        </div>
-      </div>
+      {% for post in paginator.posts %}
+        {% include post-card.html post=post %}
       {% endfor %}
     </div>
   </div>

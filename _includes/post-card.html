@@ -1,0 +1,17 @@
+<article class="post-list-item">
+  <a class="post-card" href="{{ post.url }}" aria-label="{{ post.title }}">
+    {% if post.background-image %}
+      <div class="post-card__media" style="background-image: url('{{ post.background-image }}');"></div>
+    {% else %}
+      <div class="post-card__media post-card__media--{{ post.background | default: 'default' }}"></div>
+    {% endif %}
+    <div class="post-card__body">
+      <div class="post-card__meta">
+        <span>{{ post.category | default: "post" }}</span>
+        <time datetime="{{ post.date | date: '%F' }}">{{ post.date | date: "%F" }}</time>
+      </div>
+      <h2 class="post-card__title">{{ post.title }}</h2>
+      <p class="post-card__excerpt">{{ post.content | strip_html | strip_newlines | truncate: 120 }}</p>
+    </div>
+  </a>
+</article>

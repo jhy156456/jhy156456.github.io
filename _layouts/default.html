@@ -1,13 +1,15 @@
-<!DOCTYPE >
+<!DOCTYPE html>
 <html lang="ko" data-scribe-reduced-action-queue="true">
+  <head>
   <meta http-equiv="x-dns-prefetch-control" content="on" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
   <meta name="renderer" content="webkit" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta http-equiv="Cache-Control" content="no-siteapp" />
   <title>{{ site.title }}</title>
   {% include head.html %}
+  </head>
     <body class="bg-grey" gtools_scp_screen_capture_injected="true">
     <div id="MathJax_Message" style="display: none"></div>
     <header id="header" class="header bg-white">
@@ -16,7 +18,7 @@
           href="/"
           title="{{  site.title }}"
           class="navbar-logo">
-          <img src="{{ site.url }}/style/images/logo-jhy156456.png" alt="{{ site.title }}" />
+          <img src="{{ '/style/images/logo-jhy156456.png' | relative_url }}" alt="{{ site.title }}" />
         </a>
         <div class="navbar-menu">
           {% for link in site.links %}
@@ -44,7 +46,7 @@
             </span>
           </form>
         </div>
-        <div class="navbar-mobile-menu" onclick="">
+        <button class="navbar-mobile-menu" type="button" aria-label="메뉴 열기" aria-expanded="false">
           <span class="icon-menu cross">
             <span class="middle"></span>
           </span>
@@ -58,7 +60,7 @@
               </li>
             {% endfor %}
           </ul>
-        </div>
+        </button>
       </div>
     </header>
 

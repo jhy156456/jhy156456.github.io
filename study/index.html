@@ -1,21 +1,28 @@
 ---
 pagination:
-enabled: true
-category: study
-sort_field: "date"
-sort_reverse: true
+  enabled: true
+  category: study
+  sort_field: "date"
+  sort_reverse: true
 ---
 
 <div class="nav_main_parent">
   {% include nav_list_main.html %}
   <div class="main-content index-page clearfix">
+    <section class="listing-hero">
+      <p class="listing-hero__eyebrow">Study Notes</p>
+      <h1>기술 학습과 문제 해결 기록</h1>
+      <p>AI, 백엔드, 데이터 엔지니어링, 인프라 운영에서 다시 찾아볼 내용을 모았습니다.</p>
+    </section>
     {% assign sum = site.posts | size %}
     <div class="post-lists">
       <div class="post-lists-body">
-        {% for posts in site.posts %}
-        {% include categories-main.html %} {% endfor %}
+        {% for post in paginator.posts %}
+          {% include post-card.html post=post %}
+        {% endfor %}
       </div>
     </div>
+    {% include pagination.html %}
   </div>
 </div>
 {% comment %}
