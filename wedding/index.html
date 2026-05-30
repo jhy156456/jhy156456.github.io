@@ -1061,7 +1061,7 @@
           
           
           
-          <figure class="gallery-tile">
+          <figure class="gallery-tile"> 
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-02.jpg"
               data-full="/assets/images/wedding/gallery/gallery-02.jpg"
@@ -2094,9 +2094,9 @@
 
           var prevItem = galleryItems[(currentGalleryIndex - 1 + galleryItems.length) % galleryItems.length];
           var nextItem = galleryItems[(currentGalleryIndex + 1) % galleryItems.length];
-          lightboxPrevImg.src = prevItem.thumb;
+          lightboxPrevImg.src = prevItem.full;
           lightboxPrevImg.alt = "";
-          lightboxNextImg.src = nextItem.thumb;
+          lightboxNextImg.src = nextItem.full;
           lightboxNextImg.alt = "";
         }
 
@@ -2238,7 +2238,6 @@
           galleryItems = Array.prototype.map.call(galleryImages, function (img) {
             return {
               full: img.getAttribute("data-full") || img.src,
-              thumb: img.getAttribute("src") || img.src,
               alt: img.alt
             };
           });
