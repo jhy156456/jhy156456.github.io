@@ -1,0 +1,9 @@
+<article class="archive-row">
+  <a class="archive-row__title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+  <div class="archive-row__meta">
+    <time datetime="{{ post.date | date: '%F' }}">{{ post.date | date: "%F" }}</time>
+    {% if post.category %}
+      <a href="{{ '/tags/#' | append: post.category | relative_url }}">{{ post.category }}</a>
+    {% endif %}
+  </div>
+</article>
