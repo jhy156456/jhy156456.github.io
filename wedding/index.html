@@ -876,14 +876,16 @@
 
       .lightbox-img {
         --lightbox-scale: 1;
+        --lightbox-pan-x: 0px;
+        --lightbox-pan-y: 0px;
         position: absolute;
-        top: 50%;
-        left: 50%;
+        inset: 0;
+        margin: auto;
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
         transform-origin: center center;
-        transform: translate(-50%, -50%) translateX(var(--lightbox-shift)) scale(var(--lightbox-scale));
+        transform: translate(var(--lightbox-pan-x), var(--lightbox-pan-y)) translateX(var(--lightbox-shift)) scale(var(--lightbox-scale));
         opacity: 1;
         transition: transform 0.24s cubic-bezier(0.22, 0.68, 0.2, 1), opacity 0.24s ease;
         touch-action: none;
@@ -910,11 +912,11 @@
       }
 
       .lightbox-img-prev {
-        transform: translate(-50%, -50%) translateX(calc(var(--lightbox-shift) - var(--lightbox-gap)));
+        transform: translateX(calc(var(--lightbox-shift) - var(--lightbox-gap)));
       }
 
       .lightbox-img-next {
-        transform: translate(-50%, -50%) translateX(calc(var(--lightbox-shift) + var(--lightbox-gap)));
+        transform: translateX(calc(var(--lightbox-shift) + var(--lightbox-gap)));
       }
 
       .lightbox-img.is-dragging {
@@ -1049,7 +1051,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-01.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-01.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-01.jpg"
               alt="웨딩 사진 1"
               width="82"
               height="82"
@@ -1064,7 +1066,7 @@
           <figure class="gallery-tile"> 
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-02.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-02.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-02.jpg"
               alt="웨딩 사진 2"
               width="82"
               height="82"
@@ -1079,7 +1081,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-03.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-03.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-03.jpg"
               alt="웨딩 사진 3"
               width="82"
               height="82"
@@ -1094,7 +1096,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-04.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-04.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-04.jpg"
               alt="웨딩 사진 4"
               width="82"
               height="82"
@@ -1109,7 +1111,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-05.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-05.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-05.jpg"
               alt="웨딩 사진 5"
               width="82"
               height="82"
@@ -1124,7 +1126,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-06.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-06.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-06.jpg"
               alt="웨딩 사진 6"
               width="82"
               height="82"
@@ -1139,7 +1141,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-07.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-07.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-07.jpg"
               alt="웨딩 사진 7"
               width="82"
               height="82"
@@ -1154,7 +1156,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-08.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-08.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-08.jpg"
               alt="웨딩 사진 8"
               width="82"
               height="82"
@@ -1169,7 +1171,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-09.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-09.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-09.jpg"
               alt="웨딩 사진 9"
               width="82"
               height="82"
@@ -1184,7 +1186,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-10.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-10.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-10.jpg"
               alt="웨딩 사진 10"
               width="82"
               height="82"
@@ -1199,7 +1201,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-11.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-11.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-11.jpg"
               alt="웨딩 사진 11"
               width="82"
               height="82"
@@ -1214,7 +1216,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-12.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-12.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-12.jpg"
               alt="웨딩 사진 12"
               width="82"
               height="82"
@@ -1229,7 +1231,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-13.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-13.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-13.jpg"
               alt="웨딩 사진 13"
               width="82"
               height="82"
@@ -1244,7 +1246,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-14.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-14.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-14.jpg"
               alt="웨딩 사진 14"
               width="82"
               height="82"
@@ -1259,7 +1261,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-15.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-15.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-15.jpg"
               alt="웨딩 사진 15"
               width="82"
               height="82"
@@ -1274,7 +1276,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-16.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-16.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-16.jpg"
               alt="웨딩 사진 16"
               width="82"
               height="82"
@@ -1289,7 +1291,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-17.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-17.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-17.jpg"
               alt="웨딩 사진 17"
               width="82"
               height="82"
@@ -1304,7 +1306,7 @@
           <figure class="gallery-tile">
             <img
               src="/assets/images/wedding/gallery/thumbs/gallery-18.jpg"
-              data-full="/assets/images/wedding/gallery/gallery-18.jpg"
+              data-full="/assets/images/wedding/gallery/display/gallery-18.jpg"
               alt="웨딩 사진 18"
               width="82"
               height="82"
@@ -1597,6 +1599,8 @@
         var firebaseReady = false;
         var db = null;
         var zoomScale = 1;
+        var panX = 0;
+        var panY = 0;
         var startDistance = 0;
         var startScale = 1;
         var galleryItems = [];
@@ -1606,10 +1610,19 @@
         var touchStartX = 0;
         var touchStartY = 0;
         var touchCurrentX = 0;
+        var touchPanStartX = 0;
+        var touchPanStartY = 0;
+        var isLightboxPanning = false;
+        var isPinchingLightbox = false;
+        var suppressLightboxSwipe = false;
         var isLightboxDragging = false;
         var mouseDragActive = false;
+        var mousePanActive = false;
         var mouseStartX = 0;
+        var mouseStartY = 0;
         var mouseCurrentX = 0;
+        var mousePanStartX = 0;
+        var mousePanStartY = 0;
         var musicIsPlaying = false;
         var musicUserPaused = false;
         var musicGestureTried = false;
@@ -2034,8 +2047,39 @@
           return Math.sqrt(dx * dx + dy * dy);
         }
 
-        function applyZoom() {
+        function getLightboxPanBounds(scale) {
+          var stageWidth = lightboxStage.clientWidth;
+          var stageHeight = lightboxStage.clientHeight;
+          var naturalWidth = lightboxImg.naturalWidth || stageWidth;
+          var naturalHeight = lightboxImg.naturalHeight || stageHeight;
+          var fitScale = Math.min(stageWidth / naturalWidth, stageHeight / naturalHeight, 1);
+          var renderedWidth = naturalWidth * fitScale * scale;
+          var renderedHeight = naturalHeight * fitScale * scale;
+
+          return {
+            x: Math.max(0, (renderedWidth - stageWidth) / 2),
+            y: Math.max(0, (renderedHeight - stageHeight) / 2)
+          };
+        }
+
+        function clampLightboxPan() {
+          var bounds = getLightboxPanBounds(zoomScale);
+          panX = clamp(panX, -bounds.x, bounds.x);
+          panY = clamp(panY, -bounds.y, bounds.y);
+        }
+
+        function applyLightboxTransform() {
+          clampLightboxPan();
           lightboxImg.style.setProperty("--lightbox-scale", zoomScale);
+          lightboxImg.style.setProperty("--lightbox-pan-x", panX + "px");
+          lightboxImg.style.setProperty("--lightbox-pan-y", panY + "px");
+        }
+
+        function resetLightboxZoom() {
+          zoomScale = 1;
+          panX = 0;
+          panY = 0;
+          applyLightboxTransform();
         }
 
         /** 원본 JPEG 디코딩이 끝난 뒤 콜백 (슬라이드 시 메인 스레드 버벅임 완화) */
@@ -2073,7 +2117,11 @@
             lightboxSlideTimer = null;
           }
           isLightboxDragging = false;
+          isLightboxPanning = false;
+          isPinchingLightbox = false;
+          suppressLightboxSwipe = false;
           mouseDragActive = false;
+          mousePanActive = false;
           lightboxStage.classList.remove("is-carousel-dragging", "is-carousel-resetting");
           lightboxImg.classList.remove("is-dragging", "slide-next-out", "slide-prev-out", "slide-next-in", "slide-prev-in");
           lightboxStage.style.removeProperty("--lightbox-shift");
@@ -2107,12 +2155,12 @@
           currentGalleryIndex = (index + galleryItems.length) % galleryItems.length;
           var item = galleryItems[currentGalleryIndex];
           lightboxImg.alt = item.alt || "확대 이미지";
-          zoomScale = 1;
+          resetLightboxZoom();
           lightboxImg.src = item.full;
+          updateLightboxNav();
+          updateLightboxPreviewImages();
           runAfterLightboxImageReady(function () {
-            applyZoom();
-            updateLightboxNav();
-            updateLightboxPreviewImages();
+            applyLightboxTransform();
           });
         }
 
@@ -2134,12 +2182,12 @@
             currentGalleryIndex = nextIndex;
             var item = galleryItems[currentGalleryIndex];
             lightboxImg.alt = item.alt || "확대 이미지";
-            zoomScale = 1;
+            resetLightboxZoom();
             lightboxImg.src = item.full;
+            updateLightboxNav();
+            updateLightboxPreviewImages();
             runAfterLightboxImageReady(function () {
-              applyZoom();
-              updateLightboxNav();
-              updateLightboxPreviewImages();
+              applyLightboxTransform();
 
               lightboxImg.classList.remove("slide-next-out", "slide-prev-out");
               lightboxImg.classList.add(slideDirection === "prev" ? "slide-prev-in" : "slide-next-in");
@@ -2171,12 +2219,12 @@
               currentGalleryIndex = nextIndex;
               var item = galleryItems[currentGalleryIndex];
               lightboxImg.alt = item.alt || "확대 이미지";
-              zoomScale = 1;
+              resetLightboxZoom();
               lightboxImg.src = item.full;
+              updateLightboxNav();
+              updateLightboxPreviewImages();
               runAfterLightboxImageReady(function () {
-                applyZoom();
-                updateLightboxNav();
-                updateLightboxPreviewImages();
+                applyLightboxTransform();
                 lightboxStage.style.setProperty("--lightbox-shift", "0px");
                 lightboxStage.classList.remove("is-carousel-dragging");
                 lightboxImg.classList.remove("is-dragging");
@@ -2200,8 +2248,10 @@
           currentGalleryIndex = typeof galleryIndex === "number" ? galleryIndex : -1;
           resetLightboxSlide();
           lightboxImg.alt = alt || "확대 이미지";
-          zoomScale = 1;
+          resetLightboxZoom();
           lightboxImg.src = src;
+          updateLightboxNav();
+          updateLightboxPreviewImages();
           lightbox.classList.add("show");
           lightbox.setAttribute("aria-hidden", "false");
           document.body.style.overflow = "hidden";
@@ -2210,9 +2260,7 @@
             lightboxHistoryActive = true;
           }
           runAfterLightboxImageReady(function () {
-            applyZoom();
-            updateLightboxNav();
-            updateLightboxPreviewImages();
+            applyLightboxTransform();
           });
         }
 
@@ -2293,35 +2341,58 @@
           });
 
           lightboxImg.addEventListener("dblclick", function () {
-            zoomScale = zoomScale > 1 ? 1 : 2;
-            applyZoom();
+            if (zoomScale > 1) {
+              resetLightboxZoom();
+            } else {
+              zoomScale = 2;
+              applyLightboxTransform();
+            }
           });
 
           lightboxImg.addEventListener("mousedown", function (event) {
-            if (currentGalleryIndex < 0 || zoomScale !== 1) {
+            if (currentGalleryIndex < 0) {
               return;
             }
             event.preventDefault();
-            mouseDragActive = true;
             mouseStartX = event.clientX;
+            mouseStartY = event.clientY;
             mouseCurrentX = event.clientX;
+            if (zoomScale > 1) {
+              mousePanActive = true;
+              mousePanStartX = panX;
+              mousePanStartY = panY;
+            } else {
+              mouseDragActive = true;
+            }
             lightboxImg.classList.add("is-dragging");
           });
 
           document.addEventListener("mousemove", function (event) {
-            if (!mouseDragActive) {
+            if (!mouseDragActive && !mousePanActive) {
               return;
             }
-            mouseCurrentX = event.clientX;
-            moveLightboxDrag(mouseCurrentX - mouseStartX);
+            if (mousePanActive) {
+              panX = mousePanStartX + event.clientX - mouseStartX;
+              panY = mousePanStartY + event.clientY - mouseStartY;
+              applyLightboxTransform();
+            } else {
+              mouseCurrentX = event.clientX;
+              moveLightboxDrag(mouseCurrentX - mouseStartX);
+            }
           });
 
           document.addEventListener("mouseup", function () {
-            if (!mouseDragActive) {
+            if (!mouseDragActive && !mousePanActive) {
               return;
             }
-            mouseDragActive = false;
-            finishLightboxDrag(mouseCurrentX - mouseStartX);
+            if (mousePanActive) {
+              mousePanActive = false;
+              lightboxImg.classList.remove("is-dragging");
+              applyLightboxTransform();
+            } else {
+              mouseDragActive = false;
+              finishLightboxDrag(mouseCurrentX - mouseStartX);
+            }
           });
 
           lightboxImg.addEventListener(
@@ -2330,7 +2401,11 @@
               event.preventDefault();
               var delta = event.deltaY > 0 ? -0.15 : 0.15;
               zoomScale = clamp(zoomScale + delta, 1, 4);
-              applyZoom();
+              if (zoomScale === 1) {
+                panX = 0;
+                panY = 0;
+              }
+              applyLightboxTransform();
             },
             { passive: false }
           );
@@ -2339,13 +2414,21 @@
             "touchstart",
             function (event) {
               if (event.touches.length === 2) {
+                isPinchingLightbox = true;
+                suppressLightboxSwipe = true;
+                isLightboxDragging = false;
+                isLightboxPanning = false;
                 startDistance = getDistance(event.touches[0], event.touches[1]);
                 startScale = zoomScale;
+                lightboxImg.classList.add("is-dragging");
               } else if (event.touches.length === 1) {
                 touchStartX = event.touches[0].clientX;
                 touchStartY = event.touches[0].clientY;
                 touchCurrentX = touchStartX;
+                touchPanStartX = panX;
+                touchPanStartY = panY;
                 isLightboxDragging = false;
+                isLightboxPanning = false;
               }
             },
             { passive: true }
@@ -2359,14 +2442,28 @@
                 var currentDistance = getDistance(event.touches[0], event.touches[1]);
                 if (startDistance > 0) {
                   zoomScale = clamp(startScale * (currentDistance / startDistance), 1, 4);
-                  applyZoom();
+                  if (zoomScale === 1) {
+                    panX = 0;
+                    panY = 0;
+                  }
+                  applyLightboxTransform();
                 }
+              } else if (event.touches.length === 1 && currentGalleryIndex > -1 && zoomScale > 1) {
+                event.preventDefault();
+                isLightboxPanning = true;
+                panX = touchPanStartX + event.touches[0].clientX - touchStartX;
+                panY = touchPanStartY + event.touches[0].clientY - touchStartY;
+                lightboxImg.classList.add("is-dragging");
+                applyLightboxTransform();
               } else if (event.touches.length === 1 && currentGalleryIndex > -1 && zoomScale === 1) {
                 var dragX = event.touches[0].clientX - touchStartX;
                 var dragY = event.touches[0].clientY - touchStartY;
 
                 if (isLightboxDragging || (Math.abs(dragX) > 8 && Math.abs(dragX) > Math.abs(dragY))) {
                   event.preventDefault();
+                  if (suppressLightboxSwipe) {
+                    return;
+                  }
                   isLightboxDragging = true;
                   touchCurrentX = event.touches[0].clientX;
                   lightboxImg.classList.add("is-dragging");
@@ -2380,13 +2477,54 @@
           lightboxImg.addEventListener(
             "touchend",
             function (event) {
+              if (isPinchingLightbox) {
+                if (event.touches.length < 2) {
+                  startDistance = 0;
+                  isPinchingLightbox = false;
+                  if (event.touches.length === 1) {
+                    touchStartX = event.touches[0].clientX;
+                    touchStartY = event.touches[0].clientY;
+                    touchPanStartX = panX;
+                    touchPanStartY = panY;
+                  }
+                }
+                if (zoomScale <= 1.02) {
+                  resetLightboxZoom();
+                } else {
+                  applyLightboxTransform();
+                }
+                if (event.touches.length === 0) {
+                  suppressLightboxSwipe = false;
+                  lightboxImg.classList.remove("is-dragging");
+                }
+                return;
+              }
+              if (isLightboxPanning) {
+                isLightboxPanning = false;
+                lightboxImg.classList.remove("is-dragging");
+                if (event.touches.length === 0) {
+                  suppressLightboxSwipe = false;
+                }
+                if (zoomScale <= 1.02) {
+                  resetLightboxZoom();
+                } else {
+                  applyLightboxTransform();
+                }
+                return;
+              }
+              if (suppressLightboxSwipe) {
+                if (event.touches.length === 0) {
+                  suppressLightboxSwipe = false;
+                  lightboxImg.classList.remove("is-dragging");
+                }
+                return;
+              }
               if (currentGalleryIndex > -1 && event.changedTouches.length === 1 && zoomScale === 1) {
                 var releaseX = isLightboxDragging ? touchCurrentX : event.changedTouches[0].clientX;
                 finishLightboxDrag(releaseX - touchStartX);
               }
               if (zoomScale < 1) {
-                zoomScale = 1;
-                applyZoom();
+                resetLightboxZoom();
               }
             },
             { passive: true }

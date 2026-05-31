@@ -1,5 +1,6 @@
-# JPEG EXIF Orientation(274)을 반영해 세로·가로가 맞는 썸네일을 만듭니다.
-# 원본을 추가·교체한 뒤 PowerShell에서 실행: .\wedding\build-gallery-thumbs.ps1
+# Builds gallery thumbnails and lightbox display images from the original JPEGs.
+# Run from the repo root:
+#   .\wedding\build-gallery-thumbs.ps1
 
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
@@ -30,43 +31,65 @@ function Apply-ExifOrientation([System.Drawing.Image]$image) {
   }
 }
 
+function Save-ResizedJpeg(
+  [System.Drawing.Image]$source,
+  [string]$outPath,
+  [int]$maxSide,
+  [long]$quality,
+  [System.Drawing.Imaging.ImageCodecInfo]$jpegCodec
+) {
+  $w = $source.Width
+  $h = $source.Height
+  $scale = [Math]::Min(1.0, [Math]::Min($maxSide / $w, $maxSide / $h))
+  $nw = [Math]::Max(1, [int][Math]::Round($w * $scale))
+  $nh = [Math]::Max(1, [int][Math]::Round($h * $scale))
+
+  $bmp = New-Object System.Drawing.Bitmap $nw, $nh
+  $g = [System.Drawing.Graphics]::FromImage($bmp)
+  $encParams = New-Object System.Drawing.Imaging.EncoderParameters 1
+  $encParams.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter ([System.Drawing.Imaging.Encoder]::Quality, $quality)
+
+  try {
+    $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+    $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
+    $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+    $g.DrawImage($source, 0, 0, $nw, $nh)
+    $bmp.Save($outPath, $jpegCodec, $encParams)
+  }
+  finally {
+    $g.Dispose()
+    $bmp.Dispose()
+    $encParams.Dispose()
+  }
+}
+
 $repoRoot = Split-Path $PSScriptRoot -Parent
 
 $srcDir = Join-Path $repoRoot "assets\images\wedding\gallery"
 $thumbDir = Join-Path $srcDir "thumbs"
+$displayDir = Join-Path $srcDir "display"
 
 if (-not (Test-Path $srcDir)) {
   Write-Error "Gallery folder not found: $srcDir"
 }
 
 New-Item -ItemType Directory -Force -Path $thumbDir | Out-Null
+New-Item -ItemType Directory -Force -Path $displayDir | Out-Null
 
 $jpegCodec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq "image/jpeg" }
-$encParams = New-Object System.Drawing.Imaging.EncoderParameters 1
-$encParams.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter ([System.Drawing.Imaging.Encoder]::Quality, 78L)
 
 Get-ChildItem -LiteralPath $srcDir -File -Filter "gallery-*.jpg" | Where-Object { $_.DirectoryName -eq $srcDir } | ForEach-Object {
   $img = [System.Drawing.Image]::FromFile($_.FullName)
   try {
     Apply-ExifOrientation -image $img
 
-    $maxSide = 240
-    $w = $img.Width
-    $h = $img.Height
-    $scale = [Math]::Min(1.0, [Math]::Min($maxSide / $w, $maxSide / $h))
-    $nw = [Math]::Max(1, [int][Math]::Round($w * $scale))
-    $nh = [Math]::Max(1, [int][Math]::Round($h * $scale))
-    $bmp = New-Object System.Drawing.Bitmap $nw, $nh
-    $g = [System.Drawing.Graphics]::FromImage($bmp)
-    $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
-    $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
-    $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
-    $g.DrawImage($img, 0, 0, $nw, $nh)
-    $outPath = Join-Path $thumbDir $_.Name
-    $bmp.Save($outPath, $jpegCodec, $encParams)
-    $g.Dispose()
-    $bmp.Dispose()
-    Write-Host ("OK {0} ({1} bytes)" -f $_.Name, (Get-Item $outPath).Length)
+    $thumbPath = Join-Path $thumbDir $_.Name
+    Save-ResizedJpeg -source $img -outPath $thumbPath -maxSide 240 -quality 78L -jpegCodec $jpegCodec
+
+    $displayPath = Join-Path $displayDir $_.Name
+    Save-ResizedJpeg -source $img -outPath $displayPath -maxSide 2000 -quality 82L -jpegCodec $jpegCodec
+
+    Write-Host ("OK {0} thumb={1:N0} display={2:N0}" -f $_.Name, (Get-Item $thumbPath).Length, (Get-Item $displayPath).Length)
   }
   finally {
     $img.Dispose()
@@ -74,3 +97,4 @@ Get-ChildItem -LiteralPath $srcDir -File -Filter "gallery-*.jpg" | Where-Object 
 }
 
 Write-Host "Done. Thumbs: $thumbDir"
+Write-Host "Done. Display: $displayDir"
