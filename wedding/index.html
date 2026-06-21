@@ -879,6 +879,10 @@
         display: none;
       }
 
+      .pswp--touch .pswp__button--arrow {
+        visibility: visible;
+      }
+
       .lightbox {
         position: fixed;
         inset: 0;
@@ -1625,6 +1629,28 @@
         showHideAnimationType: "fade",
         wheelToZoom: true,
         pswpModule: () => import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js")
+      });
+
+      let galleryHistoryEntryActive = false;
+
+      galleryLightbox.on("afterInit", () => {
+        const currentState = history.state && typeof history.state === "object" ? history.state : {};
+        history.pushState({ ...currentState, weddingGalleryOpen: true }, "", window.location.href);
+        galleryHistoryEntryActive = true;
+      });
+
+      galleryLightbox.on("close", () => {
+        if (galleryHistoryEntryActive) {
+          galleryHistoryEntryActive = false;
+          history.back();
+        }
+      });
+
+      window.addEventListener("popstate", () => {
+        if (galleryHistoryEntryActive && galleryLightbox.pswp) {
+          galleryHistoryEntryActive = false;
+          galleryLightbox.pswp.close();
+        }
       });
 
       galleryLightbox.init();
