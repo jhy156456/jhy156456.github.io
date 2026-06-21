@@ -907,6 +907,10 @@
         opacity: 1;
       }
 
+      .lightbox-stage.is-carousel-dragging .lightbox-img {
+        transition: none;
+      }
+
       .lightbox-stage.is-carousel-resetting .lightbox-img {
         transition: none;
       }
@@ -2148,6 +2152,30 @@
           lightboxNextImg.alt = "";
         }
 
+        function preloadLightboxImage(src) {
+          if (!src) {
+            return;
+          }
+          var image = new Image();
+          image.decoding = "async";
+          image.src = src;
+          if (image.decode) {
+            image.decode().catch(function () {});
+          }
+        }
+
+        function preloadLightboxNeighbors() {
+          if (currentGalleryIndex < 0 || galleryItems.length < 2) {
+            return;
+          }
+          var prevItem = galleryItems[(currentGalleryIndex - 1 + galleryItems.length) % galleryItems.length];
+          var currentItem = galleryItems[currentGalleryIndex];
+          var nextItem = galleryItems[(currentGalleryIndex + 1) % galleryItems.length];
+          preloadLightboxImage(prevItem && prevItem.full);
+          preloadLightboxImage(currentItem && currentItem.full);
+          preloadLightboxImage(nextItem && nextItem.full);
+        }
+
         function showGalleryImage(index) {
           if (!galleryItems.length) {
             return;
@@ -2159,6 +2187,7 @@
           lightboxImg.src = item.full;
           updateLightboxNav();
           updateLightboxPreviewImages();
+          preloadLightboxNeighbors();
           runAfterLightboxImageReady(function () {
             applyLightboxTransform();
           });
@@ -2186,6 +2215,7 @@
             lightboxImg.src = item.full;
             updateLightboxNav();
             updateLightboxPreviewImages();
+            preloadLightboxNeighbors();
             runAfterLightboxImageReady(function () {
               applyLightboxTransform();
 
@@ -2223,6 +2253,7 @@
               lightboxImg.src = item.full;
               updateLightboxNav();
               updateLightboxPreviewImages();
+              preloadLightboxNeighbors();
               runAfterLightboxImageReady(function () {
                 applyLightboxTransform();
                 lightboxStage.style.setProperty("--lightbox-shift", "0px");
@@ -2252,6 +2283,7 @@
           lightboxImg.src = src;
           updateLightboxNav();
           updateLightboxPreviewImages();
+          preloadLightboxNeighbors();
           lightbox.classList.add("show");
           lightbox.setAttribute("aria-hidden", "false");
           document.body.style.overflow = "hidden";
