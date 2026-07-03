@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "wedding": {
+      "guestbook": {
+        ".read": true,
+        ".write": true
+      },
+      "rsvp": {
+        ".read": false,
+        ".write": true
+      }
+    },
+    "views": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}

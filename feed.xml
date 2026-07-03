@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hayden J GitHub blog</title>
+    <description>Full Stack | AI</description>
+    <link>https://jhy156456.github.io</link>
+    <atom:link href="https://jhy156456.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    
+      <item>
+        <title>[de] test</title>
+        <category>study</category>
+        <description>test  test</description>
+        <pubDate>2026-01-02 17:00:00 </pubDate>
+        <link>https://jhy156456.github.io/2026/01/02/os-zip-shell-script.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2026/01/02/os-zip-shell-script.html</guid>
+      </item>
+    
+      <item>
+        <title>[infra] 내부 DNS 변경 후 특정 도메인 SERVFAIL 이슈 (BIND + DNSSEC)</title>
+        <category>study</category>
+        <description>개요내부망에서 원래 쓰던 DNS 서버(이하 UPSTREAM_DNS)가 따로 있고,리눅스 서버 하나(이하 LOCAL_DNS)에는 BIND가 동작만 하고 있었다.LOCAL_DNS...</description>
+        <pubDate>2025-12-10 17:00:00 </pubDate>
+        <link>https://jhy156456.github.io/2025/12/10/os-local-dns-issue.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2025/12/10/os-local-dns-issue.html</guid>
+      </item>
+    
+      <item>
+        <title>[DE] hdfs cli 명령어 수행 안될 때</title>
+        <category>study</category>
+        <description>hdfs 명령어  hdfs 명령어가 잘 작동하는지 확인하려면 아래와같은 명령어를 수행한다.hdfs getconf -confKey fs.defaultFS이때 출력이 file:/...</description>
+        <pubDate>2025-11-22 04:40:00 </pubDate>
+        <link>https://jhy156456.github.io/2025/11/22/DE-hdfs-cli-not-working.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2025/11/22/DE-hdfs-cli-not-working.html</guid>
+      </item>
+    
+      <item>
+        <title>[oracle] delete from table 했을 때 복구방법</title>
+        <category>study</category>
+        <description>문제발생테이블 명을 비슷하게 지어서 Table_a를 delete all 할 것을 Table_b를 해버림..해결디비 설정에 따라 다르겠지만 내가 사용하는 오라클 DB는 스냅샷이...</description>
+        <pubDate>2025-11-12 18:58:42 </pubDate>
+        <link>https://jhy156456.github.io/2025/11/12/oracle-delete-from-table.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2025/11/12/oracle-delete-from-table.html</guid>
+      </item>
+    
+      <item>
+        <title>[spring] 인덱스에서 누락된 IN 또는 OUT 매개변수::11 </title>
+        <category>study</category>
+        <description>문제spring에서 jdbc와 dao-hqml로 연결된 oracle 쿼리에서 인덱스에서 누락된 IN 또는 OUT 매개변수::11 가 발생했다.오류가 발생한 쿼리를 DBeave...</description>
+        <pubDate>2025-04-15 22:16:42 </pubDate>
+        <link>https://jhy156456.github.io/2025/04/15/spring-Missing-IN-or-OUT-parameter.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2025/04/15/spring-Missing-IN-or-OUT-parameter.html</guid>
+      </item>
+    
+      <item>
+        <title>[spring] attribute key must be unique</title>
+        <category>study</category>
+        <description>문제spring에서 jdbc와 dao-hqml로 연결된 oracle 쿼리에서 attribute key must be unique가 발생했다.오류가 발생한 쿼리를 DBeaver...</description>
+        <pubDate>2025-04-04 22:16:42 </pubDate>
+        <link>https://jhy156456.github.io/2025/04/04/spring-attribute-key-must-be-unique.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2025/04/04/spring-attribute-key-must-be-unique.html</guid>
+      </item>
+    
+      <item>
+        <title>[oracle] primary key 수정 후 무결성 제약조건(ORA-00001) 사라지지 않음 현상</title>
+        <category>study</category>
+        <description>문제발생A_TABLE에 A,B,C 컬럼 외에 D 컬럼을 프라이머리키로 추가했다.ALTER TABLE A_TABLE DROP CONSTRAINT SYS_0ALTER TABLE ...</description>
+        <pubDate>2025-03-18 18:58:42 </pubDate>
+        <link>https://jhy156456.github.io/2025/03/18/oracle-primary-key-index-error.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2025/03/18/oracle-primary-key-index-error.html</guid>
+      </item>
+    
+      <item>
+        <title>[nlp] KLUE STS 데이터셋 다운로드 오류</title>
+        <category>study</category>
+        <description>[nlp] KLUE STS 데이터셋 다운로드 오류오류 발생아래 코드로 데이터 다운로드 시 오류가 발생했다.from datasets import load_datasetload_...</description>
+        <pubDate>2025-01-08 12:38:00 </pubDate>
+        <link>https://jhy156456.github.io/2025/01/08/nlp-KLUE-STS-error.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2025/01/08/nlp-KLUE-STS-error.html</guid>
+      </item>
+    
+      <item>
+        <title>[k8s] service</title>
+        <category>study</category>
+        <description>  [k8s] serviceselector  Service를 생성하면, label Selector에서 특정 label을 가진 Pod들만 탐지한다. Service는 이렇게 필터...</description>
+        <pubDate>2024-12-30 18:40:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/12/30/k8s-service.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/12/30/k8s-service.html</guid>
+      </item>
+    
+      <item>
+        <title>[statistics] z-scoring, f, t..</title>
+        <category>study</category>
+        <description>분위수  확률 p에 위치해있는 수가 어떤수인지를 구하는 방법24, 28, 37, 43, 46x1, x2, x3, x4, x5 일때 p가 0.5인 경우의 분위수 값은? 5개 x...</description>
+        <pubDate>2024-11-23 00:06:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/11/23/statistics-z-scoring,-f,-t/.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/11/23/statistics-z-scoring,-f,-t/.html</guid>
+      </item>
+    
+      <item>
+        <title>[tips] logitech mx keys for mac f13~f15(with. fn) 불편한 점 개선</title>
+        <category>study</category>
+        <description>mx keyslogitech 에서 출시한 기기 3개의 연결이 가능한 소리가 적은 키보드문제점  로지텍에는 logi options에서 설정 가능한 F1,F2등을 기본 기능키로 ...</description>
+        <pubDate>2024-09-19 20:24:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/09/19/tips-logitech-mx-keys-for-mac-f13~f15(with.-fn).html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/09/19/tips-logitech-mx-keys-for-mac-f13~f15(with.-fn).html</guid>
+      </item>
+    
+      <item>
+        <title>[python] path</title>
+        <category>study</category>
+        <description>logger.pyfrom pathlib import PathPath().cwd() / 'logs'Path().cwd() : Return a new path pointing t...</description>
+        <pubDate>2024-08-09 22:27:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/08/09/python-path.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/08/09/python-path.html</guid>
+      </item>
+    
+      <item>
+        <title>[backend] gunicorn, argparse conflict issue</title>
+        <category>study</category>
+        <description>문제위와 같이 arg_parse.py파일이 있을때 gunicorn으로 파이썬을 실행시켰을 때 해당 모듈의 get_args()함수를 실행시키는 코드가 있었다. 이 때 gunic...</description>
+        <pubDate>2024-08-07 02:20:00 </pubDate>
+        <link>https://jhy156456.github.io/2024/08/07/backend-gunicorn,-argparse-%EC%B6%A9%EB%8F%8C-%EC%9D%B4%EC%8A%88.html</link>
+        <guid isPermaLink="true">https://jhy156456.github.io/2024/08/07/backend-gunicorn,-argparse-%EC%B6%A9%EB%8F%8C-%EC%9D%B4%EC%8A%88.html</guid>
+      </item>
+    
+  </channel>
+</rss>
