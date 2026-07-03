@@ -4230,15 +4230,15 @@ a:focus::before {
     .post-card {
         width: 100%;
         min-height: 0;
-        aspect-ratio: auto;
+        aspect-ratio: 1 / 1;
         border-radius: 14px;
         box-sizing: border-box;
     }
 
     .post-card__media {
-        flex-basis: auto;
+        flex-basis: 40%;
         min-height: 0;
-        height: 112px;
+        height: auto;
     }
 
     .post-card__body {
