@@ -381,6 +381,32 @@
         overflow: hidden;
       }
 
+      .naver-map-canvas {
+        position: relative;
+        width: 100%;
+        height: 240px;
+        margin-top: 12px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #f5f5f3;
+        color: var(--muted);
+        font-size: 13px;
+        display: grid;
+        place-items: center;
+      }
+
+      .naver-map-label {
+        margin: 0;
+        padding: 8px 10px;
+        color: #1c1b1a;
+        font-family: "Noto Sans KR", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.35;
+        white-space: nowrap;
+      }
+
       .map-actions {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1402,6 +1428,14 @@
             height="1080"
           />
         </div>
+        <div
+          id="naverMap"
+          class="naver-map-canvas"
+          role="region"
+          aria-label="노블발렌티 삼성 네이버 지도"
+        >
+          지도를 불러오는 중입니다.
+        </div>
         <div class="map-actions" aria-label="지도 앱으로 보기">
           <a class="map-link naver-map" href="https://map.naver.com/p/search/%EB%85%B8%EB%B8%94%EB%B0%9C%EB%A0%8C%ED%8B%B0%20%EC%82%BC%EC%84%B1" target="_blank" rel="noopener">
             <img class="map-service-icon" src="/assets/images/wedding/map-icons/naver-map.png" alt="" width="20" height="20" />
@@ -1685,6 +1719,7 @@
     </script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=i32ql2rx67&amp;submodules=geocoder"></script>
     <script>
       (function () {
         var GUESTBOOK_KEY = "wedding_guestbook_entries_v2";
@@ -2207,6 +2242,62 @@
             x: Math.max(0, (renderedWidth - stageWidth) / 2),
             y: Math.max(0, (renderedHeight - stageHeight) / 2)
           };
+        }
+
+        function initNaverMap() {
+          var mapElement = document.getElementById("naverMap");
+          if (!mapElement) {
+            return;
+          }
+
+          if (!window.naver || !naver.maps || !naver.maps.Service) {
+            mapElement.textContent = "지도를 불러오지 못했습니다. 아래 지도 버튼을 이용해 주세요.";
+            return;
+          }
+
+          var fallbackPosition = new naver.maps.LatLng(37.5148, 127.0649);
+          var map = new naver.maps.Map(mapElement, {
+            center: fallbackPosition,
+            zoom: 17,
+            draggable: true,
+            scrollWheel: false,
+            pinchZoom: true,
+            zoomControl: true,
+            zoomControlOptions: {
+              position: naver.maps.Position.TOP_RIGHT
+            }
+          });
+          var marker = new naver.maps.Marker({
+            position: fallbackPosition,
+            map: map
+          });
+          var infoWindow = new naver.maps.InfoWindow({
+            content: '<p class="naver-map-label">노블발렌티 삼성</p>',
+            borderWidth: 0,
+            backgroundColor: "#ffffff",
+            anchorColor: "#ffffff",
+            pixelOffset: new naver.maps.Point(0, -4)
+          });
+
+          infoWindow.open(map, marker);
+          naver.maps.Event.addListener(marker, "click", function () {
+            infoWindow.open(map, marker);
+          });
+
+          naver.maps.Service.geocode(
+            { query: "서울 강남구 봉은사로 637" },
+            function (status, response) {
+              if (status !== naver.maps.Service.Status.OK || !response.v2.addresses.length) {
+                return;
+              }
+
+              var address = response.v2.addresses[0];
+              var position = new naver.maps.LatLng(Number(address.y), Number(address.x));
+              map.setCenter(position);
+              marker.setPosition(position);
+              infoWindow.open(map, marker);
+            }
+          );
         }
 
         function clampLightboxPan() {
@@ -2929,6 +3020,7 @@
         });
 
         initScrollReveal();
+        initNaverMap();
         initIntro();
         initMusic();
         // Gallery lightbox is handled by PhotoSwipe for stable native-like swiping.
