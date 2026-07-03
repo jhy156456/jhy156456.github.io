@@ -2948,8 +2948,8 @@ a:focus::before {
 
 .post-card {
     display: flex;
-    height: 100%;
-    min-height: 360px;
+    min-height: 0;
+    aspect-ratio: 1 / 1;
     flex-direction: column;
     overflow: hidden;
     border: 1px solid var(--ui-line);
@@ -2967,7 +2967,8 @@ a:focus::before {
 }
 
 .post-card__media {
-    min-height: 150px;
+    flex: 0 0 40%;
+    min-height: 0;
     border-bottom: 1px solid var(--ui-line);
     background: #fff;
     background-position: 50% 50%;
@@ -3024,7 +3025,9 @@ a:focus::before {
     display: flex;
     flex: 1;
     flex-direction: column;
-    padding: 18px;
+    min-height: 0;
+    overflow: hidden;
+    padding: 14px 16px 16px;
 }
 
 .post-card__meta {
@@ -3037,18 +3040,26 @@ a:focus::before {
 }
 
 .post-card__title {
-    margin: 14px 0 10px;
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 8px 0 6px;
     color: var(--ui-text);
     font-family: inherit;
     font-size: 18px;
-    line-height: 1.48;
+    line-height: 1.4;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
 
 .post-card__excerpt {
+    display: -webkit-box;
+    overflow: hidden;
     margin: 0;
     color: var(--ui-muted);
     font-size: 14px;
-    line-height: 1.72;
+    line-height: 1.55;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
 
 .pagination {
@@ -3317,6 +3328,15 @@ a:focus::before {
 .taxonomy__index a:hover,
 .nav__list .nav__items a:hover {
     color: var(--ui-accent);
+}
+
+.nav__list .nav__items .nav__summary-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 62px;
+    padding: 15px 28px 14px;
+    box-sizing: border-box;
 }
 
 .main-post {
@@ -4210,11 +4230,13 @@ a:focus::before {
     .post-card {
         width: 100%;
         min-height: 0;
+        aspect-ratio: auto;
         border-radius: 14px;
         box-sizing: border-box;
     }
 
     .post-card__media {
+        flex-basis: auto;
         min-height: 0;
         height: 112px;
     }
