@@ -880,6 +880,11 @@
           padding-right: 14px;
           padding-left: 14px;
         }
+
+        #naverMap,
+        #naverMap * {
+          touch-action: pan-y !important;
+        }
       }
 
       @media (min-width: 360px) {
@@ -2261,12 +2266,15 @@
           }
 
           var fallbackPosition = new naver.maps.LatLng(37.5148, 127.0649);
+          var isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
           var map = new naver.maps.Map(mapElement, {
             center: fallbackPosition,
             zoom: 17,
-            draggable: true,
+            draggable: !isTouchDevice,
             scrollWheel: false,
-            pinchZoom: true,
+            pinchZoom: !isTouchDevice,
+            disableDoubleTapZoom: isTouchDevice,
+            disableTwoFingerTapZoom: isTouchDevice,
             zoomControl: false
           });
           var marker = new naver.maps.Marker({
