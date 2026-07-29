@@ -1,6 +1,12 @@
 # Builds gallery thumbnails and lightbox display images from the original JPEGs.
 # Run from the repo root:
 #   .\wedding\build-gallery-thumbs.ps1
+# Or build directly from another folder:
+#   .\wedding\build-gallery-thumbs.ps1 -SourceDir "C:\path\to\photos"
+
+param(
+  [string]$SourceDir = ""
+)
 
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Drawing
@@ -65,9 +71,10 @@ function Save-ResizedJpeg(
 
 $repoRoot = Split-Path $PSScriptRoot -Parent
 
-$srcDir = Join-Path $repoRoot "assets\images\wedding\gallery"
-$thumbDir = Join-Path $srcDir "thumbs"
-$displayDir = Join-Path $srcDir "display"
+$galleryDir = Join-Path $repoRoot "assets\images\wedding\gallery"
+$srcDir = if ([string]::IsNullOrWhiteSpace($SourceDir)) { $galleryDir } else { $SourceDir }
+$thumbDir = Join-Path $galleryDir "thumbs"
+$displayDir = Join-Path $galleryDir "display"
 
 if (-not (Test-Path $srcDir)) {
   Write-Error "Gallery folder not found: $srcDir"
@@ -77,19 +84,30 @@ New-Item -ItemType Directory -Force -Path $thumbDir | Out-Null
 New-Item -ItemType Directory -Force -Path $displayDir | Out-Null
 
 $jpegCodec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq "image/jpeg" }
+$sourceFiles = Get-ChildItem -LiteralPath $srcDir -File | Where-Object { $_.Extension -match "^\.jpe?g$" } | Sort-Object Name
 
-Get-ChildItem -LiteralPath $srcDir -File -Filter "gallery-*.jpg" | Where-Object { $_.DirectoryName -eq $srcDir } | ForEach-Object {
+if ($sourceFiles.Count -eq 0) {
+  Write-Error "No JPEG images found: $srcDir"
+}
+
+Get-ChildItem -LiteralPath $thumbDir -File -Filter "gallery-*.jpg" | Remove-Item -Force
+Get-ChildItem -LiteralPath $displayDir -File -Filter "gallery-*.jpg" | Remove-Item -Force
+
+$index = 0
+$sourceFiles | ForEach-Object {
+  $index += 1
+  $outputName = "gallery-{0:D2}.jpg" -f $index
   $img = [System.Drawing.Image]::FromFile($_.FullName)
   try {
     Apply-ExifOrientation -image $img
 
-    $thumbPath = Join-Path $thumbDir $_.Name
+    $thumbPath = Join-Path $thumbDir $outputName
     Save-ResizedJpeg -source $img -outPath $thumbPath -maxSide 240 -quality 78L -jpegCodec $jpegCodec
 
-    $displayPath = Join-Path $displayDir $_.Name
+    $displayPath = Join-Path $displayDir $outputName
     Save-ResizedJpeg -source $img -outPath $displayPath -maxSide 2000 -quality 82L -jpegCodec $jpegCodec
 
-    Write-Host ("OK {0} thumb={1:N0} display={2:N0}" -f $_.Name, (Get-Item $thumbPath).Length, (Get-Item $displayPath).Length)
+    Write-Host ("OK {0} -> {1} thumb={2:N0} display={3:N0}" -f $_.Name, $outputName, (Get-Item $thumbPath).Length, (Get-Item $displayPath).Length)
   }
   finally {
     $img.Dispose()
