@@ -105,7 +105,7 @@ $sourceFiles | ForEach-Object {
     Save-ResizedJpeg -source $img -outPath $thumbPath -maxSide 240 -quality 78L -jpegCodec $jpegCodec
 
     $displayPath = Join-Path $displayDir $outputName
-    Save-ResizedJpeg -source $img -outPath $displayPath -maxSide 2000 -quality 82L -jpegCodec $jpegCodec
+    Save-ResizedJpeg -source $img -outPath $displayPath -maxSide 2000 -quality 90L -jpegCodec $jpegCodec
 
     Write-Host ("OK {0} -> {1} thumb={2:N0} display={3:N0}" -f $_.Name, $outputName, (Get-Item $thumbPath).Length, (Get-Item $displayPath).Length)
   }
