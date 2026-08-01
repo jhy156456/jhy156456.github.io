@@ -5,7 +5,8 @@
 #   .\wedding\build-gallery-thumbs.ps1 -SourceDir "C:\path\to\photos"
 
 param(
-  [string]$SourceDir = ""
+  [string]$SourceDir = "",
+  [switch]$ThumbsOnly
 )
 
 $ErrorActionPreference = "Stop"
@@ -69,12 +70,54 @@ function Save-ResizedJpeg(
   }
 }
 
+function Save-SquareThumbnail(
+  [System.Drawing.Image]$source,
+  [string]$outPath,
+  [int]$size,
+  [long]$quality,
+  [System.Drawing.Imaging.ImageCodecInfo]$jpegCodec
+) {
+  $cropSize = [Math]::Min($source.Width, $source.Height)
+  $cropX = [int][Math]::Round(($source.Width - $cropSize) / 2)
+  $cropY = if ($source.Height -gt $source.Width) {
+    [int][Math]::Round(($source.Height - $cropSize) * 0.28)
+  } else {
+    [int][Math]::Round(($source.Height - $cropSize) / 2)
+  }
+
+  $bmp = New-Object System.Drawing.Bitmap $size, $size
+  $g = [System.Drawing.Graphics]::FromImage($bmp)
+  $encParams = New-Object System.Drawing.Imaging.EncoderParameters 1
+  $encParams.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter ([System.Drawing.Imaging.Encoder]::Quality, $quality)
+
+  try {
+    $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+    $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
+    $g.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+    $destination = New-Object System.Drawing.Rectangle 0, 0, $size, $size
+    $sourceArea = New-Object System.Drawing.Rectangle $cropX, $cropY, $cropSize, $cropSize
+    $g.DrawImage($source, $destination, $sourceArea, [System.Drawing.GraphicsUnit]::Pixel)
+    $bmp.Save($outPath, $jpegCodec, $encParams)
+  }
+  finally {
+    $g.Dispose()
+    $bmp.Dispose()
+    $encParams.Dispose()
+  }
+}
+
 $repoRoot = Split-Path $PSScriptRoot -Parent
 
 $galleryDir = Join-Path $repoRoot "assets\images\wedding\gallery"
-$srcDir = if ([string]::IsNullOrWhiteSpace($SourceDir)) { $galleryDir } else { $SourceDir }
 $thumbDir = Join-Path $galleryDir "thumbs"
 $displayDir = Join-Path $galleryDir "display"
+$srcDir = if ($ThumbsOnly) {
+  $displayDir
+} elseif ([string]::IsNullOrWhiteSpace($SourceDir)) {
+  $galleryDir
+} else {
+  $SourceDir
+}
 
 if (-not (Test-Path $srcDir)) {
   Write-Error "Gallery folder not found: $srcDir"
@@ -91,7 +134,9 @@ if ($sourceFiles.Count -eq 0) {
 }
 
 Get-ChildItem -LiteralPath $thumbDir -File -Filter "gallery-*.jpg" | Remove-Item -Force
-Get-ChildItem -LiteralPath $displayDir -File -Filter "gallery-*.jpg" | Remove-Item -Force
+if (-not $ThumbsOnly) {
+  Get-ChildItem -LiteralPath $displayDir -File -Filter "gallery-*.jpg" | Remove-Item -Force
+}
 
 $index = 0
 $sourceFiles | ForEach-Object {
@@ -102,12 +147,14 @@ $sourceFiles | ForEach-Object {
     Apply-ExifOrientation -image $img
 
     $thumbPath = Join-Path $thumbDir $outputName
-    Save-ResizedJpeg -source $img -outPath $thumbPath -maxSide 240 -quality 78L -jpegCodec $jpegCodec
+    Save-SquareThumbnail -source $img -outPath $thumbPath -size 480 -quality 90L -jpegCodec $jpegCodec
 
-    $displayPath = Join-Path $displayDir $outputName
-    Save-ResizedJpeg -source $img -outPath $displayPath -maxSide 2000 -quality 90L -jpegCodec $jpegCodec
+    if (-not $ThumbsOnly) {
+      $displayPath = Join-Path $displayDir $outputName
+      Save-ResizedJpeg -source $img -outPath $displayPath -maxSide 2000 -quality 90L -jpegCodec $jpegCodec
+    }
 
-    Write-Host ("OK {0} -> {1} thumb={2:N0} display={3:N0}" -f $_.Name, $outputName, (Get-Item $thumbPath).Length, (Get-Item $displayPath).Length)
+    Write-Host ("OK {0} -> {1} thumb={2:N0}" -f $_.Name, $outputName, (Get-Item $thumbPath).Length)
   }
   finally {
     $img.Dispose()
@@ -115,4 +162,6 @@ $sourceFiles | ForEach-Object {
 }
 
 Write-Host "Done. Thumbs: $thumbDir"
-Write-Host "Done. Display: $displayDir"
+if (-not $ThumbsOnly) {
+  Write-Host "Done. Display: $displayDir"
+}
