@@ -1229,7 +1229,11 @@
           <h2 class="title">우리의 순간들</h2>
         </header>
         <div class="gallery-shelf">
-        <div class="gallery-grid" id="weddingGallery">
+        <div
+          class="gallery-grid"
+          id="weddingGallery"
+          data-gallery-order="1,14,11,2,6,7,17,18,16,4,12,10,8,3,5,13,9,15"
+        >
           
           
           
@@ -1511,6 +1515,18 @@
             </a>
           </figure>
         </div>
+        <script>
+          (function arrangeWeddingGallery() {
+            var gallery = document.getElementById("weddingGallery");
+            var tiles = gallery ? Array.from(gallery.children) : [];
+            if (!gallery || !gallery.dataset.galleryOrder || tiles.length === 0) return;
+
+            gallery.dataset.galleryOrder.split(",").forEach(function (item) {
+              var tile = tiles[Number(item) - 1];
+              if (tile) gallery.appendChild(tile);
+            });
+          })();
+        </script>
         </div>
       </section>
 
