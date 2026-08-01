@@ -999,6 +999,18 @@
         width: 100%;
         height: 100dvh;
         z-index: 80;
+        overscroll-behavior: none;
+      }
+
+      .pswp__scroll-wrap,
+      .pswp__container,
+      .pswp__item,
+      .pswp__zoom-wrap {
+        overscroll-behavior: none;
+      }
+
+      .pswp__scroll-wrap {
+        touch-action: none;
       }
 
       .pswp__button--zoom {
@@ -1795,6 +1807,19 @@
       });
 
       let galleryHistoryEntryActive = false;
+      let isLockingGalleryVerticalPan = false;
+
+      galleryLightbox.on("zoomPanUpdate", ({ slide }) => {
+        if (isLockingGalleryVerticalPan || slide !== galleryLightbox.pswp?.currSlide) return;
+
+        const lockedPanY = slide.bounds.center.y;
+        if (!Number.isFinite(lockedPanY) || Math.abs(slide.pan.y - lockedPanY) < 0.5) return;
+
+        isLockingGalleryVerticalPan = true;
+        slide.pan.y = lockedPanY;
+        slide.applyCurrentZoomPan();
+        isLockingGalleryVerticalPan = false;
+      });
 
       const refreshGalleryViewport = () => {
         window.requestAnimationFrame(() => {
