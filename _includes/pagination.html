@@ -60,7 +60,8 @@
     <li class="disabled"><a href="#">&hellip;</a></li>
     {% endif %}
 
-    {% if paginator.page == paginator.total_pages %}
+    {% if paginator.total_pages <= 1 %}
+    {% elsif paginator.page == paginator.total_pages %}
     <li class="current"><a href="#" >{{ paginator.page }}</a></li>
     {% else %}
     {% assign last_page_path = page_base_path | append: 'page' | append: paginator.total_pages | append: '/' | replace: '//', '/' | relative_url %}

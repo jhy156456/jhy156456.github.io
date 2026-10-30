@@ -9,7 +9,7 @@ date: 2022-12-05 10:16:42
 tags:
 - de
 - sqoop
-- data engineer
+- data-engineer
 ---
 
 # [sqoop] sqoop-mysql 연동

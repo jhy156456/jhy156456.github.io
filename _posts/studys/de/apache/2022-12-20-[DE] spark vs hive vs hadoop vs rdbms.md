@@ -9,7 +9,7 @@ date: 2022-12-14 14:25
 tags:
 - de
 - spark
-- data engineer
+- data-engineer
 ---
 
 # [DE] spark vs hive vs hadoop vs rdbms 간단 정리

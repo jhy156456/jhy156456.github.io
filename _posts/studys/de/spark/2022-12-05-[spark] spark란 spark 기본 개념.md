@@ -9,7 +9,7 @@ date: 2022-12-14 14:25
 tags:
 - de
 - spark
-- data engineer
+- data-engineer
 ---
 
 # [spark] spark란? spark 기본 개념

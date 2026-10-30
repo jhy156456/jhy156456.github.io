@@ -143,17 +143,7 @@
           {% endunless %}
         </p>
         {{ content }}
-        <p class="post-info">
-          이 글은
-          <a href="/">HaydenJ</a>
-          가 작성했으며,
-          <a
-            href="https://creativecommons.org/licenses/by/4.0/"
-            target="_blank"
-            rel="external nofollow">CC BY 4.0</a>
-          라이선스를 따릅니다.<br/>별도 출처가 표시된 글을 제외하면 직접 작성하거나 정리한 글입니다.<br/>마지막 수정 시간: {{
-   page.date | date: "%F %H:%M:%S" }}
-        </p>
+        {% include post-end.html license=true %}
       </div>
     </article>
 
@@ -288,7 +278,7 @@
       };
       postDirectoryBuild();
     </script>
-    <script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <script>
       lang = hljs.initHighlightingOnLoad();
     </script>

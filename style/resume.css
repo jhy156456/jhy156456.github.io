@@ -1,0 +1,176 @@
+/* 소개(이력서) 페이지 — _layouts/resume.html 전용. 토큰은 style/refresh.css(:root) 를 따른다. */
+.resume-body { background: var(--ui-bg); }
+
+.resume {
+    width: min(1040px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 40px 0 72px;
+    color: var(--ui-text);
+    font-size: 15px;
+    line-height: 1.65;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+}
+.resume h1, .resume h2, .resume h3 { margin: 0; -webkit-margin-before: 0; -webkit-margin-after: 0; }
+.resume p { margin: 0; }
+.resume ul, .resume ol { margin: 0; padding: 0; list-style: none; }
+
+/* 상단 프로필 */
+.rs-hero {
+    display: grid;
+    padding: 40px;
+    border: 1px solid var(--ui-line);
+    border-radius: 24px;
+    background: var(--ui-surface);
+    box-shadow: var(--ui-shadow-sm);
+}
+.rs-eyebrow {
+    color: var(--ui-accent);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.rs-name {
+    margin-top: 10px !important;
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+}
+.rs-name span { margin-left: 6px; color: var(--ui-muted); font-size: 22px; font-weight: 600; letter-spacing: 0; }
+.rs-focus { margin-top: 10px !important; color: var(--ui-text); font-size: 17px; font-weight: 600; }
+.rs-summary { max-width: 760px; margin-top: 16px !important; color: var(--ui-muted); font-size: 15.5px; line-height: 1.8; }
+.rs-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.rs-links a {
+    display: inline-flex;
+    align-items: center;
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid var(--ui-line);
+    border-radius: 999px;
+    background: var(--ui-surface);
+    color: var(--ui-text);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color .15s ease, color .15s ease, background-color .15s ease;
+}
+.rs-links a:first-child { border-color: var(--ui-text); background: var(--ui-text); color: #fff; }
+.rs-links a:hover { border-color: var(--ui-accent); color: var(--ui-accent); background: var(--ui-accent-soft); }
+.rs-links a:first-child:hover { color: #fff; background: var(--ui-accent); border-color: var(--ui-accent); }
+
+
+/* 섹션 */
+.rs-section { margin-top: 48px; }
+.rs-h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px !important;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+.rs-h2::after { content: ""; flex: 1; height: 1px; background: var(--ui-line); }
+.rs-period { color: var(--ui-muted); font-size: 13px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* 핵심 역량 */
+.rs-skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.rs-skill { padding: 20px 22px; border: 1px solid var(--ui-line); border-radius: 18px; background: var(--ui-surface); }
+.rs-skill h3 { margin-bottom: 12px !important; font-size: 15px; font-weight: 700; }
+.rs-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.rs-chips li {
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: var(--ui-surface-muted);
+    color: var(--ui-text);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+.rs-chips--sm { margin-top: 14px !important; }
+.rs-chips--sm li { padding: 2px 9px; font-size: 12.5px; color: var(--ui-muted); }
+
+/* 경력 */
+.rs-exp { padding: 22px 24px; border: 1px solid var(--ui-line); border-radius: 18px; background: var(--ui-surface); }
+.rs-exp__head, .rs-project__head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.rs-exp__head h3 { font-size: 18px; font-weight: 800; }
+.rs-exp__role { margin-top: 4px !important; font-weight: 600; }
+.rs-exp__desc { margin-top: 6px !important; color: var(--ui-muted); }
+
+/* 프로젝트 타임라인 */
+.rs-timeline { position: relative; padding-left: 24px !important; }
+.rs-timeline::before { content: ""; position: absolute; left: 6px; top: 10px; bottom: 10px; width: 2px; background: var(--ui-line); }
+.rs-project {
+    position: relative;
+    margin-bottom: 14px;
+    padding: 22px 24px;
+    border: 1px solid var(--ui-line);
+    border-radius: 18px;
+    background: var(--ui-surface);
+}
+.rs-project::before {
+    content: "";
+    position: absolute;
+    left: -24px;
+    top: 28px;
+    width: 14px;
+    height: 14px;
+    border: 3px solid var(--ui-bg);
+    border-radius: 50%;
+    background: var(--ui-accent);
+    box-shadow: 0 0 0 1px var(--ui-accent);
+}
+.rs-project__head h3 { font-size: 17px; font-weight: 700; line-height: 1.45; }
+.rs-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px !important; }
+.rs-tags span { padding: 1px 8px; border-radius: 999px; background: var(--ui-accent-soft); color: var(--ui-accent); font-size: 12px; font-weight: 700; }
+.rs-points { margin-top: 12px !important; }
+.rs-points li { position: relative; padding-left: 16px; margin-top: 6px; color: var(--ui-text); font-size: 14.5px; }
+.rs-points li::before { content: ""; position: absolute; left: 2px; top: 0.72em; width: 5px; height: 5px; border-radius: 50%; background: var(--ui-muted); }
+
+/* 교육·학력 */
+.rs-two { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; }
+.rs-list li { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--ui-line); font-size: 14.5px; }
+.rs-list li:last-child { border-bottom: 0; }
+
+/* 논문 */
+.rs-pub { padding: 22px 24px; border: 1px solid var(--ui-line); border-radius: 18px; background: var(--ui-surface); }
+.rs-pub__ko { margin-top: 4px !important; font-weight: 600; }
+.rs-pub__sum { margin-top: 10px !important; color: var(--ui-muted); }
+.rs-details { margin-top: 14px; }
+.rs-details summary { cursor: pointer; color: var(--ui-accent); font-size: 14px; font-weight: 700; }
+.rs-details p { margin-top: 12px !important; color: var(--ui-muted); font-size: 13.5px; line-height: 1.75; }
+
+/* 반응형 */
+@media (max-width: 900px) {
+    .rs-hero { padding: 28px 22px; }
+    .rs-skills, .rs-two { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+    .resume { padding: 20px 0 48px; font-size: 14.5px; }
+    .rs-name { font-size: 30px; }
+    .rs-name span { display: block; margin: 4px 0 0; font-size: 17px; }
+    .rs-exp__head, .rs-project__head { flex-direction: column; gap: 2px; }
+    .rs-project, .rs-exp, .rs-pub, .rs-skill { padding: 18px; }
+    .rs-timeline { padding-left: 18px !important; }
+    .rs-project::before { left: -18px; }
+    .rs-timeline::before { left: 4px; }
+}
+
+/* 인쇄 / PDF 저장 */
+@media print {
+    @page { margin: 14mm 12mm; }
+    .header, .footer, #directory-content { display: none !important; }
+    body, .resume-body { background: #fff !important; }
+    .resume { width: 100%; padding: 0; font-size: 12.5px; }
+    .rs-hero, .rs-skill, .rs-exp, .rs-project, .rs-pub { box-shadow: none; break-inside: avoid; }
+    .rs-section { margin-top: 24px; }
+    .rs-links a { border-color: #ccc !important; background: #fff !important; color: #111 !important; }
+    .rs-details:not([open]) { display: none; }
+}
+
+/* 테마 기본 제목색(회색)을 덮어 잉크색으로 */
+.resume h1, .resume h2, .resume h3, .resume strong { color: var(--ui-text); }

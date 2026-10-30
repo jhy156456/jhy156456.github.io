@@ -1,17 +1,24 @@
+{% assign t = include.post.title | strip %}
+{% assign first_char = t | slice: 0 %}
+{% if first_char == "[" and t contains "]" %}
+  {% assign cover_label = t | split: "]" | first | remove_first: "[" %}
+{% else %}
+  {% assign cover_label = include.post.tags | first | default: include.post.category | default: "post" %}
+{% endif %}
 <article class="post-list-item">
-  <a class="post-card" href="{{ post.url }}" aria-label="{{ post.title }}">
-    {% if post.background-image %}
-      <div class="post-card__media" style="background-image: url('{{ post.background-image }}');"></div>
+  <a class="post-card" href="{{ include.post.url }}" aria-label="{{ include.post.title }}">
+    {% if include.post.background-image %}
+      <div class="post-card__media" style="background-image: url('{{ include.post.background-image }}');"></div>
     {% else %}
-      <div class="post-card__media post-card__media--{{ post.background | default: 'default' }}"></div>
+      <div class="post-card__media post-card__cover"><span>{{ cover_label | strip }}</span></div>
     {% endif %}
     <div class="post-card__body">
       <div class="post-card__meta">
-        <span>{{ post.category | default: "post" }}</span>
-        <time datetime="{{ post.date | date: '%F' }}">{{ post.date | date: "%F" }}</time>
+        <span>{{ include.post.category | default: "post" }}</span>
+        <time datetime="{{ include.post.date | date: '%F' }}">{{ include.post.date | date: "%F" }}</time>
       </div>
-      <h2 class="post-card__title">{{ post.title }}</h2>
-      <p class="post-card__excerpt">{{ post.content | strip_html | strip_newlines | truncate: 120 }}</p>
+      <h2 class="post-card__title">{{ include.post.title }}</h2>
+      <p class="post-card__excerpt">{{ include.post.content | strip_html | strip_newlines | truncate: 120 }}</p>
     </div>
   </a>
 </article>

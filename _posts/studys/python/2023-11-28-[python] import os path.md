@@ -8,7 +8,7 @@ title: "[python] 현재 path 구하기"
 date: 2023-11-28 08:49:42
 tags:
 
-- phyton
+- python
 - os
 
 ---

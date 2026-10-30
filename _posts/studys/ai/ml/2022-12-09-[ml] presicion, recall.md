@@ -9,7 +9,7 @@ title: "[ml] Precision, Recall"
 date: 2022-12-09 10:06:42
 tags:
   - ai
-  - presicion
+  - precision
   - recall
 ---
 

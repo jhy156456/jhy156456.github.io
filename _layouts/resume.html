@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta content="{{ page.title }} - {{ site.title }}" name="title" />
+    <meta content="{{ page.title }} - {{ site.title }}" name="og:title" />
+    <title>{{ page.title }} - {{ site.title }}</title>
+    {% include head.html %}
+    <link href="{{ '/style/resume.css' | relative_url }}" rel="stylesheet">
+  </head>
+
+  <body class="resume-body">
+    <header id="header" class="header bg-white">
+      <div class="navbar-container">
+        <a href="/" title="{{ site.title }}" class="navbar-logo">
+          <img src="{{ '/style/images/logo-jhy156456.png' | relative_url }}" alt="{{ site.title }}" />
+        </a>
+        <div class="navbar-menu">
+          {% for link in site.links %}
+            <a href="{% unless link.external %}{{ link.url | relative_url }}{% else %}{{ link.url }}{% endunless %}">{{ link.name }}</a>
+          {% endfor %}
+        </div>
+        <div class="navbar-search" id="navbar-search-toggle">
+          <span class="icon-search"></span>
+          <form id="cb-search-btn" role="search">
+            <span class="search-box">
+              <input type="text" class="input" id="cb-search-content" required="true" placeholder="검색..." maxlength="30" autocomplete="off" />
+            </span>
+          </form>
+        </div>
+        <button class="navbar-mobile-menu" type="button" aria-label="메뉴 열기" aria-expanded="false">
+          <span class="icon-menu cross"><span class="middle"></span></span>
+          <ul>
+            {% for link in site.links %}
+              <li><a href="{% unless link.external %}{{ link.url | relative_url }}{% else %}{{ link.url }}{% endunless %}">{{ link.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </button>
+      </div>
+    </header>
+
+    <main class="resume">
+      {{ content }}
+    </main>
+
+    {% include foot.html %}
+  </body>
+</html>

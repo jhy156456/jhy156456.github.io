@@ -1,0 +1,254 @@
+# 소개(이력서) 페이지 데이터 — about.md 가 이 파일을 읽어 그린다. 항목 추가·수정은 여기서만.
+profile:
+  name: 정현영
+  name_en: Hayden J
+  role: Data Scientist · ML Engineer
+  focus: 방산·항공 MRO 수요예측 · LLM Agent · 데이터 플랫폼
+  summary: >-
+    한화시스템에서 방산·항공 MRO 데이터를 다루며 수요예측 모델 연구부터 서빙·제품화까지
+    끝까지 책임지는 데이터 사이언티스트입니다. 정확도를 숫자로 검증하고, 그 결과를 실제로
+    쓰이는 시스템으로 만드는 일을 합니다. 최근에는 폐쇄망 환경의 LLM Agent를 설계·운영하고 있습니다.
+  links:
+    - label: GitHub
+      url: https://github.com/jhy156456
+    - label: LinkedIn
+      url: https://www.linkedin.com/in/%ED%98%84%EC%98%81-%EC%A0%95-6b2660252/
+    - label: Email
+      url: mailto:jcypher1024@outlook.com
+    - label: 기술 블로그
+      url: /study
+
+skills:
+  - group: 머신러닝 · 예측
+    items: [간헐수요 예측, 허들 모델, CatBoost, LightGBM, scikit-learn, 시계열(SARIMA·Prophet·LSTM), 합성데이터(SDV), PyTorch, TensorFlow]
+  - group: LLM · Agent
+    items: [LangGraph, RAG, Milvus, Rerank, Text-to-SQL, vLLM, Ollama, STT/TTS]
+  - group: 백엔드 · MLOps
+    items: [Python, FastAPI, Gunicorn, Spring(Java), Docker, Kubernetes, Airflow, Jenkins]
+  - group: 데이터 플랫폼 · DB
+    items: [Cloudera CDP, Hadoop(HDFS·Hive·Spark·Oozie), Iceberg, Oracle, MariaDB, MongoDB, PostgreSQL]
+  - group: 프론트엔드 · 앱
+    items: [Vue3, Nuxt, React, Android(Kotlin)]
+
+experience:
+  - company: 한화시스템
+    period: 2019.07 ~ 현재
+    role: 데이터 사이언티스트 · 개발자 (방산·항공 MRO)
+    desc: 수요예측 모델 연구·서빙·제품화, LLM Agent, 데이터 플랫폼 운영, 무기체계 운영 프로그램 웹·앱 개발
+
+projects:
+  - title: 방산 MRO 수요예측 모델 고도화 및 단독 제품화
+    period: 2026.06 ~
+    tags: [수요예측, 제품화]
+    points:
+      - "무기체계 수리부속 수요예측 모델 고도화: 발생 판단(CatBoost 앙상블) → 수량(톱다운 + LightGBM) → 후처리 3단계 허들 모델 설계, 0포함 수량정확도 50.1 → 58.8 (기존 운영 모델 대비 우위, 2024·2025 백테스트)"
+      - "체계별 파이프라인(지상·방공 체계, 군 직접정비·업체정비) 구축 및 업체정비 데이터 결합: 공통품목 품목정확도 +2.3, 수량정확도 +2"
+      - "채점식 기반 수량 결정 규칙(음이항 분포에서 기대 점수 최대 정수 선택) 고안: 수량정확도 두 해 연속 +2 이상, 품목정확도 영향 없음"
+      - "보안 데이터 마스킹 파이프라인 설계(원본 비열람·자동 가드) 및 재고번호 정합·데이터 품질 진단"
+      - "개선 모델을 기존 운영 예측 엔진(FastAPI)에 반영, 이관본과 결과 100% 일치 검증"
+      - "수요예측 단독 시스템(제품) 설계·개발: 엑셀 업로드 → 자동 튜닝 → 예측 → 결과·정확도 화면, MariaDB·Oracle 지원, 국방 공공데이터(KDSIS) API 연동"
+      - "엔진 이중 모드로 기존 시스템 수요예측과 단독 제품을 하나의 엔진으로 통합"
+      - "정비 요청 이력 기반 납품시기 예측 모델 개발"
+    stack: [Python, FastAPI, Gunicorn, CatBoost, LightGBM, scikit-learn, pandas, Vue3, Spring(Java), MariaDB, Oracle]
+
+  - title: 군수 AI Agent 고도화 및 폐쇄망 제품화
+    period: 2026.03 ~
+    tags: [LLM, Agent]
+    points:
+      - "LangGraph 기반 계층형 멀티 에이전트 설계: 오케스트레이터가 문서 검색·데이터 분석·업무 처리 전문 에이전트(하위 그래프)를 호출, 계획(Planner) → 실행(Executor) → 답변 생성 SSE 스트리밍"
+      - "문서 RAG: 문서 관리·인덱싱 서비스(Studio), 벡터 DB(Milvus), 재순위(Rerank) 서버 구성"
+      - "데이터 분석 에이전트: 자연어 → SQL 생성(Text-to-SQL), 조회 범위·조인·읽기 전용 가드레일과 결과 숫자 대조 검증, 온톨로지(자산·품목·정비·재고 개념) 기반 의미 계층 설계"
+      - "업무 처리 에이전트: 기술지원·정비·부품청구 접수 워크플로를 대화로 처리(기존 MRO 시스템 API 연동), LLM 판단 기반 되묻기"
+      - "로컬 LLM 서빙: Ollama ↔ vLLM(OpenAI 호환) 전환 구조, Gemma 4 모델 서빙 최적화(생성 속도 21.7 → 74 tok/s, 의도 분류 5.5~7.6초 → 1.4~2.8초)"
+      - "폐쇄망 단독 제품 패키징: Docker Compose(MongoDB·Milvus·MinIO·etcd) 구성, 이미지 버전 관리·오프라인 설치 스크립트(Windows/Linux)·헬스체크, 보안 취약점(CVE) 대응"
+      - "역할 기반 권한 관리: 사용자 권한에 따라 검색 가능한 문서·사용 가능한 기능 분리, 한국어·영어 질의 지원"
+      - "음성 질의응답: Whisper STT(언어 자동 감지) → 에이전트 → TTS 답변 낭독(PCM 스트리밍), Nuxt(Vue3) 채팅 화면 개발"
+    stack: [Python, FastAPI, LangGraph, Gemma, vLLM, Ollama, RAG, Milvus, Rerank, MongoDB, MinIO, Nuxt(Vue3), Docker Compose]
+
+  - title: 데이터 분석 플랫폼 전환 및 운영
+    period: 2025.07 ~
+    tags: [데이터 플랫폼]
+    points:
+      - "Cloudera on-premises(CDP) 기반 데이터 분석 플랫폼 전환 및 운영, Cloudera 관리자 자격 취득"
+    stack: [Cloudera, CDP, CAI, HDFS, YARN, Hive, Oozie, Spark]
+
+  - title: 한화에어로스페이스 수요예측 시스템 구축
+    period: 2025.08 ~ 2025.11
+    tags: [수요예측, 항공]
+    points:
+      - "항공기 엔진(F404) 정비 부품 소모실적(10년치) 기반 수요예측 모델 개발"
+      - "원/달러 환율·산업생산지수·KOSPI 등 외부 경제지표를 다변량 변수로 결합, 결측률 기반 변수 자동 선택"
+      - "SDV(Gaussian Copula·CTGAN) 합성데이터로 간헐수요 품목 학습 데이터 증강"
+      - "대체품 이력 반영 및 품목별 최적 모델 자동 선택"
+    stack: [Python, pandas, scikit-learn, SDV, FRED API]
+
+  - title: MRO AI Agent 1차 구축 (정비 절차 질의응답)
+    period: 2025.05 ~ 2025.08
+    tags: [LLM, RAG, 음성]
+    points:
+      - "MRO 웹 플랫폼에 붙는 AI 비서 1차 버전 구축: 정비사가 정비 절차·점검 방법을 자연어로 물으면 기술교범 문서에서 답을 찾아 응답"
+      - "문서 RAG 파이프라인: 기술교범 문서를 청크 단위로 인덱싱하고, 질의와 유사한 문서 구간을 찾아 답변과 함께 출처 문서·위치를 제시해 현장에서 원문을 바로 확인 가능하게 함"
+      - "폐쇄망 제약 대응: 외부 API 없이 Ollama 로컬 LLM으로 서빙, Docker 컨테이너로 서버·노트북 동일 구성 배포"
+      - "현장 음성 질의: 손을 쓰기 어려운 정비 현장을 위해 STT(음성→질의)·TTS(답변 낭독) 기능을 채팅 흐름에 통합"
+      - "Node.js 백엔드·MongoDB, Vue3 채팅 화면 개발 — 이후 2026년 멀티 에이전트·폐쇄망 제품화(위 항목)의 기반이 됨"
+    stack: [Ollama, RAG, STT/TTS, Node.js, MongoDB, Vue3, Docker]
+
+  - title: 대한항공 수요예측 시스템 구축
+    period: 2025.01 ~ 2025.04
+    tags: [수요예측, 항공]
+    points: []
+    stack: []
+
+  - title: 리눅스 서버 구축
+    period: 2024.12
+    tags: [인프라]
+    points:
+      - "Red Hat Linux 기반 개발·운영 서버 구축"
+      - "도커 드라이버로 쿠버네티스 클러스터 설치 및 IP-Route 테이블 최적화"
+      - "프로그램별 유저 권한 분리로 보안 정책 수립"
+      - "Jira 컨테이너 배포 및 운영"
+    stack: [Red Hat Linux, Nginx, Docker, Kubernetes, Jenkins, Jira]
+
+  - title: 수요예측 모델 서빙 및 모델 개발
+    period: 2024.02 ~
+    tags: [수요예측, MLOps]
+    points:
+      - "정기·비정기·단종 수요예측 엔진 개발: 품목별로 단변량(ElasticNet·Prophet·SARIMAX·RNN·GRU·LSTM)·다변량(Lasso·LassoLars·OMP) 후보 모델을 검증 RMSE로 자동 선택, 이력이 짧은 품목은 MTBF 기반 예측"
+      - "고장 수요(수리부속·외주정비)와 자재 수요 분리, BOM 전개로 자재 소요 산출, 비정기 예측의 제외 부대·기간 처리"
+      - "운용시간·기상 데이터 등 다변량 변수 결합 및 결측 변수 자동 필터링"
+      - "Python 예측 모델을 Docker 이미지로 컨테이너라이징 및 K8s 배포"
+      - "Airflow DAG로 학습·재학습 파이프라인 자동화"
+      - "FastAPI + Gunicorn API 서버 성능 튜닝"
+      - "Iceberg 기반 데이터 버저닝·스키마 관리"
+    stack: [Kubernetes, Docker, Airflow, Python, FastAPI, Gunicorn, Iceberg]
+
+  - title: 무기체계 운영 프로그램 앱 개발
+    period: 2023.10 ~ 2024.02
+    tags: [앱]
+    points:
+      - "웹/앱 하이브리드 개발"
+      - "Pure JS·HTML 하이브리드 프론트엔드 및 Kotlin Android 네이티브 모듈 개발"
+      - "Spring(Java) 백엔드 REST API 설계·구현"
+    stack: [JavaScript, HTML, Android(Kotlin), Spring(Java)]
+
+  - title: 무기체계 운영 프로그램 웹 개발
+    period: 2023.04 ~ 2023.09
+    tags: [웹]
+    points:
+      - "MRO 분석, 수요예측, 단종관리 3개 모듈 총 30개 화면 개발"
+      - "각 화면에 맞는 Spring 서버 개발"
+      - "화면에 필요한 데이터 추출을 위한 Oracle 쿼리 작성"
+      - "자재의 고장을 예측하고 필요한 수량을 예측하는 수요예측 모델 개발"
+    stack: [Nexacro, Spring(Java), JavaScript, HTML, Oracle]
+
+  - title: 자재 재고 예측 프로젝트
+    period: 2022.10 ~ 2023.01
+    tags: [예측]
+    points:
+      - "예측을 위한 시계열 모델링 (SARIMA·선형회귀)"
+      - "RNN, LSTM, GRU 등 딥러닝 시계열 예측 모델 적용"
+      - "데이터 시각화를 위한 Superset BI"
+      - "객체 지향 중심의 파이썬 프로젝트로 수행"
+    stack: [FastAPI, Vue.js, PostgreSQL, SARIMA, 선형회귀]
+
+  - title: 사내 MSA 교육 강의
+    period: 2022.07
+    tags: [교육]
+    points:
+      - "클라우드 환경에서의 MSA를 적용한 애플리케이션 구축 및 개발 강의"
+      - "Kafka·Kubernetes·Docker·AWS 기반 MSA 실습 시나리오 제작"
+    stack: [Kafka, Kubernetes, Docker, AWS]
+
+  - title: 태양광 발전량 예측 프로젝트
+    period: 2022.04 ~ 2022.10
+    tags: [예측]
+    points:
+      - "태양광 발전량 데이터를 이용한 익일 발전량 예측 (논문으로 발표)"
+      - "객체 지향 중심의 파이썬 프로젝트로 수행"
+    stack: [LSTM, LightGBM, XGBoost, GradientBoost]
+
+  - title: 데이팅 모바일 앱
+    period: 2021.01 ~ 2021.12
+    tags: [앱]
+    points: []
+    stack: [React Native, Redux, Spring Boot, MySQL]
+
+  - title: 쇼핑몰-공장 관리자 페이지 개발
+    period: 2020.01 ~ 2020.12
+    tags: [풀스택]
+    points:
+      - "쇼핑몰 사장님과 공장 사장님을 연결하는 플랫폼 창구 개발"
+      - "개발자 2인으로 프론트·백엔드 풀스택 개발, AWS로 배포"
+      - "엑셀·메일로 제품과 가격을 주고받던 번거로움을 해소"
+    stack: [React, Redux, Material-UI, Node.js, GraphQL, MySQL, AWS]
+
+  - title: 증권 모바일 앱 개발
+    period: ""
+    tags: [앱]
+    points:
+      - "증권 모바일 앱 개발 및 운영"
+      - "계좌개설 프로젝트 참여"
+      - "안면인식 서비스 도입"
+    stack: [Android, Java, Kotlin]
+
+certifications:
+  - date: 2026.02
+    name: Cloudera Administrator on Premises 자격 취득 (~2028.03)
+  - date: 2025.11
+    name: Administering Cloudera on premises 수료
+  - date: 2024.03
+    name: 모두의연구소 — 인공지능 시대의 사용자 경험 이해하기(AI-UX) 수료
+  - date: 2023.11
+    name: ADsP 데이터분석 준전문가 (한국데이터산업진흥원)
+  - date: 2023.04
+    name: 모두의연구소 — Data Engineering 고급 수료
+  - date: 2023.01
+    name: 모두의연구소 — Data Engineering 중급 수료
+  - date: 2020.07
+    name: 인프런 — 파이썬 머신러닝 완벽 가이드 수료
+  - date: 2020.07
+    name: 인프런 — 딥러닝 컴퓨터 비전 완벽 가이드 수료
+  - date: 2019.08
+    name: 정보처리기사 (한국산업인력공단)
+  - date: 2018.09
+    name: 빅데이터 전문가 양성과정 수료 · 프로젝트 최우수상
+
+publications:
+  - title: A Comparative Study of Machine Learning and Ensemble Models for Photovoltaic Power Prediction
+    title_ko: 태양광 발전량 예측을 위한 머신러닝 및 앙상블 모델 비교 연구
+    date: 2024.08.22
+    summary: LGBM과 Informer를 결합한 앙상블 모델로 예보 의존도를 낮추고 최신 관측 데이터를 통합해, 기존 LGBM·LSTM·Informer·LTSF-linear 대비 높은 예측 성능과 지역 일반화를 입증
+    abstract_en: >-
+      Globally, photovoltaic power is selected as an effort to minimize greenhouse gas emissions and produce alternative
+      energy that does not depend on fossil fuels. However, the variability of photovoltaic power due to weather conditions
+      complicates power supply management. Continuous research is underway to predict photovoltaic power accurately. Key
+      factors for accurate prediction include tracking the sun's position using solar altitude and azimuth, weather forecasts,
+      and the location of solar panels. Additionally, new technologies and approaches are developed annually worldwide to
+      reduce prediction variability and improve model accuracy. In this paper, to enhance the accuracy of photovoltaic power
+      predictions we proposes an ensemble model combining LGBM ,one of the Gradient Boosting Machines, with Informer, a deep
+      learning time series prediction model. Photovoltaic power prediction has no choice but to depend on weather forecast
+      data. However, in this study, we integrates the latest observational data and considers weather characteristics to
+      predict stable power generation without overly depending on forecast data. To evaluate the proposed model's performance,
+      its predictions were compared with those of previously studied models LGBM, LSTM, Informer, and LTSF-linear. For
+      comparison, power generation data from three photovoltaic power plants in South Korea over one year, observed weather
+      data from four providers, and two months of weather forecast data were used. Experiments demonstrated that the proposed
+      model has higher prediction performance and can be applied across various regions.
+    abstract_ko: >-
+      세계적으로 온실 가스 배출을 최소화하고 화석 연료에 의존하지 않는 대체 에너지를 생산하기 위한 노력으로 태양광 발전을 선택하고 있다. 하지만, 태양광 발전량은 날씨 상황에 따라 에너지 변동성이 크게 변하기 때문에
+      전력 수급 관리가 어려운 상황이다. 이를 해결하기 위해 발전량을 예측하는 연구가 지속적으로 이루어 지고 있다. 발전량 예측을 위한 가장 중요한 요소는 태양 고도와 방위각을 활용한 태양 위치 추적, 기상 날씨 예보,
+      태양광 패널의 위치 등의 여러 정보들을 고려해야 한다. 또한 예측의 변동성을 줄이고 모델의 정확성을 향상시키기 위해 새로운 기술과 접근 방식이 매년 전 세계적으로 발생하고 있다. 본 논문에서는 태양광 발전량 예측의
+      정확성을 향상하기 위해, Gradient Boosting Machine중 하나인 LGBM과 딥러닝 시계열 예측 모델인 Informer를 결합한 앙상블 모델을 제안했다. 태양광 발전량 예측은 날씨 예보 데이터에 의존할
+      수 밖에 없다. 하지만, 본 연구에서는 예보 데이터에 지나치게 의존하지 않으면서 안정적인 발전량을 예측 하기 위해 최신의 관측 데이터를 모델에 통합하고 날씨의 특성을 고려했다. 제안 모델의 성능을 평가하기 위해,
+      기존에 연구된 LGBM, LSTM, Informer 및 LTSF-linear 모델과의 예측 결과를 비교했다. 비교를 위해 한국 내 세 개 지역의 태양광 발전소에서 1 년 동안 생산된 발전량과, 네 곳의 기상 정보
+      업체에서 제공하는 관측된 날씨 데이터, 그리고 두 달 간의 날씨 예보 데이터를 사용했다. 실험을 통해 제안 모델이 기존 모델들 보다 높은 예측 성능과 다양한 지역에 적용 가능함을 입증했다.
+
+education:
+  - year: "2024"
+    school: 한양대학교
+    degree: 인공지능시스템 석사 (Master’s Degree in Artificial Intelligence Systems)
+  - year: "2019"
+    school: 홍익대학교
+    degree: 컴퓨터공학 학사 (Bachelor’s Degree in Computer Engineering)
+  - year: "2012"
+    school: 배명고등학교
+    degree: 졸업

@@ -1,17 +1,6 @@
 ---
 layout: null
 ---
-{
-	"code" : 0 ,
-	"data" : [
-	 {% for post in site.posts %}
-	{
-		"title" : "{{ post.title }} - {% for tag in posts.tags %}{% if forloop.rindex != 1 %}{{ tag }}_{% else %}{{ tag }}{% endif %}{% endfor %}",
-		"url" : "{{ post.url }}"
-	}
-	{% if forloop.rindex != 1  %}
-	,
-	{% endif %}
-    {% endfor %}
-	]
-}
+{"code": 0, "data": [{% for post in site.posts %}{% unless post.title == null %}
+  {"title": {{ post.title | strip | jsonify }}, "url": {{ post.url | relative_url | jsonify }}, "date": {{ post.date | date: "%Y-%m-%d" | jsonify }}, "category": {{ post.category | default: "" | jsonify }}, "tags": {{ post.tags | jsonify }}, "text": {{ post.content | strip_html | strip_newlines | normalize_whitespace | truncate: 600 | jsonify }}}{% unless forloop.last %},{% endunless %}{% endunless %}{% endfor %}
+]}

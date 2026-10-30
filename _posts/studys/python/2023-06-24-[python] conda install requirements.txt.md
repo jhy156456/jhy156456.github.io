@@ -7,7 +7,7 @@ categories: python
 title: "[python] conda install requirements.txt"
 date: 2023-06-24 10:16:42
 tags:
-  - phyton
+  - python
   - os
 ---
 

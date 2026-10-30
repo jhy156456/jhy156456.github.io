@@ -7,7 +7,7 @@ categories: python
 title: "[python] __name__, __init__, __call__, self, etc"
 date: 2023-01-05 08:37:00
 tags:
-  - phyton
+  - python
   - os
 ---
 
