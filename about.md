@@ -68,10 +68,29 @@ redirect_from:
         {% if pj.period != "" %}<span class="rs-period">{{ pj.period }}</span>{% endif %}
       </div>
       {% if pj.tags.size > 0 %}<p class="rs-tags">{% for t in pj.tags %}<span>{{ t }}</span>{% endfor %}</p>{% endif %}
+      {% if pj.summary %}<p class="rs-project__summary">{{ pj.summary }}</p>{% endif %}
       {% if pj.points.size > 0 %}
       <ul class="rs-points">{% for pt in pj.points %}<li>{{ pt }}</li>{% endfor %}</ul>
       {% endif %}
       {% if pj.stack.size > 0 %}<ul class="rs-chips rs-chips--sm">{% for s in pj.stack %}<li>{{ s }}</li>{% endfor %}</ul>{% endif %}
+      {% if pj.shots or pj.link %}
+      <div class="rs-project__actions">
+        {% if pj.shots %}<button class="rs-shots-toggle" type="button" aria-expanded="false">화면 보기 <span>{{ pj.shots.size }}</span></button>{% endif %}
+        {% if pj.link %}<a class="rs-project__link" href="{{ pj.link }}" target="_blank" rel="noopener">{{ pj.link_label }} ↗</a>{% endif %}
+      </div>
+      {% endif %}
+      {% if pj.shots %}
+      <div class="rs-shots" hidden>
+        <div class="rs-shots__inner">
+          {% for s in pj.shots %}
+          <a class="rs-shot rs-shot--{{ s.kind }}" href="{{ s.src | relative_url }}" target="_blank" rel="noopener">
+            <span class="rs-shot__frame"><img src="{{ s.src | relative_url }}" alt="{{ pj.title }} {{ s.caption }} 화면" loading="lazy"></span>
+            <span class="rs-shot__cap">{{ s.caption }}</span>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
     </li>
     {% endfor %}
   </ol>
@@ -107,3 +126,16 @@ redirect_from:
   </article>
   {% endfor %}
 </section>
+
+<script>
+  // 프로젝트 "화면 보기": 카드 아래로 화면을 펼치고 접는다
+  document.querySelectorAll(".rs-shots-toggle").forEach(function (btn) {
+    var panel = btn.closest(".rs-project").querySelector(".rs-shots");
+    btn.addEventListener("click", function () {
+      var open = btn.getAttribute("aria-expanded") !== "true";
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.firstChild.nodeValue = open ? "화면 접기 " : "화면 보기 ";
+      panel.hidden = !open;
+    });
+  });
+</script>

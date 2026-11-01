@@ -131,6 +131,57 @@
 .rs-points li { position: relative; padding-left: 16px; margin-top: 6px; color: var(--ui-text); font-size: 14.5px; }
 .rs-points li::before { content: ""; position: absolute; left: 2px; top: 0.72em; width: 5px; height: 5px; border-radius: 50%; background: var(--ui-muted); }
 
+/* 프로젝트 요약·링크·"화면 보기" */
+.rs-project__summary { margin-top: 12px !important; color: var(--ui-text); font-size: 15px; line-height: 1.75; }
+.rs-project__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.rs-shots-toggle, .rs-project__link {
+    display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px;
+    border: 1px solid var(--ui-line); border-radius: 999px; background: var(--ui-surface);
+    color: var(--ui-text); font: inherit; font-size: 13.5px; font-weight: 700; text-decoration: none; cursor: pointer;
+    transition: border-color .15s ease, color .15s ease, background-color .15s ease;
+}
+.rs-shots-toggle span { min-width: 18px; padding: 0 5px; border-radius: 999px; background: var(--ui-surface-muted); color: var(--ui-muted); font-size: 12px; line-height: 18px; text-align: center; }
+.rs-shots-toggle::after { content: ""; width: 6px; height: 6px; margin-left: 2px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor;
+    transform: translateY(-2px) rotate(45deg); transition: transform .2s ease; }
+.rs-shots-toggle[aria-expanded="true"]::after { transform: translateY(1px) rotate(-135deg); }
+.rs-shots-toggle:hover, .rs-shots-toggle[aria-expanded="true"] { border-color: var(--ui-accent); color: var(--ui-accent); background: var(--ui-accent-soft); }
+.rs-project__link { border-color: var(--ui-text); background: var(--ui-text); color: #fff; }
+.rs-project__link:hover { border-color: var(--ui-accent); background: var(--ui-accent); color: #fff; }
+
+/* 펼친 화면: 카드 안 옅은 판 위에 브라우저 창·폰 프레임 */
+.rs-shots { margin-top: 18px; }
+.rs-shots[hidden] { display: none; }
+.rs-shots__inner {
+    display: flex; align-items: flex-end; justify-content: center; gap: 18px;
+    padding: 28px 22px 18px; border-radius: 16px;
+    background: linear-gradient(180deg, var(--ui-surface-muted) 0%, #ebe7df 100%);
+    animation: rs-shots-in .25s ease;
+}
+@keyframes rs-shots-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .rs-shots__inner { animation: none; } }
+.rs-shot { display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; color: inherit; text-decoration: none; }
+.rs-shot__frame { display: block; overflow: hidden; background: #fff; box-shadow: 0 1px 2px rgba(31, 30, 28, .06), 0 14px 32px rgba(31, 30, 28, .12);
+    transition: transform .2s ease, box-shadow .2s ease; }
+.rs-shot:hover .rs-shot__frame { transform: translateY(-3px); box-shadow: 0 2px 4px rgba(31, 30, 28, .06), 0 20px 40px rgba(31, 30, 28, .16); }
+.rs-shot__frame img { display: block; width: 100%; height: auto; }
+.rs-shot__cap { color: var(--ui-muted); font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+
+/* 폰: 둥근 모서리 + 검은 베젤 */
+.rs-shot--mobile { flex: 0 1 196px; }
+.rs-shot--mobile .rs-shot__frame { width: 100%; padding: 6px; border-radius: 30px; background: #1f1e1c; }
+.rs-shot--mobile .rs-shot__frame img { border-radius: 24px; }
+
+/* 데스크톱: 창 막대(점 세 개)가 있는 브라우저 창 */
+.rs-shot--desktop { flex: 1 1 560px; max-width: 600px; }
+.rs-shot--desktop .rs-shot__frame { position: relative; width: 100%; border: 1px solid var(--ui-line); border-radius: 12px; }
+.rs-shot--desktop .rs-shot__frame::before { content: ""; display: block; height: 26px; border-bottom: 1px solid var(--ui-line); background: #f4f2ee; }
+.rs-shot--desktop .rs-shot__frame::after {
+    content: ""; position: absolute; top: 9px; left: 12px; width: 8px; height: 8px; border-radius: 50%;
+    background: #e0796a; box-shadow: 14px 0 0 #e8c15a, 28px 0 0 #7cbf74;
+}
+/* 데스크톱 화면과 함께 놓이는 폰은 조금 작게 */
+.rs-shot--desktop ~ .rs-shot--mobile { flex-basis: 150px; }
+
 /* 교육·학력 */
 .rs-two { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; }
 .rs-list li { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--ui-line); font-size: 14.5px; }
@@ -158,6 +209,13 @@
     .rs-timeline { padding-left: 18px !important; }
     .rs-project::before { left: -18px; }
     .rs-timeline::before { left: 4px; }
+    /* 화면은 옆으로 넘겨 본다 */
+    .rs-shots__inner { justify-content: flex-start; overflow-x: auto; scroll-snap-type: x mandatory; padding: 20px 16px 14px;
+        gap: 14px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .rs-shots__inner::-webkit-scrollbar { display: none; }
+    .rs-shot { scroll-snap-align: center; }
+    .rs-shot--mobile, .rs-shot--desktop ~ .rs-shot--mobile { flex: 0 0 58%; }
+    .rs-shot--desktop { flex: 0 0 88%; }
 }
 
 /* 인쇄 / PDF 저장 */
@@ -167,6 +225,7 @@
     body, .resume-body { background: #fff !important; }
     .resume { width: 100%; padding: 0; font-size: 12.5px; }
     .rs-hero, .rs-skill, .rs-exp, .rs-project, .rs-pub { box-shadow: none; break-inside: avoid; }
+    .rs-project__actions, .rs-shots { display: none !important; }
     .rs-section { margin-top: 24px; }
     .rs-links a { border-color: #ccc !important; background: #fff !important; color: #111 !important; }
     .rs-details:not([open]) { display: none; }

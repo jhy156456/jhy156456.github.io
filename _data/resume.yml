@@ -37,6 +37,7 @@ experience:
     desc: 수요예측 모델 연구·서빙·제품화, LLM Agent, 데이터 플랫폼 운영, 무기체계 운영 프로그램 웹·앱 개발
 
 projects:
+  # shots 가 있으면 "화면 보기"로 펼친다. kind 는 desktop(브라우저 창) 또는 mobile(폰)
   - title: 방산 MRO 수요예측 모델 고도화 및 단독 제품화
     period: 2026.06 ~
     tags: [수요예측, 제품화]
@@ -50,6 +51,43 @@ projects:
       - "엔진 이중 모드로 기존 시스템 수요예측과 단독 제품을 하나의 엔진으로 통합"
       - "정비 요청 이력 기반 납품시기 예측 모델 개발"
     stack: [Python, FastAPI, Gunicorn, CatBoost, LightGBM, scikit-learn, pandas, Vue3, Spring(Java), MariaDB, Oracle]
+
+  - title: Fitory — 운동 기록 앱
+    period: 2026.05 ~
+    tags: [개인 프로젝트, 모바일 앱]
+    link: https://fitory-77928.web.app
+    link_label: 웹에서 열기
+    summary: "헬스장에서 세트를 빠르게 기록하고, 쌓인 기록으로 다음 운동을 추천받고, 친구 크루와 서로 응원하는 운동 기록 앱. 기획·디자인·앱·백엔드·배포를 혼자 맡아 Android(APK)와 웹으로 운영 중."
+    points:
+      - "로컬 우선 구조: 기록 원본은 기기(AsyncStorage)에 두고 Firebase RTDB는 계정 백업·복원만 담당, 빈 데이터로 원격 백업을 덮어쓰지 않도록 보호"
+      - "운동 라이브러리 1,757개: 초성 검색, 부위·장비·브랜드 필터, 머신 브랜드별 카탈로그(원판식·핀식 구분), 앱 업데이트 없이 원격 카탈로그 갱신"
+      - "세트 입력·중량 계산(바벨·원판·머신·덤벨, kg/lb), 휴식 타이머, 기록 달력, 기간별 볼륨·부위·근력 성장 통계, 최근 기록 기반 오늘의 부위 추천"
+      - "친구 크루: 피드·댓글·응원·단톡방·챌린지·월간 랭킹을 Firebase 보안 규칙으로 멤버만 접근하게 구성하고 다계정 규칙 테스트 스크립트로 검증"
+      - "Express(TypeScript) 백엔드: 카카오 → 네이버 폴백 장소 검색 프록시, 크루 푸시(FCM) 발송 전 ID 토큰·멤버십 검증, 라우트별 rate limit, Render 자동 배포"
+    stack: [React Native, Expo, TypeScript, Zustand, React Navigation, Firebase Auth·RTDB·Storage, FCM, Express, Render, Firebase Hosting]
+    shots:
+      - { src: /assets/images/resume/fittory-home.png, kind: mobile, caption: 홈 · 오늘의 추천 }
+      - { src: /assets/images/resume/fittory-add.png, kind: mobile, caption: 운동 라이브러리 }
+      - { src: /assets/images/resume/fittory-stats.png, kind: mobile, caption: 통계 }
+      - { src: /assets/images/resume/fittory-session.png, kind: mobile, caption: 기록 상세 }
+
+  - title: 개인 기술 블로그 리디자인
+    period: 2026.05 ~
+    tags: [개인 프로젝트, 웹 UI/UX]
+    link: https://jhy156456.github.io
+    link_label: 블로그 열기
+    summary: "2019년부터 운영한 Jekyll·GitHub Pages 블로그를 읽기 좋은 문서형 디자인으로 전면 개편하고, 모바일 사용성 기준(WCAG·Apple HIG)에 맞춰 다듬음."
+    points:
+      - "디자인 토큰(배경·잉크·강조색) 기반 UI 정리, Pretendard 적용, 글 카드 그리드와 한 줄 프로필로 홈 재구성"
+      - "검색을 명령 팔레트 형태로 재작성: 최근 글, 키보드 이동, 검색어 하이라이트"
+      - "모바일 사용성: 숨김 메뉴로 생기던 가로 스크롤 제거, 터치 영역 44px, iOS 입력 확대 방지, 접이식 목차"
+      - "글 하단을 작성자 카드 → 이전/다음 글 → 같은 주제의 글 → 댓글 순서로 단순화"
+      - "이 이력서 페이지를 YAML 데이터 기반으로 구성하고 인쇄·PDF 저장에 맞춤"
+    stack: [Jekyll, Liquid, CSS, JavaScript, GitHub Pages]
+    shots:
+      - { src: /assets/images/resume/blog-desktop-home.png, kind: desktop, caption: 홈 }
+      - { src: /assets/images/resume/blog-mobile-post.png, kind: mobile, caption: 모바일 글 · 목차 }
+      - { src: /assets/images/resume/blog-mobile-end.png, kind: mobile, caption: 모바일 글 하단 }
 
   - title: 군수 AI Agent 고도화 및 폐쇄망 제품화
     period: 2026.03 ~
