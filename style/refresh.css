@@ -245,44 +245,53 @@ html { scroll-padding-top: 84px; scroll-behavior: smooth; }
 .post-content [id] { scroll-margin-top: 84px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
-/* 글 하단: 태그·작성일 → 이전/다음 글 → 같은 주제의 다른 글 → 댓글 */
-.post-end { margin-top: 56px; }
-.post-end__row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px;
-    padding: 18px 0; border-top: 1px solid var(--ui-line); border-bottom: 1px solid var(--ui-line); }
-.post-end__tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.post-content .post-end__tags a { padding: 3px 10px; border-radius: 999px; background: var(--ui-surface-muted);
-    color: var(--ui-muted); font-size: 13px; font-weight: 600; text-decoration: none; }
-.post-content .post-end__tags a:hover { background: var(--ui-accent-soft); color: var(--ui-accent); }
-.post-content .post-end__date { margin: 0; color: var(--ui-muted); font-size: 13px; }
-.post-content .post-end__date a { color: var(--ui-muted); text-decoration: underline; text-underline-offset: 2px; }
+/* 글 하단: 작성자 → 이전/다음 글 → 같은 주제의 다른 글 → 댓글 (velog·overreacted 처럼 단순하게, 태그·작성일은 글 머리에만) */
+.post-end { margin-top: 64px; }
 
-.post-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
-.post-content .post-nav__item { display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; min-height: 84px;
-    border: 1px solid var(--ui-line); border-radius: 14px; background: var(--ui-surface); text-decoration: none;
-    transition: border-color .15s ease, transform .15s ease; }
-.post-content .post-nav__item:hover { border-color: var(--ui-accent); transform: translateY(-1px); }
-.post-nav__item--next { text-align: right; grid-column: 2; }
+.post-author { display: flex; align-items: flex-start; gap: 16px; padding: 28px 0; border-top: 1px solid var(--ui-line); }
+.post-content .post-author__avatar { flex: 0 0 56px; width: 56px; height: 56px; margin: 0; padding: 5px; border-radius: 50%;
+    object-fit: contain; background: var(--ui-surface-muted); border: 1px solid var(--ui-line); }
+.post-author__text { min-width: 0; }
+.post-content .post-author p { margin: 0; }
+.post-content .post-author__name { color: var(--ui-text); font-size: 17px; font-weight: 800; line-height: 1.4; }
+.post-content .post-author__desc { margin-top: 4px; color: var(--ui-muted); font-size: 14.5px; line-height: 1.6; }
+.post-content .post-author__links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 8px; }
+.post-content .post-author__links a { color: var(--ui-muted); font-size: 13.5px; font-weight: 700; text-decoration: none; border: 0; box-shadow: none; }
+.post-content .post-author__links a:hover { color: var(--ui-accent); }
+
+.post-nav { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--ui-line); border-bottom: 1px solid var(--ui-line); }
+.post-content .post-nav__item { display: flex; flex-direction: column; gap: 4px; padding: 20px 0; text-decoration: none; }
+.post-nav__item--prev { grid-column: 1; padding-right: 20px !important; }
+.post-nav__item--next { grid-column: 2; padding-left: 20px !important; text-align: right; }
+.post-nav__item--prev + .post-nav__item--next { border-left: 1px solid var(--ui-line); }
 .post-nav__label { color: var(--ui-muted); font-size: 12.5px; font-weight: 600; }
-.post-nav__title { color: var(--ui-text); font-size: 15px; font-weight: 700; line-height: 1.45;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.post-nav__item--prev .post-nav__label::before { content: "← "; }
+.post-nav__item--next .post-nav__label::after { content: " →"; }
+.post-nav__title { color: var(--ui-text); font-size: 15.5px; font-weight: 700; line-height: 1.45;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color .15s; }
 .post-content .post-nav__item:hover .post-nav__title { color: var(--ui-accent); }
 
 .post-related { margin-top: 40px; }
-.post-content .post-related h2, .post-content .post-comments h2 { margin: 0 0 10px !important; font-size: 17px !important; font-weight: 800; }
-.post-content .post-related ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ui-line); }
-.post-content .post-related li { margin: 0; padding: 0; list-style: none; border-bottom: 1px solid var(--ui-line); }
+.post-content .post-related h2, .post-content .post-comments h2 {
+    margin: 0 0 12px !important; padding: 0 !important; border: 0 !important;
+    color: var(--ui-muted); font-size: 13px !important; font-weight: 800; letter-spacing: .04em; }
+.post-content .post-related ul { margin: 0; padding: 0; list-style: none; }
+.post-content .post-related li { margin: 0; padding: 0; list-style: none; }
 .post-content .post-related li::before { display: none; }
-.post-content .post-related a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
-    padding: 13px 2px; color: var(--ui-text); text-decoration: none; font-size: 15px; }
-.post-content .post-related a:hover span { color: var(--ui-accent); }
-.post-related time { flex: 0 0 auto; color: var(--ui-muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.post-content .post-related a { display: block; padding: 9px 0; color: var(--ui-text); font-size: 15.5px; font-weight: 600;
+    line-height: 1.5; text-decoration: none; }
+.post-content .post-related a:hover { color: var(--ui-accent); }
 
-.post-comments { margin-top: 44px; }
+.post-comments { margin-top: 48px; }
 .post-comments .utterances { max-width: 100% !important; margin: 0 !important; }
 @media (max-width: 640px) {
+    .post-author { gap: 14px; padding: 24px 0; }
+    .post-content .post-author__avatar { flex-basis: 48px; width: 48px; height: 48px; }
+    .post-content .post-author__links a { display: inline-flex; align-items: center; min-height: 36px; }
     .post-nav { grid-template-columns: 1fr; }
-    .post-nav__item--next { grid-column: auto; }
-    .post-content .post-related a { flex-direction: column; gap: 2px; }
+    .post-nav__item--prev, .post-nav__item--next { grid-column: auto; padding: 16px 0 !important; text-align: left; }
+    .post-nav__item--prev + .post-nav__item--next { border-left: 0; border-top: 1px solid var(--ui-line); }
+    .post-content .post-related a { padding: 12px 0; }
 }
 
 /* ── 4차: 모바일 사용성 ──
@@ -353,8 +362,6 @@ a, button, summary { -webkit-tap-highlight-color: rgba(194, 96, 59, 0.12); }
     .post-content pre { border-radius: 10px; font-size: 13px; line-height: 1.6;
         -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
     .post-content pre code { font-size: inherit; }
-    .post-content .post-end__tags a { display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; }
-    .post-content .post-related a { padding: 14px 2px; }
     .footer .social-list a { display: inline-block; padding: 10px 8px; }
 }
 

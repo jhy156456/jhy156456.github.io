@@ -1,23 +1,29 @@
-{%- comment -%} 글 하단: 태그·작성일 → 이전/다음 글 → 같은 태그의 다른 글 → 댓글 {%- endcomment -%}
+{%- comment -%} 글 하단: 작성자 → 이전/다음 글 → 같은 주제의 다른 글 → 댓글 (태그·작성일은 글 머리에만) {%- endcomment -%}
 <footer class="post-end">
-  <div class="post-end__row">
-    <div class="post-end__tags">
-      {% for tag in page.tags %}<a href="/tags#{{ tag | strip }}">#{{ tag | strip }}</a>{% endfor %}
+  <section class="post-author" aria-label="작성자">
+    <img class="post-author__avatar" src="{{ '/style/images/logo-jhy156456.png' | relative_url }}" alt="">
+    <div class="post-author__text">
+      <p class="post-author__name">Hayden J</p>
+      <p class="post-author__desc">AI, 데이터, 백엔드 개발을 하며 마주친 문제와 해결 과정을 기록합니다.</p>
+      <p class="post-author__links">
+        <a href="/about">소개</a>
+        <a href="https://github.com/jhy156456" target="_blank" rel="noopener">GitHub</a>
+        {% if include.license %}<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="external nofollow">CC BY 4.0</a>{% endif %}
+      </p>
     </div>
-    <p class="post-end__date">{{ page.date | date: "%Y.%m.%d" }} 작성{% if include.license %} · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="external nofollow">CC BY 4.0</a>{% endif %}</p>
-  </div>
+  </section>
 
   {% if page.previous or page.next %}
   <nav class="post-nav" aria-label="이전 글, 다음 글">
     {% if page.previous %}
     <a class="post-nav__item post-nav__item--prev" href="{{ page.previous.url | relative_url }}">
-      <span class="post-nav__label">← 이전 글</span>
+      <span class="post-nav__label">이전 글</span>
       <span class="post-nav__title">{{ page.previous.title }}</span>
     </a>
-    {% else %}<span></span>{% endif %}
+    {% endif %}
     {% if page.next %}
     <a class="post-nav__item post-nav__item--next" href="{{ page.next.url | relative_url }}">
-      <span class="post-nav__label">다음 글 →</span>
+      <span class="post-nav__label">다음 글</span>
       <span class="post-nav__title">{{ page.next.title }}</span>
     </a>
     {% endif %}
@@ -31,9 +37,9 @@
       {% assign shared = false %}
       {% for t in post.tags %}{% if page.tags contains t %}{% assign shared = true %}{% break %}{% endif %}{% endfor %}
       {% if shared %}
-        <li><a href="{{ post.url | relative_url }}"><span>{{ post.title }}</span><time>{{ post.date | date: "%Y.%m.%d" }}</time></a></li>
+        <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
         {% assign related_count = related_count | plus: 1 %}
-        {% if related_count >= 4 %}{% break %}{% endif %}
+        {% if related_count >= 3 %}{% break %}{% endif %}
       {% endif %}
     {% endfor %}
   {% endcapture %}
