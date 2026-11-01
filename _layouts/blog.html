@@ -262,6 +262,19 @@
         createPostDirectory(document.getElementById("post-content"), document.getElementById("directory"), true);
       };
       postDirectoryBuild();
+
+      // 좁은 화면용 접이식 목차: 제목이 3개 이상일 때만 본문 앞에 넣는다
+      (function () {
+        var dir = document.querySelector("#directory > ul"), content = document.getElementById("post-content");
+        if (!dir || !content || dir.querySelectorAll("a").length < 3) return;
+        var box = document.createElement("details"), summary = document.createElement("summary");
+        box.className = "toc-mobile";
+        summary.textContent = "목차";
+        box.appendChild(summary);
+        box.appendChild(dir.cloneNode(true));
+        box.addEventListener("click", function (e) { if (e.target.closest("a")) box.open = false; });
+        content.insertBefore(box, content.firstChild);
+      })();
     </script>
     <script>//           window.addEventListener(
 //     "scroll",

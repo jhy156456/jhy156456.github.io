@@ -284,3 +284,95 @@ html { scroll-padding-top: 84px; scroll-behavior: smooth; }
     .post-nav__item--next { grid-column: auto; }
     .post-content .post-related a { flex-direction: column; gap: 2px; }
 }
+
+/* ── 4차: 모바일 사용성 ──
+   근거: 터치 대상 최소 44×44px(Apple HIG, WCAG 2.5.5) / 48dp(Material), 좁은 화면 본문 16px 이상(NN/g),
+   iOS는 16px 미만 입력창에 포커스하면 화면을 확대함, 엄지 닿는 하단·전체 행을 누를 수 있게(Hoober 2013). */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+a, button, summary { -webkit-tap-highlight-color: rgba(194, 96, 59, 0.12); }
+
+/* 접힌 모바일 메뉴가 화면 오른쪽 밖으로 밀려 있어 모든 페이지에 가로 스크롤이 생기던 것:
+   밀어 두지 말고 숨긴다. 터치에서 hover/focus 로 열린 채 남지 않게 is-open 으로만 연다. */
+.navbar-mobile-menu ul,
+.navbar-mobile-menu:hover > ul, .navbar-mobile-menu:active > ul, .navbar-mobile-menu:focus > ul {
+    display: none; transform: none !important; clip: auto; overflow: visible; margin: 0; padding: 6px; top: calc(100% + 6px);
+}
+.navbar-mobile-menu.is-open > ul { display: block; }
+.navbar-mobile-menu ul li { display: block; }
+.navbar-mobile-menu ul li a { width: auto; min-height: 44px; padding: 0 16px; display: flex; align-items: center;
+    line-height: 1.4; background: transparent; border-radius: 10px; font-size: 16px; }
+.navbar-mobile-menu:hover .icon-menu, .navbar-mobile-menu:active .icon-menu { transform: none; }
+.navbar-mobile-menu.is-open .icon-menu.cross .middle { opacity: 0; }
+.navbar-mobile-menu.is-open .icon-menu.cross:after { bottom: 5px; transform: rotate(135deg); }
+.navbar-mobile-menu.is-open .icon-menu.cross:before { top: 5px; transform: rotate(45deg); }
+
+@media (max-width: 760px) {
+    /* 상단 아이콘: 눈에 보이는 크기는 그대로, 누르는 영역만 44px */
+    .navbar-search, .navbar-mobile-menu { display: inline-flex !important; align-items: center; justify-content: center;
+        min-width: 44px; height: 44px; padding: 0 !important; line-height: 44px; }
+    .navbar-search { cursor: pointer; }
+    .navbar-search form { position: fixed !important; left: 0 !important; right: 0 !important; top: 58px !important; margin: 0 !important; }
+
+    /* iOS 입력 확대 방지 */
+    .navbar-search form .search-box input { font-size: 16px !important; }
+    .sr-item { padding-top: 12px; padding-bottom: 12px; }
+
+    /* 스터디·리뷰 목록이 화면 끝에 붙던 것: 좌우 16px */
+    .nav_main_parent .main-content { padding: 0 16px; box-sizing: border-box; }
+    .listing-hero, .archive-hero { padding: 24px 0 20px !important; }
+    .listing-hero h1, .archive-hero h1 { font-size: 26px !important; }
+
+    /* 목록: 글 행 전체를 누를 수 있게(분류 링크는 그 위에 따로) */
+    .archive-row { position: relative; padding: 14px 0; }
+    .archive-row__title::after { content: ""; position: absolute; inset: 0; }
+    .archive-row__meta { font-size: 13px; }
+    .archive-row__meta a { position: relative; z-index: 1; padding: 10px 6px; margin: -10px -6px; }
+    .list-head a { padding: 10px 0; }
+
+    /* 카드 */
+    .post-card__title { font-size: 17px; line-height: 1.45; }
+    .post-card__excerpt { font-size: 14px; line-height: 1.6; }
+    .post-card:active { transform: scale(.99); }
+    .home-intro { margin-top: 20px; }
+    .home-intro__links a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; font-size: 14px; }
+
+    /* 페이지 번호: 44px */
+    .page-navigator { gap: 8px; }
+    .page-navigator li a { min-width: 44px; height: 44px; }
+
+    /* 글 상세 */
+    .post-header-thumb-container { padding-top: 24px !important; }
+    .post-header-thumb .post-title { font-size: 24px; line-height: 1.35; word-break: keep-all; overflow-wrap: anywhere; }
+    .post-header-thumb .post-data { font-size: 13px; }
+    .post-header-thumb .post-tags a { display: inline-flex; align-items: center; min-height: 34px; margin: 0 6px 8px 0; }
+    .post-page { padding-top: 16px !important; }
+    .post-content { font-size: 16.5px; line-height: 1.75; word-break: keep-all; }
+    .post-content li { font-size: inherit; }
+    .post-content h2 { margin-top: 36px; font-size: 21px; }
+    .post-content h3 { font-size: 18px; }
+    .post-content pre { border-radius: 10px; font-size: 13px; line-height: 1.6;
+        -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+    .post-content pre code { font-size: inherit; }
+    .post-content .post-end__tags a { display: inline-flex; align-items: center; min-height: 34px; padding: 0 12px; }
+    .post-content .post-related a { padding: 14px 2px; }
+    .footer .social-list a { display: inline-block; padding: 10px 8px; }
+}
+
+/* 좁은 화면에서는 오른쪽 목차가 숨으니, 글 머리에 접이식 목차를 둔다 */
+.toc-mobile { display: none; }
+@media (max-width: 1360px) {
+    .toc-mobile { display: block; margin: 0 0 28px; border: 1px solid var(--ui-line); border-radius: 14px; background: var(--ui-surface); }
+    .toc-mobile summary { display: flex; align-items: center; justify-content: space-between; min-height: 48px; padding: 0 16px;
+        cursor: pointer; list-style: none; font-size: 15px; font-weight: 800; color: var(--ui-text); }
+    .toc-mobile summary::-webkit-details-marker { display: none; }
+    .toc-mobile summary::after { content: ""; width: 8px; height: 8px; border-right: 2px solid var(--ui-muted); border-bottom: 2px solid var(--ui-muted);
+        transform: rotate(45deg) translateY(-2px); transition: transform .2s; }
+    .toc-mobile[open] summary::after { transform: rotate(-135deg) translateY(-2px); }
+    .post-content .toc-mobile ul { margin: 0; padding: 0 8px 10px; list-style: none; border-top: 1px solid var(--ui-line); }
+    .post-content .toc-mobile li { margin: 0; padding: 0; list-style: none; }
+    .post-content .toc-mobile li::before { display: none; }
+    .post-content .toc-mobile ul ul { padding: 0 0 0 14px; border: 0; }
+    .post-content .toc-mobile a { display: flex; align-items: center; min-height: 40px; padding: 6px 8px; border-radius: 8px;
+        color: var(--ui-muted); font-size: 15px; line-height: 1.45; text-decoration: none; }
+    .post-content .toc-mobile a:active { background: var(--ui-surface-muted); color: var(--ui-accent); }
+}

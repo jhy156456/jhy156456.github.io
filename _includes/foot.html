@@ -55,8 +55,8 @@
       return;
     }
     
-    // 검색 아이콘 클릭 시 토글
-    $iconSearch.on('click', function(e) {
+    // 검색 아이콘(주변 44px 영역 포함) 클릭 시 토글 — 입력창 클릭은 아래에서 전파를 막는다
+    $searchToggle.on('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
       
