@@ -8,9 +8,9 @@
     {% if paginator.previous_page %}
       {% if paginator.previous_page == 1 %}{% assign previous_page_path = first_page_path %}
       {% else %}{% assign previous_page_path = page_base_path | append: 'page' | append: paginator.previous_page | append: '/' | replace: '//', '/' | relative_url %}{% endif %}
-      <li class="pg-prev"><a href="{{ previous_page_path }}" rel="prev"><span aria-hidden="true">‹</span> 이전</a></li>
+      <li class="pg-prev"><a href="{{ previous_page_path }}" rel="prev" aria-label="이전 페이지"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span class="pg-label">이전</span></a></li>
     {% else %}
-      <li class="pg-prev disabled"><span><span aria-hidden="true">‹</span> 이전</span></li>
+      <li class="pg-prev disabled"><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg><span class="pg-label">이전</span></span></li>
     {% endif %}
 
     {% comment %} 첫 페이지 {% endcomment %}
@@ -18,7 +18,7 @@
     {% else %}<li class="pg-num"><a href="{{ first_page_path }}">1</a></li>{% endif %}
 
     {% assign page_start = 2 %}
-    {% if paginator.page > 4 %}
+    {% if paginator.page > 5 %}
       {% assign page_start = paginator.page | minus: 2 %}
       <li class="pg-gap" aria-hidden="true">…</li>
     {% endif %}
@@ -32,7 +32,7 @@
       {% else %}<li class="pg-num"><a href="{{ index_page_path }}">{{ index }}</a></li>{% endif %}
     {% endfor %}
 
-    {% if pages_to_end > 3 %}<li class="pg-gap" aria-hidden="true">…</li>{% endif %}
+    {% if pages_to_end > 4 %}<li class="pg-gap" aria-hidden="true">…</li>{% endif %}
 
     {% comment %} 마지막 페이지 {% endcomment %}
     {% if paginator.page == paginator.total_pages %}<li class="pg-num current"><a href="#" aria-current="page">{{ paginator.page }}</a></li>
@@ -41,15 +41,12 @@
       <li class="pg-num"><a href="{{ last_page_path }}">{{ paginator.total_pages }}</a></li>
     {% endif %}
 
-    {% comment %} 모바일에서만 보이는 '현재 / 전체' {% endcomment %}
-    <li class="pg-status" aria-live="polite"><b>{{ paginator.page }}</b> / {{ paginator.total_pages }}</li>
-
     {% comment %} 다음 {% endcomment %}
     {% if paginator.next_page %}
       {% assign next_page_path = page_base_path | append: 'page' | append: paginator.next_page | append: '/' | replace: '//', '/' | relative_url %}
-      <li class="pg-next"><a href="{{ next_page_path }}" rel="next">다음 <span aria-hidden="true">›</span></a></li>
+      <li class="pg-next"><a href="{{ next_page_path }}" rel="next" aria-label="다음 페이지"><span class="pg-label">다음</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></a></li>
     {% else %}
-      <li class="pg-next disabled"><span>다음 <span aria-hidden="true">›</span></span></li>
+      <li class="pg-next disabled"><span><span class="pg-label">다음</span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg></span></li>
     {% endif %}
   </ol>
 </nav>

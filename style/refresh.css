@@ -134,19 +134,6 @@ body.bg-grey, body { background-color: var(--ui-bg) !important; }
 .listing-hero p, .archive-hero p { margin-top: 8px !important; font-size: 15px !important; color: var(--ui-muted) !important; }
 
 
-/* 페이지 번호 */
-.page-navigator { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; padding: 0; }
-.page-navigator li { list-style: none; margin: 0 !important; }
-.page-navigator li a {
-    display: inline-flex; align-items: center; justify-content: center;
-    min-width: 38px; height: 38px; padding: 0 12px;
-    border: 1px solid var(--ui-line); border-radius: 10px;
-    background: var(--ui-surface); color: var(--ui-muted) !important; font-weight: 600; font-size: 14px;
-}
-.page-navigator li a:hover { color: var(--ui-text) !important; border-color: var(--ui-text); }
-.page-navigator li.current a { background: var(--ui-text); border-color: var(--ui-text); color: #fff !important; }
-.page-navigator li.disabled a { opacity: .45; pointer-events: none; }
-
 /* 목록 폭을 머리 제목과 맞춤 */
 .post-lists, .nav_main_parent .post-lists { width: 100% !important; margin: 0 !important; padding: 0 !important; }
 .listing-hero .listing-hero__eyebrow, .archive-hero .archive-hero__eyebrow { color: var(--ui-accent) !important; }
@@ -345,10 +332,6 @@ a, button, summary { -webkit-tap-highlight-color: rgba(194, 96, 59, 0.12); }
     .home-intro { margin-top: 20px; }
     .home-intro__links a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; font-size: 14px; }
 
-    /* 페이지 번호: 44px */
-    .page-navigator { gap: 8px; }
-    .page-navigator li a { min-width: 44px; height: 44px; }
-
     /* 글 상세 */
     .post-header-thumb-container { padding-top: 24px !important; }
     .post-header-thumb .post-title { font-size: 24px; line-height: 1.35; word-break: keep-all; overflow-wrap: anywhere; }
@@ -416,28 +399,30 @@ a, button, summary { -webkit-tap-highlight-color: rgba(194, 96, 59, 0.12); }
 #directory ul li a.is-active { color: var(--ui-accent) !important; font-weight: 700; background: var(--ui-accent-soft); }
 #directory ul li a.is-active::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px; border-radius: 2px; background: var(--ui-accent); }
 
-/* ── 페이지 번호: PC 는 번호 줄, 모바일은 [‹ 이전]  5 / 9  [다음 ›] 한 줄 ── */
-.page-navigator { display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; gap: 6px; margin: 36px 0 8px; padding: 0; }
-.page-navigator li { list-style: none; margin: 0 !important; }
-.page-navigator li > a, .page-navigator li > span {
-    display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-    min-width: 38px; height: 38px; padding: 0 12px; box-sizing: border-box;
-    border: 1px solid var(--ui-line); border-radius: 10px; background: var(--ui-surface);
-    color: var(--ui-muted) !important; font-size: 14px; font-weight: 600; text-decoration: none;
-    font-variant-numeric: tabular-nums; transition: border-color .15s, color .15s, background-color .15s;
+/* ── 페이지 번호: 테두리 없는 가벼운 버튼. 모바일도 번호 줄 유지, 좁으면 칸이 줄어들고 이전·다음은 화살표만 ── */
+.lists-navigator .page-navigator { display: flex; justify-content: center; align-items: center; flex-wrap: nowrap; gap: 2px; margin: 40px 0 8px; padding: 0; }
+.lists-navigator .page-navigator li { list-style: none; margin: 0 !important; min-width: 0; }
+.lists-navigator .page-navigator li > a, .lists-navigator .page-navigator li > span {
+    display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+    min-width: 32px; height: 32px; padding: 0 6px; box-sizing: border-box;
+    border: 0; border-radius: 8px; background: transparent;
+    color: var(--ui-muted) !important; font-size: 14px; font-weight: 500; line-height: 1; text-decoration: none;
+    font-variant-numeric: tabular-nums; transition: color .15s, background-color .15s;
 }
-.page-navigator li > a:hover { color: var(--ui-text) !important; border-color: var(--ui-text); }
-.page-navigator li.current > a { background: var(--ui-text); border-color: var(--ui-text); color: #fff !important; }
-.page-navigator li.disabled > span { opacity: .4; cursor: default; }
-.page-navigator .pg-gap { min-width: 20px; text-align: center; color: var(--ui-muted); font-weight: 700; letter-spacing: .1em; }
-.page-navigator .pg-status { display: none; }
+.lists-navigator .page-navigator li > a:hover { color: var(--ui-text) !important; background: var(--ui-surface-muted); }
+.lists-navigator .page-navigator li > a:focus-visible { outline: 2px solid var(--ui-accent); outline-offset: 1px; }
+.lists-navigator .page-navigator li.current > a { background: var(--ui-text); color: #fff !important; font-weight: 600; }
+.lists-navigator .page-navigator li.disabled > span { opacity: .35; cursor: default; }
+.lists-navigator .page-navigator svg { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.lists-navigator .page-navigator .pg-prev { margin-right: 6px; }
+.lists-navigator .page-navigator .pg-next { margin-left: 6px; }
+.lists-navigator .page-navigator .pg-gap { min-width: 20px; text-align: center; color: var(--ui-muted); font-size: 13px; }
 @media (max-width: 640px) {
-    .page-navigator { justify-content: space-between; gap: 10px; margin-top: 24px; }
-    .page-navigator .pg-num, .page-navigator .pg-gap { display: none; }
-    .page-navigator .pg-status { display: block; flex: 1; text-align: center; color: var(--ui-muted); font-size: 15px; font-variant-numeric: tabular-nums; }
-    .page-navigator .pg-status b { color: var(--ui-text); font-weight: 800; }
-    .page-navigator .pg-prev > a, .page-navigator .pg-prev > span,
-    .page-navigator .pg-next > a, .page-navigator .pg-next > span { height: 44px; min-width: 96px; padding: 0 16px; font-size: 15px; border-radius: 12px; }
-    .page-navigator .pg-next > a { background: var(--ui-text); border-color: var(--ui-text); color: #fff !important; }
+    .lists-navigator .page-navigator { margin-top: 28px; }
+    .lists-navigator .page-navigator li { flex: 0 1 30px; }
+    .lists-navigator .page-navigator li > a, .lists-navigator .page-navigator li > span { width: 100%; min-width: 0; height: 30px; padding: 0; font-size: 13px; }
+    .lists-navigator .page-navigator .pg-label { display: none; }
+    .lists-navigator .page-navigator .pg-prev, .lists-navigator .page-navigator .pg-next { margin: 0; }
+    .lists-navigator .page-navigator .pg-gap { flex: 0 1 14px; min-width: 0; }
 }
 
