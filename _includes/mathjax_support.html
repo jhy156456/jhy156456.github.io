@@ -1,25 +1,16 @@
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-  TeX: {
-            equationNumbers: {
-              autoNumber: "AMS"
-            }
-          },
-          tex2jax: {
-          inlineMath: [ ['$', '$'] ],
-          displayMath: [ ['$$', '$$'] ],
-          processEscapes: true,
-        }
-      });
-      MathJax.Hub.Register.MessageHook("Math Processing Error",function (message) {
-            alert("Math Processing Error: "+message[1]);
-          });
-      MathJax.Hub.Register.MessageHook("TeX Jax - parse error",function (message) {
-            alert("Math Processing Error: "+message[1]);
-          });
+<!-- 수식 렌더링: MathJax 3 (옛 cdn.mathjax.org 는 2017년 서비스 종료로 동작하지 않음) -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      processEscapes: true,
+      tags: 'none'
+    },
+    chtml: { scale: 1.0, displayAlign: 'center' }
+  };
 </script>
-<script
-  type="text/javascript"
-  async
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"
-></script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+<style>
+  .post-content mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+</style>

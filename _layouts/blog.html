@@ -276,6 +276,36 @@
         content.insertBefore(box, content.firstChild);
       })();
     </script>
+    <script>
+      // 목차 스크롤 스파이: 지금 읽는 제목의 목차 항목을 강조하고, 목차가 길면 그 항목이 보이게 목차 안을 스크롤한다
+      (function () {
+        var dir = document.getElementById("directory");
+        if (!dir) return;
+        var links = Array.prototype.slice.call(dir.querySelectorAll('a[href^="#"]'));
+        var pairs = links.map(function (a) {
+          return { a: a, h: document.getElementById(decodeURIComponent(a.getAttribute("href").slice(1))) };
+        }).filter(function (p) { return p.h; });
+        if (!pairs.length) return;
+        var current = null, ticking = false, OFFSET = 110;
+        function update() {
+          ticking = false;
+          var active = pairs[0];
+          for (var i = 0; i < pairs.length; i++) {
+            if (pairs[i].h.getBoundingClientRect().top - OFFSET <= 0) active = pairs[i]; else break;
+          }
+          if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) active = pairs[pairs.length - 1];
+          if (active === current) return;
+          if (current) current.a.classList.remove("is-active");
+          active.a.classList.add("is-active");
+          current = active;
+          var ar = active.a.getBoundingClientRect(), dr = dir.getBoundingClientRect();
+          if (ar.top < dr.top + 20 || ar.bottom > dr.bottom - 20) dir.scrollTop += ar.top - dr.top - dr.height / 3;
+        }
+        window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+        window.addEventListener("resize", update);
+        update();
+      })();
+    </script>
     <script>//           window.addEventListener(
 //     "scroll",
 //     function () {

@@ -383,3 +383,35 @@ a, button, summary { -webkit-tap-highlight-color: rgba(194, 96, 59, 0.12); }
         color: var(--ui-muted); font-size: 15px; line-height: 1.45; text-decoration: none; }
     .post-content .toc-mobile a:active { background: var(--ui-surface-muted); color: var(--ui-accent); }
 }
+
+/* ── 모바일 글 목록: 큰 카드 대신 한 줄 행(글자 왼쪽 · 작은 썸네일 오른쪽), velog·Medium 모바일 목록 방식 ── */
+@media (max-width: 640px) {
+    .post-lists-body { display: block !important; }
+    .post-lists-body .post-list-item { display: block; border-bottom: 1px solid var(--ui-line); }
+    .post-lists-body .post-list-item:first-child { border-top: 1px solid var(--ui-line); }
+    .post-lists-body .post-card {
+        flex-direction: row-reverse; align-items: center; gap: 14px;
+        height: auto; padding: 14px 2px; border: 0 !important; border-radius: 0;
+        background: transparent; box-shadow: none !important; transform: none !important;
+    }
+    .post-lists-body .post-card__media {
+        flex: 0 0 72px; width: 72px; height: 72px !important; border-radius: 10px;
+        border: 1px solid var(--ui-line); background-size: cover; background-position: center;
+    }
+    .post-lists-body .post-card__cover { padding: 8px; align-items: flex-end; }
+    .post-lists-body .post-card__cover span { display: block; max-width: 100%; font-size: 11.5px; letter-spacing: 0; line-height: 1.2;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .post-lists-body .post-card__cover::before { left: 8px; top: 8px; width: 14px; height: 2px; }
+    .post-lists-body .post-card__body { padding: 0 !important; min-width: 0; }
+    .post-lists-body .post-card__meta { font-size: 11.5px; margin: 0 0 3px; gap: 8px; justify-content: flex-start; }
+    .post-lists-body .post-card__title { margin: 0 !important; font-size: 15.5px; line-height: 1.4; font-weight: 700;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .post-lists-body .post-card__excerpt { margin: 4px 0 0 !important; font-size: 13px; line-height: 1.5; color: var(--ui-muted); -webkit-line-clamp: 1; }
+    .post-lists-body .post-card:active .post-card__title { color: var(--ui-accent); }
+    .list-head { margin: 24px 0 8px; }
+}
+
+/* 목차: 지금 읽는 위치 강조 (블로그 레이아웃 스크롤 스파이) */
+#directory ul li a { position: relative; border-radius: 6px; transition: color .15s ease, background-color .15s ease; padding-left: 8px !important; }
+#directory ul li a.is-active { color: var(--ui-accent) !important; font-weight: 700; background: var(--ui-accent-soft); }
+#directory ul li a.is-active::before { content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px; border-radius: 2px; background: var(--ui-accent); }
